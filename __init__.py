@@ -9,7 +9,7 @@ fitting_lines_dict = {"lambda0":lambda0, "line_type":line_type, "line_name":line
 
 fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
 
-fitspath_caroline = ''C:\\Users\\carol\\Google Drive\\'
+fitspath_caroline = 'C:\\Users\\carol\\Google Drive\\'
 
 # Define k values for dust attenuation
 k_values = cardelli(lambda0 * u.Angstrom)
