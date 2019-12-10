@@ -11,7 +11,7 @@ def get index(det4363_table, input_table, column_name):
     input_table: astropy table containing the entire sample to be updated
 
     Return
-    Numpy index array containing match against input_table
+    Numpy index arrays containing for det4363_table and input_table
     """
 
     if column_name != 'OBJNO' or column_name != 'SLIT' or column_name != 'AP':
@@ -22,7 +22,7 @@ def get index(det4363_table, input_table, column_name):
     det4363_id = det4363_table[column_name]
     input_id   = input_table[column_name]
 
-    ref_idx, input_idx = match_nosort(det4363_id, input_id)
+    det4363_idx, input_idx = match_nosort(det4363_id, input_id)
 
-    return input_idx
+    return det4363_idx, input_idx
 
