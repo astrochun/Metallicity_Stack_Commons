@@ -1,5 +1,7 @@
 from chun_codes.cardelli import cardelli
 import astropy.units as u
+from datetime import date
+import os
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
 line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
@@ -35,3 +37,42 @@ def exclude_outliers(objno):
         flag[idx] = 1
 
     return flag
+
+
+def get_time(org_name, path_init='', year=False):
+    '''
+    Purpose:
+        This function finds and returns the path to a directory named after the
+        current date (MMDDYYYY). If the directory doesn't exist yet, it creates
+        a new directory named after the current date in the provided org_name
+        directory.
+
+        From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
+    Usage:
+        fitspath = general.get_time(org_name, path_init='', year=True)
+
+    Params:
+        org_name --> a string of the directory that the date subdirectory will be in.
+
+    Returns:
+        fitspath --> the path to the date directory.
+
+    Outputs:
+        "Path already exists" --> prints this message if the current date directory already exists.
+        fitspath --> prints the path to the directory.
+
+    '''
+
+    today = date.today()
+
+    list_path = [path_init, org_name, "%02i%02i" % (today.month, today.day), '']
+    if year:
+        list_path[-2] += "i%02i%02i" % today.year
+
+    fitspath = os.path.join(*list_path)
+    try:
+        os.mkdir(fitspath)
+    except FileExistsError:
+        print("Path already exists : ", fitspath)
+
+    return fitspath
