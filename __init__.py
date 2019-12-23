@@ -39,7 +39,7 @@ def exclude_outliers(objno):
     return flag
 
 
-def get_time(org_name, path_init='', year=False):
+def dir_date(org_name, path_init='', year=False):
     '''
     Purpose:
         This function finds and returns the path to a directory named after the
