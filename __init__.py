@@ -13,6 +13,8 @@ fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
 
 fitspath_caroline = 'C:\\Users\\carol\\Google Drive\\'
 
+scalefact = 1e-17
+
 # Define k values for dust attenuation
 k_values = cardelli(lambda0 * u.Angstrom)
 k_dict   = dict(zip(line_name,k_values))
