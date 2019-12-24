@@ -1,4 +1,5 @@
 import numpy as np
+from astropy.convolution import Box1DKernel, convolve
 
 from . import scalefact
 
@@ -97,3 +98,24 @@ def rms_func(wave, dispersion, lambda_in, y0, sigma_array, mask_flag):
     RMS_pix = sigma * dispersion / scalefact
 
     return ini_sig / scalefact, RMS_pix
+
+def movingaverage_box1D(values, width, boundary='fill', fill_value=0.0):
+    '''
+
+    Purpose:
+        Applies as boxcar kernel to smooth spectra
+
+    :param values: numpy array containing the spectrum
+    :param width: float containing width for smoothing
+    :param boundary: handling of boundary values.
+                     Options are: 'None', 'fill', 'wrap', and 'extend'
+                     See astropy.convolution.convolve for more information
+    :param fill_value: float to indicate fill value for default boundary='fill'
+
+    :return smooth: numpy array contained the smoothed/convolved spectrum
+
+    '''
+
+    box_kernel = Box1DKernel(width)
+    smooth = convolve(values, box_kernel, boundary=boundary, fill_value=fill_value)
+    return smooth
