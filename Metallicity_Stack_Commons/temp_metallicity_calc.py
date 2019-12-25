@@ -39,7 +39,7 @@ def temp_calculation(R):
     print(T_e)  
     return T_e
 
-def metalicity_calculation(T_e, TWO_BETA, THREE_BETA):   #metallicity spelled wrong go back and change it if you have time
+def metallicity_calculation(T_e, TWO_BETA, THREE_BETA):   #metallicity spelled wrong go back and change it if you have time
 #(T_e,der_3727_HBETA, der_4959_HBETA, der_5007_HBETA, OIII5007, OIII4959, OIII4363, HBETA, OII3727, dustatt = False):
     #12 +log(O+/H) = log(OII/Hb) +5.961 +1.676/t_2 - 0.4logt_2 - 0.034t_2 + log(1+1.35x)
     #12 +log(O++/H) = log(OIII/Hb)+6.200+1.251/t_3 - 0.55log(t_3) - 0.014(t_3)
