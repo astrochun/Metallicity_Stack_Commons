@@ -1,5 +1,6 @@
 import numpy as np
 from astropy.convolution import Box1DKernel, convolve
+from astropy.io import ascii as asc
 
 from . import scalefact
 
@@ -98,6 +99,33 @@ def rms_func(wave, dispersion, lambda_in, y0, sigma_array, mask_flag):
     RMS_pix = sigma * dispersion / scalefact
 
     return ini_sig / scalefact, RMS_pix
+
+
+def OIII4363_flux_limit(combine_flux_ascii):
+    '''
+
+    Purpose:
+        Determine 3-sigma limit on [OIII]4363 based on H-gamma measurements
+
+    :param combine_flux_ascii: filename of ASCII file containing emission-line
+                               flux measurements
+
+    :return: numpy array containing 3-sigma flux limit
+    '''
+
+    try:
+        combine_fits = asc.read(combine_flux_ascii)
+    except FileNotFoundError:
+        print("File not found! "+combine_flux_ascii)
+        return
+
+    Hgamma    = combine_fits['HGAMMA_Flux_Observed'].data
+    Hgamma_SN = combine_fits['HGAMMA_S/N'].data
+
+    OIII4363_flux_limit = (Hgamma / Hgamma_SN) * 3
+
+    return OIII4363_flux_limit
+
 
 def movingaverage_box1D(values, width, boundary='fill', fill_value=0.0):
     '''
