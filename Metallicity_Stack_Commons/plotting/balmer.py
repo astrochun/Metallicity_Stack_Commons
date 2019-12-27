@@ -67,49 +67,32 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
 
     ID = combine_asc['ID']
 
-    B_xbar = combine_asc['HBETA_X_bar']
-    B_sp   = combine_asc['HBETA_Pos_Sig']
-    B_ap   = combine_asc['HBETA_Pos_Amp']
-    B_con  = combine_asc['HBETA_Const']
-    B_sn   = combine_asc['HBETA_Neg_Sig']
-    B_an   = combine_asc['HBETA_Neg_Amp']
-
-    G_xbar = combine_asc['Hgamma_X_bar']
-    G_sp   = combine_asc['Hgamma_Pos_Sig']
-    G_ap   = combine_asc['Hgamma_Pos_Amp']
-    G_con  = combine_asc['Hgamma_Const']
-    G_sn   = combine_asc['Hgamma_Neg_Sig']
-    G_an   = combine_asc['Hgamma_Neg_Amp']
-
-    D_xbar = combine_asc['HDELTA_X_bar']
-    D_sp   = combine_asc['HDELTA_Pos_Sig']
-    D_ap   = combine_asc['HDELTA_Pos_Amp']
-    D_con  = combine_asc['HDELTA_Const']
-    D_sn   = combine_asc['HDELTA_Neg_Sig']
-    D_an   = combine_asc['HDELTA_Neg_Amp']
-
     pdfpages = PdfPages(out_pdf)
 
     for ii in range(len(ID)):
    
-        if ii % nrows ==0: fig, ax_arr = plt.subplots(nrows=nrows, ncols=ncols, squeeze = False)
+        if ii % nrows ==0:
+            fig, ax_arr = plt.subplots(nrows=nrows, ncols=ncols, squeeze = False)
 
         y0 = stack2D[ii]
         y_norm = y0/scalefact
         dx = wave[2]-wave[1]
 
+        HBETA_fit  = extract_fit(combine_asc[ii], 'HBETA', balmer=True)
+        Hgamma_fit = extract_fit(combine_asc[ii], 'Hgamma', balmer=True)
+        HDELTA_fit = extract_fit(combine_asc[ii], 'HDELTA', balmer=True)
 
         ##Beta
         working_wave_beta = 4861.32
-        Bx_sigsnip = np.where(np.abs((wave-working_wave_beta))/B_sp[ii]<=2.5 )[0]
-        Bgauss0 = double_gauss(wave, B_xbar[ii], B_sp[ii], B_ap[ii], B_con[ii], B_sn[ii], B_an[ii])
-        Bneg0   = gauss(wave, B_xbar[ii], B_sn[ii], B_an[ii], B_con[ii])
+        Bx_sigsnip   = np.where(np.abs((wave-working_wave_beta))/B_sp[ii]<=2.5 )[0]
+        Bgauss0      = double_gauss(wave, *HBETA_fit)
+        Bneg0        = gauss(wave, B_xbar[ii], B_sn[ii], B_an[ii], B_con[ii])
         Bgauss0_diff = Bgauss0 - Bneg0
         By_norm_diff = y_norm[Bx_sigsnip]-Bneg0[Bx_sigsnip]
 
         #Residuals
         Bx_sigsnip_2 = np.where(np.abs((wave-working_wave_beta))/B_sp[ii]<=3.0 )[0]
-        Bresid = y_norm[Bx_sigsnip_2]-Bgauss0[Bx_sigsnip_2] + B_con[ii]  
+        Bresid       = y_norm[Bx_sigsnip_2]-Bgauss0[Bx_sigsnip_2] + B_con[ii]
 
         #Fluxes
         Bflux_g = np.sum(Bgauss0_diff*dx)
@@ -117,15 +100,15 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         
         ##Gamma
         working_wave_gamma = 4340.46
-        Gx_sigsnip = np.where(np.abs((wave-working_wave_gamma))/G_sp[ii]<=2.5 )[0]
-        Ggauss0 = double_gauss(wave, G_xbar[ii], G_sp[ii], G_ap[ii], G_con[ii], G_sn[ii], G_an[ii])
-        Gneg0   = gauss(wave, G_xbar[ii], G_sn[ii], G_an[ii], G_con[ii])
+        Gx_sigsnip   = np.where(np.abs((wave-working_wave_gamma))/G_sp[ii]<=2.5 )[0]
+        Ggauss0      = double_gauss(wave, *Hgamma_fit)
+        Gneg0        = gauss(wave, G_xbar[ii], G_sn[ii], G_an[ii], G_con[ii])
         Ggauss0_diff = Ggauss0 - Gneg0
         Gy_norm_diff = y_norm[Gx_sigsnip]-Gneg0[Gx_sigsnip]
 
         #Residuals
         Gx_sigsnip_2 = np.where(np.abs((wave-working_wave_gamma))/G_sp[ii]<=3.0)
-        Gresid = y_norm[Gx_sigsnip_2]-Ggauss0[Gx_sigsnip_2] + G_con[ii]
+        Gresid       = y_norm[Gx_sigsnip_2]-Ggauss0[Gx_sigsnip_2] + G_con[ii]
 
         #Fluxes
         Gflux_g = np.sum(Ggauss0_diff*dx)
@@ -134,7 +117,7 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         ##Delta
         working_wave_delta =  4101.73
         Dx_sigsnip = np.where(np.abs((wave-working_wave_delta))/D_sp[ii]<=2.5 )[0]
-        Dgauss0 = double_gauss(wave, D_xbar[ii], D_sp[ii], D_ap[ii], D_con[ii], D_sn[ii], D_an[ii])
+        Dgauss0 = double_gauss(wave, *HDELTA_fit)
         Dneg0   = gauss(wave, D_xbar[ii], D_sn[ii], D_an[ii], D_con[ii])
         Dgauss0_diff = Dgauss0 - Dneg0
         Dy_norm_diff = y_norm[Dx_sigsnip]-Dneg0[Dx_sigsnip]
