@@ -36,7 +36,7 @@ def extract_fit(astropy_table, line_name, balmer=False):
 
     try:
         xbar = combine_asc[line_name + '_X_bar']
-    except XXX:
+    except KeyError:
         print("Line not present in table")
         print("Exiting!!!")
         return
