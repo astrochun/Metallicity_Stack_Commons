@@ -2,6 +2,7 @@ from chun_codes.cardelli import cardelli
 import astropy.units as u
 from datetime import date
 import os
+import getpass
 
 version = "0.1.0"
 
@@ -78,5 +79,15 @@ def dir_date(org_name, path_init='', year=False):
         os.mkdir(fitspath)
     except FileExistsError:
         print("Path already exists : ", fitspath)
+
+    return fitspath
+
+def get_user():
+    username = getpass.getuser()
+    if username == 'reagenleimbach':
+        fitspath = fitspath_reagen
+
+    if username == 'carol':
+        fitspath = fitspath_caroline
 
     return fitspath
