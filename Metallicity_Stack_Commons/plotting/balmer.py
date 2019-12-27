@@ -21,6 +21,42 @@ from .. import scalefact
 nrows = 3
 ncols = 3
 
+def extract_fit(astropy_table, line_name, balmer=False):
+    '''
+    Purpose:
+      Extract best fit from table and returns a dictionary
+
+    :param astropy_table: Astropy table
+    :param line_name: line to extract fit results
+    :param balmer: boolean to indicate whether line is a Balmer line
+
+    :return:
+    param_list: list containing fit to pass in
+    '''
+
+    try:
+        xbar = combine_asc[line_name + '_X_bar']
+    except XXX:
+        print("Line not present in table")
+        print("Exiting!!!")
+        return
+
+    xbar = combine_asc[line_name + '_X_bar']
+    sp   = combine_asc[line_name + '_Pos_Sig']
+    ap   = combine_asc[line_name + '_Pos_Amp']
+    con  = combine_asc[line_name + '_Const']
+
+    param_list = [xbar, sp, ap, con]
+
+    if balmer:
+        sn = combine_asc[line_name + '_Neg_Sig']
+        an = combine_asc[line_name + '_Neg_Amp']
+
+        param_list += [sn, an]
+
+    return param_list
+
+
 def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
 
     stack2D, header = fits.getdata(Stack_name,header=True)
