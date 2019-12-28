@@ -54,7 +54,11 @@ def extract_fit(astropy_table, line_name, balmer=False):
 
         param_list += [sn, an]
 
-    return param_list
+        param_list_neg = [xbar, sn, an, con]
+
+        return param_list, param_list_neg
+    else:
+        return param_list
 
 
 def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
