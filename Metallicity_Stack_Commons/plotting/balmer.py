@@ -82,15 +82,15 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         y_norm = y0/scalefact
         dx = wave[2]-wave[1]
 
-        HBETA_fit  = extract_fit(combine_asc[ii], 'HBETA', balmer=True)
-        Hgamma_fit = extract_fit(combine_asc[ii], 'Hgamma', balmer=True)
-        HDELTA_fit = extract_fit(combine_asc[ii], 'HDELTA', balmer=True)
+        Hb_fit, Hb_fit_neg = extract_fit(combine_asc[ii], 'HBETA', balmer=True)
+        Hg_fit, Hg_fit_neg = extract_fit(combine_asc[ii], 'Hgamma', balmer=True)
+        Hd_fit, Hd_fit_neg = extract_fit(combine_asc[ii], 'HDELTA', balmer=True)
 
         ##Beta
         working_wave_beta = 4861.32
         Bx_sigsnip   = np.where(np.abs((wave-working_wave_beta))/B_sp[ii]<=2.5 )[0]
-        Bgauss0      = double_gauss(wave, *HBETA_fit)
-        Bneg0        = gauss(wave, B_xbar[ii], B_sn[ii], B_an[ii], B_con[ii])
+        Bgauss0      = double_gauss(wave, *Hb_fit)
+        Bneg0        = gauss(wave, *Hb_fit_neg)
         Bgauss0_diff = Bgauss0 - Bneg0
         By_norm_diff = y_norm[Bx_sigsnip]-Bneg0[Bx_sigsnip]
 
@@ -105,8 +105,8 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         ##Gamma
         working_wave_gamma = 4340.46
         Gx_sigsnip   = np.where(np.abs((wave-working_wave_gamma))/G_sp[ii]<=2.5 )[0]
-        Ggauss0      = double_gauss(wave, *Hgamma_fit)
-        Gneg0        = gauss(wave, G_xbar[ii], G_sn[ii], G_an[ii], G_con[ii])
+        Ggauss0      = double_gauss(wave, *Hg_fit)
+        Gneg0        = gauss(wave, *Hg_fit_neg)
         Ggauss0_diff = Ggauss0 - Gneg0
         Gy_norm_diff = y_norm[Gx_sigsnip]-Gneg0[Gx_sigsnip]
 
@@ -121,8 +121,8 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         ##Delta
         working_wave_delta =  4101.73
         Dx_sigsnip = np.where(np.abs((wave-working_wave_delta))/D_sp[ii]<=2.5 )[0]
-        Dgauss0 = double_gauss(wave, *HDELTA_fit)
-        Dneg0   = gauss(wave, D_xbar[ii], D_sn[ii], D_an[ii], D_con[ii])
+        Dgauss0 = double_gauss(wave, *Hd_fit)
+        Dneg0   = gauss(wave, *Hd_fit_neg)
         Dgauss0_diff = Dgauss0 - Dneg0
         Dy_norm_diff = y_norm[Dx_sigsnip]-Dneg0[Dx_sigsnip]
 
