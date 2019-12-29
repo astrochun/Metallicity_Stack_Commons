@@ -103,59 +103,22 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         Hd_fit, Hd_fit_neg = extract_fit(combine_asc[ii], 'HDELTA', balmer=True)
 
         ##Beta
-        wave_beta    = wavelength_dict['HBETA']
-        Bx_sigsnip   = np.where(np.abs((wave-wave_beta))/Hb_fit[1]<=2.5 )[0]
-        Bgauss0      = double_gauss(wave, *Hb_fit)
-        Bneg0        = gauss(wave, *Hb_fit_neg)
-        Bgauss0_diff = Bgauss0 - Bneg0
-        By_norm_diff = y_norm[Bx_sigsnip]-Bneg0[Bx_sigsnip]
-
-        #Residuals
-        Bx_sigsnip_2 = np.where(np.abs((wave-wave_beta))/Hb_fit[1]<=3.0 )[0]
-        Bresid       = y_norm[Bx_sigsnip_2]-Bgauss0[Bx_sigsnip_2] + Hb_fit[3]
-
-        #Fluxes
-        Bflux_g = np.sum(Bgauss0_diff*dx)
-        Bflux_s = np.sum(By_norm_diff*dx)
+        fit_result_in = [wave, y_norm, wavelength_dict['HBETA'], Hb_fit, Hb_fit_neg]
+        Bgauss0, Bresid, Bx_sigsnip_2, Bflux_g, Bflux_s = fitting_result(fit_result_in)
 
         ##Gamma
-        wave_gamma   = wavelength_dict['HGAMMA']
-        Gx_sigsnip   = np.where(np.abs((wave-wave_gamma))/Hg_fit[1]<=2.5 )[0]
-        Ggauss0      = double_gauss(wave, *Hg_fit)
-        Gneg0        = gauss(wave, *Hg_fit_neg)
-        Ggauss0_diff = Ggauss0 - Gneg0
-        Gy_norm_diff = y_norm[Gx_sigsnip]-Gneg0[Gx_sigsnip]
-
-        #Residuals
-        Gx_sigsnip_2 = np.where(np.abs((wave-wave_gamma))/Hg_fit[1]<=3.0)
-        Gresid       = y_norm[Gx_sigsnip_2]-Ggauss0[Gx_sigsnip_2] + Hg_fit[3]
-
-        #Fluxes
-        Gflux_g = np.sum(Ggauss0_diff*dx)
-        Gflux_s = np.sum(Gy_norm_diff*dx)
+        fit_result_in = [wave, y_norm, wavelength_dict['HGAMMA'], Hg_fit, Hg_fit_neg]
+        Ggauss0, Gresid, Gx_sigsnip_2, Gflux_g, Gflux_s = fitting_result(fit_result_in)
 
         ##Delta
-        wave_delta   = wavelength_dict['HDELTA']
-        Dx_sigsnip   = np.where(np.abs((wave-wave_delta))/Hd_fit[1]<=2.5 )[0]
-        Dgauss0      = double_gauss(wave, *Hd_fit)
-        Dneg0        = gauss(wave, *Hd_fit_neg)
-        Dgauss0_diff = Dgauss0 - Dneg0
-        Dy_norm_diff = y_norm[Dx_sigsnip]-Dneg0[Dx_sigsnip]
-
-        #Residuals
-        Dx_sigsnip_2 = np.where(np.abs((wave-wave_delta))/Hd_fit[1]<=3.0)
-        Dresid = y_norm[Dx_sigsnip_2]-Dgauss0[Dx_sigsnip_2] + Hd_fit[3]
-
-        #Fluxes
-        Dflux_g = np.sum(Dgauss0_diff*dx)
-        Dflux_s = np.sum(Dy_norm_diff*dx)
+        fit_result_in = [wave, y_norm, wavelength_dict['HDELTA'], Hd_fit, Hd_fit_neg]
+        Dgauss0, Dresid, Dx_sigsnip_2, Dflux_g, Dflux_s = fitting_result(fit_result_in)
 
         row = ii % nrows
 
         txt0 = r'ID: %i' % (ID[ii]) +'\n'
         txt0 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  '% (Hb_fit[1], Hb_fit_neg[1]) + '\n'
         txt0 += 'F_G: %.3f F_S: %.3f' %(Bflux_g, Bflux_s)
-        #txt0 += 'o1[2]: %.3f o1[4]: %.3f  o1[5]: %.3f'% (o1[2], o1[4], o1[5]) + 
     
         ax_arr[row][2].plot(wave, y_norm,'k', linewidth=0.3, label= 'Emission')
         ax_arr[row][2].plot(wave,Bgauss0, 'm', linewidth= 0.25, label= 'Beta Fit')
