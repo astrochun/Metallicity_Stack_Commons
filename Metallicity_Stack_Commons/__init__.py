@@ -12,7 +12,9 @@ line_name = ['OII_3727', 'HDELTA', 'HGAMMA', 'OIII_4363', 'HBETA', 'OIII_4958', 
 
 fitting_lines_dict = {"lambda0":lambda0, "line_type":line_type, "line_name":line_name}
 
-wavelength_dict = dict(zip(line_name, lambda0))
+all_lambda0   = [lambda0[0]] + [3728.91] + lambda0[1:]
+all_line_name = ['OII_3726', 'OII_3729'] + line_name[1:]
+wavelength_dict = dict(zip(all_line_name, all_lambda0))
 
 fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
 
