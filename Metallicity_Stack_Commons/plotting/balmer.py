@@ -16,7 +16,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 
 from ..fitting import gauss, double_gauss
 
-from .. import scalefact
+from .. import scalefact, wavelength_dict
 
 nrows = 3
 ncols = 3
@@ -87,15 +87,15 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         Hd_fit, Hd_fit_neg = extract_fit(combine_asc[ii], 'HDELTA', balmer=True)
 
         ##Beta
-        working_wave_beta = 4861.32
-        Bx_sigsnip   = np.where(np.abs((wave-working_wave_beta))/Hb_fit[1]<=2.5 )[0]
+        wave_beta    = wavelength_dict['HBETA']
+        Bx_sigsnip   = np.where(np.abs((wave_beta))/Hb_fit[1]<=2.5 )[0]
         Bgauss0      = double_gauss(wave, *Hb_fit)
         Bneg0        = gauss(wave, *Hb_fit_neg)
         Bgauss0_diff = Bgauss0 - Bneg0
         By_norm_diff = y_norm[Bx_sigsnip]-Bneg0[Bx_sigsnip]
 
         #Residuals
-        Bx_sigsnip_2 = np.where(np.abs((wave-working_wave_beta))/Hb_fit[1]<=3.0 )[0]
+        Bx_sigsnip_2 = np.where(np.abs((wave-wave_beta))/Hb_fit[1]<=3.0 )[0]
         Bresid       = y_norm[Bx_sigsnip_2]-Bgauss0[Bx_sigsnip_2] + Hb_fit[3]
 
         #Fluxes
@@ -103,15 +103,15 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         Bflux_s = np.sum(By_norm_diff*dx)
         
         ##Gamma
-        working_wave_gamma = 4340.46
-        Gx_sigsnip   = np.where(np.abs((wave-working_wave_gamma))/Hg_fit[1]<=2.5 )[0]
+        wave_gamma   = wavelength_dict['HGAMMA']
+        Gx_sigsnip   = np.where(np.abs((wave-wave_gamma))/Hg_fit[1]<=2.5 )[0]
         Ggauss0      = double_gauss(wave, *Hg_fit)
         Gneg0        = gauss(wave, *Hg_fit_neg)
         Ggauss0_diff = Ggauss0 - Gneg0
         Gy_norm_diff = y_norm[Gx_sigsnip]-Gneg0[Gx_sigsnip]
 
         #Residuals
-        Gx_sigsnip_2 = np.where(np.abs((wave-working_wave_gamma))/Hg_fit[1]<=3.0)
+        Gx_sigsnip_2 = np.where(np.abs((wave-wave_gamma))/Hg_fit[1]<=3.0)
         Gresid       = y_norm[Gx_sigsnip_2]-Ggauss0[Gx_sigsnip_2] + Hg_fit[3]
 
         #Fluxes
@@ -119,15 +119,15 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         Gflux_s = np.sum(Gy_norm_diff*dx)
 
         ##Delta
-        working_wave_delta =  4101.73
-        Dx_sigsnip = np.where(np.abs((wave-working_wave_delta))/Hd_fit[1]<=2.5 )[0]
-        Dgauss0 = double_gauss(wave, *Hd_fit)
-        Dneg0   = gauss(wave, *Hd_fit_neg)
+        wave_delta   = wavelength_dict['HDELTA']
+        Dx_sigsnip   = np.where(np.abs((wave-wave_delta))/Hd_fit[1]<=2.5 )[0]
+        Dgauss0      = double_gauss(wave, *Hd_fit)
+        Dneg0        = gauss(wave, *Hd_fit_neg)
         Dgauss0_diff = Dgauss0 - Dneg0
         Dy_norm_diff = y_norm[Dx_sigsnip]-Dneg0[Dx_sigsnip]
 
         #Residuals
-        Dx_sigsnip_2 = np.where(np.abs((wave-working_wave_delta))/Hd_fit[1]<=3.0)
+        Dx_sigsnip_2 = np.where(np.abs((wave-wave_delta))/Hd_fit[1]<=3.0)
         Dresid = y_norm[Dx_sigsnip_2]-Dgauss0[Dx_sigsnip_2] + Hd_fit[3]
 
         #Fluxes
@@ -143,18 +143,18 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
     
         ax_arr[row][2].plot(wave, y_norm,'k', linewidth=0.3, label= 'Emission')
         ax_arr[row][2].plot(wave,Bgauss0, 'm', linewidth= 0.25, label= 'Beta Fit')
-        ax_arr[row][2].set_xlim(working_wave_beta-50, working_wave_beta+50)
+        ax_arr[row][2].set_xlim(wave_beta-50, wave_beta+50)
         #ax_arr[row][2].legend(bbox_to_anchor=(0.25,0.1), borderaxespad=0, ncol=2,fontsize = 3)
         ax_arr[row][2].annotate(txt0, [0.95,0.95], xycoords='axes fraction', va='top', ha='right', fontsize= '5')
         ax_arr[row][2].plot(wave[Bx_sigsnip_2],Bresid, 'r', linestyle= 'dashed', linewidth = 0.2, label= 'Residuals')
 
         txt1 = r'ID: %i' % (ID[ii]) +'\n'
-        txt1 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  '% (Hg_fit[1]], Hg_fit_neg[1]) + '\n'
+        txt1 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  '% (Hg_fit[1], Hg_fit_neg[1]) + '\n'
         txt1 += 'F_G: %.3f F_S: %.3f' %(Gflux_g, Gflux_s)
     
         ax_arr[row][1].plot(wave, y_norm,'k', linewidth=0.3, label= 'Emission')
         ax_arr[row][1].plot(wave,Ggauss0, 'm', linewidth= 0.25, label= 'Gamma Fit')
-        ax_arr[row][1].set_xlim(working_wave_gamma-50, working_wave_gamma+50)
+        ax_arr[row][1].set_xlim(wave_gamma-50, wave_gamma+50)
         #ax_arr[row][1].legend(bbox_to_anchor=(0.25,0.1), borderaxespad=0, ncol=2,fontsize = 3)
         ax_arr[row][1].annotate(txt1, [0.95,0.95], xycoords='axes fraction', va='top', ha='right', fontsize= '5')
         ax_arr[row][1].plot(wave[Gx_sigsnip_2],Gresid, 'r', linestyle= 'dashed', linewidth = 0.2, label= 'Residuals')
@@ -165,7 +165,7 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
 
         ax_arr[row][0].plot(wave, y_norm,'k', linewidth=0.3, label= 'Emission')
         ax_arr[row][0].plot(wave,Dgauss0, 'm', linewidth= 0.25, label= 'Detla Fit')
-        ax_arr[row][0].set_xlim(working_wave_delta-50, working_wave_delta+50)
+        ax_arr[row][0].set_xlim(wave_delta-50, wave_delta+50)
 
         ax_arr[row][0].set_ylim(0,1.5)
         
