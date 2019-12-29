@@ -12,6 +12,8 @@ line_name = ['OII_3727', 'HDELTA', 'HGAMMA', 'OIII_4363', 'HBETA', 'OIII_4958', 
 
 fitting_lines_dict = {"lambda0":lambda0, "line_type":line_type, "line_name":line_name}
 
+wavelength_dict = dict(zip(line_name, lambda0))
+
 fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
 
 fitspath_caroline = 'C:\\Users\\carol\\Google Drive\\'
