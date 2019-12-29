@@ -2,9 +2,9 @@ import numpy as np
 from astropy.convolution import Box1DKernel, convolve
 from astropy.io import ascii as asc
 
-from . import scalefact
+from . import scalefact, wavelength_dict
 
-con1 = 3728.91 / 3726.16 # Ratio of OII doublet line
+con1 = wavelength_dict['OII_3729'] / wavelength_dict['OII_3726'] # Ratio of OII doublet line
 
 
 def gauss(x, xbar, s, a, c):
