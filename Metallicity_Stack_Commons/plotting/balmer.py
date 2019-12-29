@@ -88,7 +88,7 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
 
         ##Beta
         wave_beta    = wavelength_dict['HBETA']
-        Bx_sigsnip   = np.where(np.abs((wave_beta))/Hb_fit[1]<=2.5 )[0]
+        Bx_sigsnip   = np.where(np.abs((wave-wave_beta))/Hb_fit[1]<=2.5 )[0]
         Bgauss0      = double_gauss(wave, *Hb_fit)
         Bneg0        = gauss(wave, *Hb_fit_neg)
         Bgauss0_diff = Bgauss0 - Bneg0
@@ -101,7 +101,7 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         #Fluxes
         Bflux_g = np.sum(Bgauss0_diff*dx)
         Bflux_s = np.sum(By_norm_diff*dx)
-        
+
         ##Gamma
         wave_gamma   = wavelength_dict['HGAMMA']
         Gx_sigsnip   = np.where(np.abs((wave-wave_gamma))/Hg_fit[1]<=2.5 )[0]
