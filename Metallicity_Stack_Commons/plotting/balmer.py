@@ -60,6 +60,22 @@ def extract_fit(astropy_table, line_name, balmer=False):
     else:
         return param_list
 
+def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
+    x_sigsnip   = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 2.5)[0]
+    gauss0      = double_gauss(wave, *balmer_fit)
+    neg0        = gauss(wave, *balmer_fit_neg)
+    gauss0_diff = gauss0 - neg0
+    y_norm_diff = y_norm[x_sigsnip] - Bneg0[x_sigsnip]
+
+    # Residuals
+    x_sigsnip_2 = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 3.0)[0]
+    resid       = y_norm[x_sigsnip_2] - gauss0[x_sigsnip_2] + balmer_fit[3]
+
+    # Fluxes
+    flux_g = np.sum(gauss0_diff * dx)
+    flux_s = np.sum(y_norm_diff * dx)
+
+    return gauss0, resid, x_sigsnip_2, flux_g, flux_s
 
 def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
 
