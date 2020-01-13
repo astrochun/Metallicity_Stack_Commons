@@ -14,10 +14,10 @@ def compute_EBV(fitspath, combine_asc):
     HBETA  = combine_asc['HBETA_Flux_Observed'].data
     HGAMMA = combine_asc['HGAMMA_Flux_Observed'].data
 
-        EBV = np.log10((HBETA / HGAMMA) * (HgHb_CaseB)) * 2.5 * (1 / (k_HGAMMA - k_HBETA))
+    EBV = np.log10((HBETA / HGAMMA) * (HgHb_CaseB)) * 2.5 * (1 / (k_HGAMMA - k_HBETA))
 
-        out_ascii = fitspath + '/dust_attenuation_values.tbl'
-        # if not exists(out_ascii_single):
-        n2 = ('ID', 'E(B-V)')
-        tab1 = Table([ID, EBV], names=n2)
-        asc.write(tab1, out_ascii, format='fixed_width_two_line')
+    out_ascii = fitspath + '/dust_attenuation_values.tbl'
+
+    tab1 = Table([ID, EBV], names=('ID', 'E(B-V)'))
+    asc.write(tab1, out_ascii, format='fixed_width_two_line')
+
