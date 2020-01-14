@@ -21,3 +21,11 @@ def compute_EBV(fitspath, combine_asc):
     tab1 = Table([ID, EBV], names=('ID', 'E(B-V)'))
     asc.write(tab1, out_ascii, format='fixed_width_two_line')
 
+def compute_A(EBV):
+
+    k_arr  = np.array(list(k_dict.values()))
+
+    A_arr  = k_arr * EBV
+    A_dict = dict(zip(list(k_dict.keys()),A_arr))
+
+    return A_dict
