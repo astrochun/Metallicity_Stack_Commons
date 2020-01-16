@@ -10,11 +10,12 @@ k_HBETA  = k_dict['HBETA']
 k_HGAMMA = k_dict['HGAMMA']
 
 def compute_EBV(fitspath, combine_asc):
+
     ID = combine_asc['ID']
     HBETA  = combine_asc['HBETA_Flux_Observed'].data
     HGAMMA = combine_asc['HGAMMA_Flux_Observed'].data
 
-    EBV = np.log10((HBETA / HGAMMA) * (HgHb_CaseB)) * 2.5 * (1 / (k_HGAMMA - k_HBETA))
+    EBV = -2.5 * np.log10((HGAMMA / HBETA) / (HgHb_CaseB)) / (k_HGAMMA - k_HBETA)
 
     out_ascii = fitspath + '/dust_attenuation_values.tbl'
 
