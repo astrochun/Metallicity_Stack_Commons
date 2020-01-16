@@ -30,3 +30,12 @@ def compute_A(EBV):
     A_dict = dict(zip(list(k_dict.keys()),A_arr))
 
     return A_dict
+
+def line_ratio_atten(ratio, EBV, wave_top, wave_bottom):
+
+    k_top    = k_dict[wave_top]
+    k_bottom = k_dict[wave_bottom]
+
+    ratio_atten = ratio * 10**(0.4*EBV*(k_top - k_bottom))
+
+    return ratio_atten
