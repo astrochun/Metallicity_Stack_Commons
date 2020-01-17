@@ -18,7 +18,7 @@ wavelength_dict = dict(zip(all_line_name, all_lambda0))
 
 fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
 
-fitspath_caroline = 'C:\\Users\\carol\\Google Drive\\'
+fitspath_caroline = 'C:/Users/carol/Google Drive/'
 
 scalefact = 1e-17
 
