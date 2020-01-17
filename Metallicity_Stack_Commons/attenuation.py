@@ -39,3 +39,9 @@ def line_ratio_atten(ratio, EBV, wave_top, wave_bottom):
     ratio_atten = ratio * 10**(0.4*EBV*(k_top - k_bottom))
 
     return ratio_atten
+
+def Hb_SFR(log_LHb, EBV):
+
+    logSFR = np.log10(4.4e-42 * 2.86) + 0.4*EBV*k_dict['HBETA'] + log_LHb
+
+    return logSFR
