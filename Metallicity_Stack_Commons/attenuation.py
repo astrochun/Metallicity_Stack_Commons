@@ -39,3 +39,25 @@ def line_ratio_atten(ratio, EBV, wave_top, wave_bottom):
     ratio_atten = ratio * 10**(0.4*EBV*(k_top - k_bottom))
 
     return ratio_atten
+
+def Hb_SFR(log_LHb, EBV):
+
+    '''
+    Purpose:
+      Determine dust-corrected SFR using the H-beta luminosity and a
+      measurement for nebular attenuation
+
+    Equation below is based on Eq. 2 in Ly et al. (2015), ApJ, 805, 45
+      DOI: https://doi.org/10.1088/0004-637X/805/1/45
+
+    :param log_LHb: numpy array or float containing logarithm of H-beta
+           luminosity in units of erg/s
+    :param EBV: numpy array or float providing E(B-V)
+
+    :return logSFR: numpy array or float containing the SFR in
+            logarithmic units of M_sun/yr
+    '''
+
+    logSFR = np.log10(4.4e-42 * 2.86) + 0.4*EBV*k_dict['HBETA'] + log_LHb
+
+    return logSFR
