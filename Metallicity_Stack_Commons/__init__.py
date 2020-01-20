@@ -3,6 +3,7 @@ import astropy.units as u
 from datetime import date
 import os
 import getpass
+import numpy as np
 
 version = "0.1.0"
 
@@ -42,7 +43,7 @@ def exclude_outliers(objno):
     flag = np.zeros(len(objno), dtype=int)
     bad_data = np.array(['32007727', '32101412', '42006031', '32035286', '14023705'])
     for ii in range(len(bad_data)):
-        idx = [xx for xx in range(len(objno)) if bad_data[ii] == str(objno[xx])][0]
+        idx = [xx for xx in range(len(objno)) if bad_data[ii] == str(objno[xx])]
         flag[idx] = 1
 
     return flag
@@ -76,7 +77,7 @@ def dir_date(org_name, path_init='', year=False):
 
     list_path = [path_init, org_name, "%02i%02i" % (today.month, today.day), '']
     if year:
-        list_path[-2] += "i%02i%02i" % today.year
+        list_path[-2] += "%02i" % today.year
 
     fitspath = os.path.join(*list_path)
     try:
