@@ -22,16 +22,22 @@ from getpass import getuser
 from astropy import units as u
 from chun_codes.cardelli import *
 
+from . import k_dict
+
+k_4363 = k_dict['OIII_4363']
+k_5007 = k_dict['OIII_5007']
+
 #Constants
 
 a = 13205
 b = 0.92506
 c = 0.98062
 
-def R_calculation(OIII4363, OIII5007, EBV, k_4363, k_5007):
+
+def R_calculation(OIII4363, OIII5007, EBV):
   
     R_value = OIII4363/(OIII5007*(1+1/3.1))* 10**(0.4*EBV*(k_4363-k_5007))
-    return R_value  
+    return R_value
 
 def temp_calculation(R):
     #T_e = a(-log(R)-b)^(-c)
