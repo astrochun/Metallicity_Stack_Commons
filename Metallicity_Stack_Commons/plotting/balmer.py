@@ -8,7 +8,7 @@
       https://github.com/astrochun/Zcalbase_gal/blob/master/Analysis/DEEP2_R23_O32/balmer_plots.py
 '''
 
-
+import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
 from astropy.io import ascii as asc
