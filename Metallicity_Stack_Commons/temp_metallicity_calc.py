@@ -6,7 +6,6 @@ k_4363 = k_dict['OIII_4363']
 k_5007 = k_dict['OIII_5007']
 
 # Constants
-
 a = 13205
 b = 0.92506
 c = 0.98062
@@ -61,7 +60,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA):
 
     t_3 = T_e * 1e-4
     t_2 = 0.7 * t_3 + 0.17
-    x2 = 1e-4 * 1e3 * t_2 ** (-0.5)
+    x2  = 1e-4 * 1e3 * t_2 ** (-0.5)
 
     # Equations from Izotov et al. (2006)
     O_s_ion_log = np.log10(TWO_BETA) + 5.961 + 1.676 / t_2 - 0.4 * np.log10(t_2) \
@@ -69,8 +68,8 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA):
     O_d_ion_log = np.log10(THREE_BETA) + 6.200 + 1.251 / t_3 \
                   - 0.55 * np.log10(t_3) - 0.014 * (t_3) - 12
 
-    O_s_ion = 10 ** (O_s_ion_log)
-    O_d_ion = 10 ** (O_d_ion_log)
+    O_s_ion = 10 ** O_s_ion_log
+    O_d_ion = 10 ** O_d_ion_log
     com_O = O_s_ion + O_d_ion
     com_O_log = np.log10(com_O) + 12
 
