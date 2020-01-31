@@ -79,7 +79,7 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
     return gauss0, resid, x_sigsnip_2, flux_g, flux_s
 
 
-def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
+def HbHgHd_fits(Stack_name, combine_flux_tab, out_pdf):
 
     stack2D, header = fits.getdata(Stack_name,header=True)
     wave = header['CRVAL1'] + header['CDELT1']*np.arange(header['NAXIS1'])
