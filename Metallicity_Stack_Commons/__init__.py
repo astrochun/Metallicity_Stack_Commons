@@ -22,6 +22,9 @@ fitspath_caroline = 'C:/Users/carol/Google Drive/'
 
 scalefact = 1e-17
 
+# Flux ratio of [OIII]5007 to [OIII]4959
+OIII_r = 3.1
+
 # Define k values for dust attenuation
 k_values = cardelli(lambda0 * u.Angstrom)
 k_dict   = dict(zip(line_name,k_values))
