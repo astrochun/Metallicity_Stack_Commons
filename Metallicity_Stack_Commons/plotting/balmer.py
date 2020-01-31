@@ -22,17 +22,17 @@ nrows = 3
 ncols = 3
 
 def extract_fit(astropy_table, line_name, balmer=False):
-    '''
+    """
     Purpose:
-      Extract best fit from table and returns a dictionary
+      Extract best fit from table, return a list of fitting parameters
 
-    :param astropy_table: Astropy table
+    :param astropy_table: Astropy table containing fitting result
     :param line_name: line to extract fit results
     :param balmer: boolean to indicate whether line is a Balmer line
 
     :return:
     param_list: list containing fit to pass in
-    '''
+    """
 
     try:
         xbar = astropy_table[line_name + '_X_bar'].data
@@ -60,6 +60,7 @@ def extract_fit(astropy_table, line_name, balmer=False):
     else:
         return param_list
 
+
 def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
     x_sigsnip   = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 2.5)[0]
     gauss0      = double_gauss(wave, *balmer_fit)
@@ -76,6 +77,7 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
     flux_s = np.sum(y_norm_diff * dx)
 
     return gauss0, resid, x_sigsnip_2, flux_g, flux_s
+
 
 def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
 
