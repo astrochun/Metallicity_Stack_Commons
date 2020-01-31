@@ -102,16 +102,20 @@ def HbHgHd_fits(fitspath, nrow, ncol,Stack_name,combine_flux_tab, out_pdf):
         Hg_fit, Hg_fit_neg = extract_fit(combine_asc[ii], 'Hgamma', balmer=True)
         Hd_fit, Hd_fit_neg = extract_fit(combine_asc[ii], 'HDELTA', balmer=True)
 
+        wave_beta  = wavelength_dict['HBETA']
+        wave_gamma = wavelength_dict['HGAMMA']
+        wave_delta = wavelength_dict['HDELTA']
+
         ##Beta
-        fit_result_in = [wave, y_norm, wavelength_dict['HBETA'], Hb_fit, Hb_fit_neg]
+        fit_result_in = [wave, y_norm, wave_beta, Hb_fit, Hb_fit_neg]
         Bgauss0, Bresid, Bx_sigsnip_2, Bflux_g, Bflux_s = fitting_result(fit_result_in)
 
         ##Gamma
-        fit_result_in = [wave, y_norm, wavelength_dict['HGAMMA'], Hg_fit, Hg_fit_neg]
+        fit_result_in = [wave, y_norm, wave_gamma, Hg_fit, Hg_fit_neg]
         Ggauss0, Gresid, Gx_sigsnip_2, Gflux_g, Gflux_s = fitting_result(fit_result_in)
 
         ##Delta
-        fit_result_in = [wave, y_norm, wavelength_dict['HDELTA'], Hd_fit, Hd_fit_neg]
+        fit_result_in = [wave, y_norm, wave_delta, Hd_fit, Hd_fit_neg]
         Dgauss0, Dresid, Dx_sigsnip_2, Dflux_g, Dflux_s = fitting_result(fit_result_in)
 
         row = ii % nrows
