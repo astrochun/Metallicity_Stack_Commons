@@ -1,26 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from astropy.io import fits
-from astropy.io import ascii as asc
-from astropy.table import vstack, hstack
-from matplotlib.backends.backend_pdf import PdfPages
-from astropy.table import Table, Column
-from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
-from mpl_toolkits.axes_grid1.inset_locator import mark_inset
-from os.path import exists
-import numpy.ma as ma
-from matplotlib.gridspec import GridSpec
-from pylab import subplots_adjust
-from astropy.convolution import Box1DKernel, convolve
-from scipy.optimize import curve_fit
-import scipy.integrate as integ
-from mpl_toolkits.mplot3d import Axes3D
-import sys
-
-#For generalizing for several users
-from getpass import getuser
-from astropy import units as u
-from chun_codes.cardelli import *
 
 from . import k_dict
 
