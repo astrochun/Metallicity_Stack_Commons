@@ -35,22 +35,22 @@ def extract_fit(astropy_table, line_name, balmer=False):
     '''
 
     try:
-        xbar = combine_asc[line_name + '_X_bar']
+        xbar = astropy_table[line_name + '_X_bar']
     except KeyError:
         print("Line not present in table")
         print("Exiting!!!")
         return
 
-    xbar = combine_asc[line_name + '_X_bar']
-    sp   = combine_asc[line_name + '_Pos_Sig']
-    ap   = combine_asc[line_name + '_Pos_Amp']
-    con  = combine_asc[line_name + '_Const']
+    xbar = astropy_table[line_name + '_X_bar']
+    sp   = astropy_table[line_name + '_Pos_Sig']
+    ap   = astropy_table[line_name + '_Pos_Amp']
+    con  = astropy_table[line_name + '_Const']
 
     param_list = [xbar, sp, ap, con]
 
     if balmer:
-        sn = combine_asc[line_name + '_Neg_Sig']
-        an = combine_asc[line_name + '_Neg_Amp']
+        sn = astropy_table[line_name + '_Neg_Sig']
+        an = astropy_table[line_name + '_Neg_Amp']
 
         param_list += [sn, an]
 
