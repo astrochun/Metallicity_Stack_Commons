@@ -79,15 +79,15 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
     return gauss0, resid, x_sigsnip_2, flux_g, flux_s
 
 
-def HbHgHd_fits(Stack_name, combine_flux_tab, out_pdf):
+def HbHgHd_fits(Stack_name, astropy_table_file, out_pdf):
 
     stack2D, header = fits.getdata(Stack_name,header=True)
     wave = header['CRVAL1'] + header['CDELT1']*np.arange(header['NAXIS1'])
     dispersion = header['CDELT1']
 
-    combine_asc = asc.read(combine_flux_tab)
+    astropy_table = asc.read(astropy_table_file)
 
-    ID = combine_asc['ID']
+    ID = astropy_table['ID'].data
 
     pdfpages = PdfPages(out_pdf)
 
@@ -100,9 +100,9 @@ def HbHgHd_fits(Stack_name, combine_flux_tab, out_pdf):
         y_norm = y0/scalefact
         dx = wave[2]-wave[1]
 
-        Hb_fit, Hb_fit_neg = extract_fit(combine_asc[ii], 'HBETA', balmer=True)
-        Hg_fit, Hg_fit_neg = extract_fit(combine_asc[ii], 'Hgamma', balmer=True)
-        Hd_fit, Hd_fit_neg = extract_fit(combine_asc[ii], 'HDELTA', balmer=True)
+        Hb_fit, Hb_fit_neg = extract_fit(astropy_table[ii], 'HBETA', balmer=True)
+        Hg_fit, Hg_fit_neg = extract_fit(astropy_table[ii], 'Hgamma', balmer=True)
+        Hd_fit, Hd_fit_neg = extract_fit(astropy_table[ii], 'HDELTA', balmer=True)
 
         wave_beta  = wavelength_dict['HBETA']
         wave_gamma = wavelength_dict['HGAMMA']
