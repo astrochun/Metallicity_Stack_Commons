@@ -79,9 +79,9 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
     return gauss0, resid, x_sigsnip_2, flux_g, flux_s
 
 
-def HbHgHd_fits(Stack_name, astropy_table_file, out_pdf):
+def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
-    stack2D, header = fits.getdata(Stack_name,header=True)
+    stack2D, header = fits.getdata(stack_name, header=True)
     wave = header['CRVAL1'] + header['CDELT1']*np.arange(header['NAXIS1'])
     dispersion = header['CDELT1']
 
@@ -93,8 +93,8 @@ def HbHgHd_fits(Stack_name, astropy_table_file, out_pdf):
 
     for ii in range(len(ID)):
    
-        if ii % nrows ==0:
-            fig, ax_arr = plt.subplots(nrows=nrows, ncols=ncols, squeeze = False)
+        if ii % nrows == 0:
+            fig, ax_arr = plt.subplots(nrows=nrows, ncols=ncols, squeeze=False)
 
         y0 = stack2D[ii]
         y_norm = y0/scalefact
@@ -108,63 +108,62 @@ def HbHgHd_fits(Stack_name, astropy_table_file, out_pdf):
         wave_gamma = wavelength_dict['HGAMMA']
         wave_delta = wavelength_dict['HDELTA']
 
-        ##Beta
+        # Beta
         fit_result_in = [wave, y_norm, wave_beta, Hb_fit, Hb_fit_neg]
         Bgauss0, Bresid, Bx_sigsnip_2, Bflux_g, Bflux_s = fitting_result(fit_result_in)
 
-        ##Gamma
+        # Gamma
         fit_result_in = [wave, y_norm, wave_gamma, Hg_fit, Hg_fit_neg]
         Ggauss0, Gresid, Gx_sigsnip_2, Gflux_g, Gflux_s = fitting_result(fit_result_in)
 
-        ##Delta
+        # Delta
         fit_result_in = [wave, y_norm, wave_delta, Hd_fit, Hd_fit_neg]
         Dgauss0, Dresid, Dx_sigsnip_2, Dflux_g, Dflux_s = fitting_result(fit_result_in)
 
         row = ii % nrows
 
-        txt0 = r'ID: %i' % (ID[ii]) +'\n'
-        txt0 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  '% (Hb_fit[1], Hb_fit_neg[1]) + '\n'
-        txt0 += 'F_G: %.3f F_S: %.3f' %(Bflux_g, Bflux_s)
+        txt0 = r'ID: %i' % (ID[ii]) + '\n'
+        txt0 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_fit[1], Hb_fit_neg[1]) + '\n'
+        txt0 += 'F_G: %.3f F_S: %.3f' % (Bflux_g, Bflux_s)
 
-        ax_arr[row][2].plot(wave, y_norm,'k', linewidth=0.3, label= 'Emission')
-        ax_arr[row][2].plot(wave,Bgauss0, 'm', linewidth= 0.25, label= 'Beta Fit')
+        ax_arr[row][2].plot(wave, y_norm, 'k', linewidth=0.3, label= 'Emission')
+        ax_arr[row][2].plot(wave, Bgauss0, 'm', linewidth= 0.25, label= 'Beta Fit')
         ax_arr[row][2].set_xlim(wave_beta-50, wave_beta+50)
 
-        ax_arr[row][2].annotate(txt0, [0.95,0.95], xycoords='axes fraction',
-                                va='top', ha='right', fontsize= '5')
-        ax_arr[row][2].plot(wave[Bx_sigsnip_2],Bresid, 'r', linestyle='dashed',
-                            linewidth = 0.2, label= 'Residuals')
+        ax_arr[row][2].annotate(txt0, [0.95, 0.95], xycoords='axes fraction',
+                                va='top', ha='right', fontsize='5')
+        ax_arr[row][2].plot(wave[Bx_sigsnip_2], Bresid, 'r', linestyle='dashed',
+                            linewidth=0.2, label='Residuals')
 
-        txt1 = r'ID: %i' % (ID[ii]) +'\n'
-        txt1 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  '% (Hg_fit[1], Hg_fit_neg[1]) + '\n'
-        txt1 += 'F_G: %.3f F_S: %.3f' %(Gflux_g, Gflux_s)
+        txt1 = r'ID: %i' % (ID[ii]) + '\n'
+        txt1 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hg_fit[1], Hg_fit_neg[1]) + '\n'
+        txt1 += 'F_G: %.3f F_S: %.3f' % (Gflux_g, Gflux_s)
     
-        ax_arr[row][1].plot(wave, y_norm,'k', linewidth=0.3, label= 'Emission')
-        ax_arr[row][1].plot(wave,Ggauss0, 'm', linewidth= 0.25, label= 'Gamma Fit')
+        ax_arr[row][1].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
+        ax_arr[row][1].plot(wave, Ggauss0, 'm', linewidth=0.25, label='Gamma Fit')
         ax_arr[row][1].set_xlim(wave_gamma-50, wave_gamma+50)
 
-        ax_arr[row][1].annotate(txt1, [0.95,0.95], xycoords='axes fraction',
-                                va='top', ha='right', fontsize= '5')
-        ax_arr[row][1].plot(wave[Gx_sigsnip_2],Gresid, 'r', linestyle='dashed',
-                            linewidth = 0.2, label= 'Residuals')
+        ax_arr[row][1].annotate(txt1, [0.95, 0.95], xycoords='axes fraction',
+                                va='top', ha='right', fontsize='5')
+        ax_arr[row][1].plot(wave[Gx_sigsnip_2], Gresid, 'r', linestyle='dashed',
+                            linewidth=0.2, label='Residuals')
 
-        txt2 = r'ID: %i' % (ID[ii]) +'\n'
-        txt2 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  '% (Hd_fit[1], Hd_fit_neg[1]) + '\n'
-        txt2 += 'F_G: %.3f F_S: %.3f' %(Dflux_g, Dflux_s)
+        txt2 = r'ID: %i' % (ID[ii]) + '\n'
+        txt2 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hd_fit[1], Hd_fit_neg[1]) + '\n'
+        txt2 += 'F_G: %.3f F_S: %.3f' % (Dflux_g, Dflux_s)
 
-        ax_arr[row][0].plot(wave, y_norm,'k', linewidth=0.3, label= 'Emission')
-        ax_arr[row][0].plot(wave,Dgauss0, 'm', linewidth= 0.25, label= 'Detla Fit')
+        ax_arr[row][0].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
+        ax_arr[row][0].plot(wave, Dgauss0, 'm', linewidth=0.25, label='Delta Fit')
         ax_arr[row][0].set_xlim(wave_delta-50, wave_delta+50)
 
-        ax_arr[row][0].set_ylim(0,1.5)
+        ax_arr[row][0].set_ylim(0, 1.5)
         
-        ax_arr[row][0].annotate(txt0, [0.95,0.95], xycoords='axes fraction',
-                                va='top', ha='right', fontsize= '5')
-        ax_arr[row][0].plot(wave[Dx_sigsnip_2],Dresid, 'r', linestyle='dashed',
-                            linewidth = 0.2, label= 'Residuals')
-
+        ax_arr[row][0].annotate(txt0, [0.95, 0.95], xycoords='axes fraction',
+                                va='top', ha='right', fontsize='5')
+        ax_arr[row][0].plot(wave[Dx_sigsnip_2], Dresid, 'r', linestyle='dashed',
+                            linewidth=0.2, label='Residuals')
        
-        ax_arr[row][0].set_yticklabels([0,0.5,1,1.5])
+        ax_arr[row][0].set_yticklabels([0, 0.5, 1, 1.5])
         ax_arr[row][1].set_yticklabels([])
         ax_arr[row][2].set_yticklabels([])
 
