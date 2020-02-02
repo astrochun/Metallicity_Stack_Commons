@@ -46,7 +46,7 @@ def exclude_outliers(objno):
     flag = np.zeros(len(objno), dtype=int)
     bad_data = np.array(['32007727', '32101412', '42006031', '32035286', '14023705'])
     for ii in range(len(bad_data)):
-        idx = [xx for xx in range(len(objno)) if bad_data[ii] == str(objno[xx])]
+        idx = [xx for xx in range(len(objno)) if bad_data[ii] in str(objno[xx])]
         flag[idx] = 1
 
     return flag
