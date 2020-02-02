@@ -11,7 +11,7 @@ lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
 line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
 line_name = ['OII_3727', 'HDELTA', 'HGAMMA', 'OIII_4363', 'HBETA', 'OIII_4958', 'OIII_5007']
 
-fitting_lines_dict = {"lambda0":lambda0, "line_type":line_type, "line_name":line_name}
+fitting_lines_dict = {"lambda0": lambda0, "line_type": line_type, "line_name": line_name}
 
 all_lambda0   = [lambda0[0]] + [3728.91] + lambda0[1:]
 all_line_name = ['OII_3726', 'OII_3729'] + line_name[1:]
@@ -23,13 +23,16 @@ fitspath_caroline = 'C:/Users/carol/Google Drive/'
 
 scalefact = 1e-17
 
+# Flux ratio of [OIII]5007 to [OIII]4959
+OIII_r = 3.1
+
 # Define k values for dust attenuation
 k_values = cardelli(lambda0 * u.Angstrom)
-k_dict   = dict(zip(line_name,k_values))
+k_dict   = dict(zip(line_name, k_values))
 
 
 def exclude_outliers(objno):
-    '''
+    """
     Exclude spectra that are identified as outliers.
 
     Generally this is because the spectra have very high S/N on the continuum.
@@ -38,7 +41,7 @@ def exclude_outliers(objno):
 
     :return:
      flag: numpy array of zeros and ones
-    '''
+    """
 
     flag = np.zeros(len(objno), dtype=int)
     bad_data = np.array(['32007727', '32101412', '42006031', '32035286', '14023705'])
@@ -50,7 +53,7 @@ def exclude_outliers(objno):
 
 
 def dir_date(org_name, path_init='', year=False):
-    '''
+    """
     Purpose:
         This function finds and returns the path to a directory named after the
         current date (MMDDYYYY). If the directory doesn't exist yet, it creates
@@ -71,7 +74,7 @@ def dir_date(org_name, path_init='', year=False):
         "Path already exists" --> prints this message if the current date directory already exists.
         fitspath --> prints the path to the directory.
 
-    '''
+    """
 
     today = date.today()
 
@@ -86,6 +89,7 @@ def dir_date(org_name, path_init='', year=False):
         print("Path already exists : ", fitspath)
 
     return fitspath
+
 
 def get_user():
     username = getpass.getuser()
