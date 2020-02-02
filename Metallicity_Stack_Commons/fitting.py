@@ -92,13 +92,17 @@ def rms_func(wave, dispersion, lambda_in, y0, sigma_array, mask_flag):
     x_idx = np.where((np.abs(wave - lambda_in) <= 100) & (mask_flag == 0))[0]
 
     sigma = np.std(y0[x_idx])
-    pix = 5 * sigma_array / dispersion
-    s_pix = np.sqrt(pix)
 
-    ini_sig = s_pix * sigma * dispersion
-    RMS_pix = sigma * dispersion / scalefact
+    if sigma_array == 0:
+        RMS = sigma/scalefact
+        return RMS
+    else:
+        pix = 5 * sigma_array / dispersion
+        s_pix = np.sqrt(pix)
+        ini_sig = s_pix * sigma * dispersion
+        RMS_pix = sigma * dispersion / scalefact
 
-    return ini_sig / scalefact, RMS_pix
+        return ini_sig / scalefact, RMS_pix
 
 
 def OIII4363_flux_limit(combine_flux_ascii):
