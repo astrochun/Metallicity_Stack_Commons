@@ -33,9 +33,14 @@ def main(fitspath, dataset, composite_file):
     det3_table = asc.read(join(fitspath, 'get_det3_table2.tbl'))
     bin_table = asc.read(join(fitspath, dataset+'_2d_binning_datadet3.tbl'))
 
+    # Populate composite temperature for individual galaxies
+    adopted_temp = np.zeros(len(det3_table))
+    for comp_bin, comp_temp in zip(bin_id, bin_temp):
+        bin_idx = np.where(bin_table['Bin_number'].data == comp_bin)[0]
+        adopted_temp[bin_idx] = comp_temp
+
     # Update [bin_table] to include two new columns
-    col_temp = Column(np.zeros(len(det3_table)), name='Temperature',
-                      dtype=np.float32)
+    col_temp = Column(adopted_temp, name='Temperature')
     col_metal = Column(np.zeros(len(det3_table)), name='com_O_log',
                        dtype=np.float32)
     det3_table.add_columns([col_temp, col_metal])  # Add at the end of table
