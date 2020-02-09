@@ -6,6 +6,29 @@ import glob
 from ..temp_metallicity_calc import metallicity_calculation
 
 
+def main(fitspath, dataset, composite_file):
+    """
+    Purpose:
+      Reads in composite table(s) containing bin information to
+      determine temperature-based metallicity from composite average
+      T_e and individual line ratios ([OII]/H-beta, [OIII]/H-beta)
+
+    :param fitspath:
+    :param dataset:
+    :param average_value_ascii:
+    :return:
+    """
+
+    # Read in composite table
+    composite_table = asc.read(composite_file)
+    ID = composite_table['ID'].data
+
+    det3_table    = asc.read(fitspath + 'get_det3_table2.tbl')
+    bin_table     = asc.read(fitspath + dataset + '_2d_binning_datadet3.tbl')
+    average_table = asc.read(fitspath + dataset + '_Average_R23_O32_Values.tbl')
+    stack_table   = asc.read(fitspath + dataset + '_temperatures_metalicity.tbl')
+
+
 def run_ind_detection(fitspath, dataset, average_value_ascii):
 
     N_gal_tab = asc.read(average_value_ascii)
