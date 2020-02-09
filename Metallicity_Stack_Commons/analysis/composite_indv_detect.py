@@ -32,6 +32,8 @@ def main(fitspath, dataset, composite_file):
     # Read in tables containing line ratios, bins, etc.
     det3_table = asc.read(join(fitspath, 'get_det3_table2.tbl'))
     bin_table = asc.read(join(fitspath, dataset+'_2d_binning_datadet3.tbl'))
+    # Not used for now
+    # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
 
     # Populate composite temperature for individual galaxies
     adopted_temp = np.zeros(len(det3_table))
@@ -39,21 +41,18 @@ def main(fitspath, dataset, composite_file):
         bin_idx = np.where(bin_table['Bin_number'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
 
-    # Update [bin_table] to include two new columns
-    col_temp = Column(adopted_temp, name='Temperature')
-    col_metal = Column(np.zeros(len(det3_table)), name='com_O_log',
-                       dtype=np.float32)
-    det3_table.add_columns([col_temp, col_metal])  # Add at the end of table
-
-    # Not used for now
-    # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
-
-    bin_no = bin_table['Bin_number'].data
     O2 = det3_table['O2'].data  # [OII]3726,3728 fluxes
     O3 = det3_table['O3'].data  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
-    Hb = det3_table['Hb'].data
+    Hb = det3_table['Hb'].data  # H-beta fluxes
 
-    com_O_log, metal_dict = metallicity_calculation(temp_bin, O2/Hb, O3/Hb)
+    com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
+
+    # Update [det3_table] to include two new columns
+    col_temp = Column(adopted_temp, name='Temperature')
+    col_metal = Column(com_O_log, name='com_O_log')
+    det3_table.add_columns([col_temp, col_metal])  # Add at the end (default)
+
+
 
 
 def run_ind_detection(fitspath, dataset, average_value_ascii):
