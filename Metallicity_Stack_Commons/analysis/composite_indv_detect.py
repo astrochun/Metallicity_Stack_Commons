@@ -29,8 +29,10 @@ def main(fitspath, dataset, composite_file):
     # Read in tables containing line ratios, bins, etc.
     det3_table = asc.read(join(fitspath, 'get_det3_table2.tbl'))
     bin_table = asc.read(join(fitspath, dataset+'_2d_binning_datadet3.tbl'))
-    average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
-    stack_table = asc.read(join(fitspath, dataset+'_temperatures_metallicity.tbl'))
+
+    # Not used for now
+    # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
+    # stack_table = asc.read(join(fitspath, dataset+'_temperatures_metallicity.tbl'))
 
     # Note: Need to update one of the above tables to contain temperature? and metallicity
 
