@@ -1,4 +1,3 @@
-import numpy as np
 from astropy.io import ascii as asc
 from astropy.table import vstack
 from astropy.table import Table
@@ -6,7 +5,9 @@ import glob
 
 from ..temp_metallicity_calc import metallicity_calculation
 
+
 def run_ind_detection(fitspath, dataset, average_value_ascii):
+
     N_gal_tab = asc.read(average_value_ascii)
     ID = N_gal_tab['ID']
     for aa in range(len(ID)):
@@ -85,32 +86,3 @@ def individual_galaxy_table_stacking(fitspath, dataset, new_name):
         else:
             vstacking = vstack([vstacking, asc_tab])
     asc.write(vstacking, new_name, format='fixed_width_two_line', overwrite=True)
-
-
-######NOT USING#########
-def ind_metalicity_calculation(T_e, der_3727_HBETA, der_4959_HBETA, der_5007_HBETA, OIII5007, OIII4959, OIII4363, HBETA,
-                               OII3727, dustatt=False):
-    # 12 +log(O+/H) = log(OII/Hb) +5.961 +1.676/t_2 - 0.4logt_2 - 0.034t_2 + log(1+1.35x)
-    # 12 +log(O++/H) = log(OIII/Hb)+6.200+1.251/t_3 - 0.55log(t_3) - 0.014(t_3)
-    # t_2 = 0.7*t_3 +0.17
-
-    if dustatt == False:
-        two_beta = OII3727 / HBETA
-        three_beta = (OIII4959 + OIII5007) / HBETA
-    else:
-        two_beta = der_3727_HBETA
-        three_beta = der_4959_HBETA + der_5007_HBETA
-    t_3 = T_e * 1e-4
-    t_2 = 0.7 * t_3 + 0.17
-    x2 = 1e-4 * 1e3 * t_2 ** (-0.5)
-
-    O_s_ion_log = np.log10(two_beta) + 5.961 + 1.676 / t_2 - 0.4 * np.log10(t_2) - 0.034 * t_2 + np.log10(
-        1 + 1.35 * x2) - 12
-    O_d_ion_log = np.log10(three_beta) + 6.200 + 1.251 / t_3 - 0.55 * np.log10(t_3) - 0.014 * (t_3) - 12
-
-    O_s_ion = 10 ** (O_s_ion_log)
-    O_d_ion = 10 ** (O_d_ion_log)
-    com_O = O_s_ion + O_d_ion
-    com_O_log = np.log10(com_O) + 12
-
-    return O_s_ion, O_d_ion, com_O_log, O_s_ion_log, O_d_ion_log
