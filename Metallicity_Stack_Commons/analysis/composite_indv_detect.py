@@ -24,25 +24,27 @@ def main(fitspath, dataset, composite_file):
 
     # Read in composite table
     composite_table = asc.read(composite_file)
-    ID = composite_table['ID'].data
+
+    bin_id = composite_table['ID'].data
+    bin_temp = composite_table['Temperature'].data
 
     # Read in tables containing line ratios, bins, etc.
     det3_table = asc.read(join(fitspath, 'get_det3_table2.tbl'))
     bin_table = asc.read(join(fitspath, dataset+'_2d_binning_datadet3.tbl'))
+    stack_table = asc.read(join(fitspath, dataset+'_temperatures_metallicity.tbl'))
 
     # Not used for now
     # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
-    # stack_table = asc.read(join(fitspath, dataset+'_temperatures_metallicity.tbl'))
 
     # Note: Need to update one of the above tables to contain temperature? and metallicity
 
     bin_no = bin_table['Bin_number'].data
 
-    source_id = det3_table['Individual_IDs'].data
     O2 = det3_table['O2'].data
     O3 = det3_table['O3'].data
     Hb = det3_table['Hb'].data
-    temp_bin = stackmeas_tab['Temperature'].data
+
+    com_O_log, metal_dict = metallicity_calculation(temp_bin, O2/Hb, O3/Hb)
 
 
 def run_ind_detection(fitspath, dataset, average_value_ascii):
