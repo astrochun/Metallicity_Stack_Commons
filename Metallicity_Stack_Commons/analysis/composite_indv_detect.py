@@ -1,8 +1,9 @@
 from os.path import join
 
+import numpy as np
 from astropy.io import ascii as asc
 from astropy.table import vstack
-from astropy.table import Table
+from astropy.table import Table, Column
 import glob
 
 from ..temp_metallicity_calc import metallicity_calculation
@@ -31,17 +32,20 @@ def main(fitspath, dataset, composite_file):
     # Read in tables containing line ratios, bins, etc.
     det3_table = asc.read(join(fitspath, 'get_det3_table2.tbl'))
     bin_table = asc.read(join(fitspath, dataset+'_2d_binning_datadet3.tbl'))
-    stack_table = asc.read(join(fitspath, dataset+'_temperatures_metallicity.tbl'))
+
+    # Update [bin_table] to include two new columns
+    col_temp = Column(np.zeros(len(det3_table)), name='Temperature',
+                      dtype=np.float32)
+    col_metal = Column(np.zeros(len(det3_table)), name='com_O_log',
+                       dtype=np.float32)
+    det3_table.add_columns([col_temp, col_metal])  # Add at the end of table
 
     # Not used for now
     # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
 
-    # Note: Need to update one of the above tables to contain temperature? and metallicity
-
     bin_no = bin_table['Bin_number'].data
-
-    O2 = det3_table['O2'].data
-    O3 = det3_table['O3'].data
+    O2 = det3_table['O2'].data  # [OII]3726,3728 fluxes
+    O3 = det3_table['O3'].data  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
     Hb = det3_table['Hb'].data
 
     com_O_log, metal_dict = metallicity_calculation(temp_bin, O2/Hb, O3/Hb)
