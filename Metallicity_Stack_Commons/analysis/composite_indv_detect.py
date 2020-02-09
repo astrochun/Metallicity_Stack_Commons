@@ -1,3 +1,5 @@
+from os.path import join
+
 from astropy.io import ascii as asc
 from astropy.table import vstack
 from astropy.table import Table
@@ -24,10 +26,11 @@ def main(fitspath, dataset, composite_file):
     composite_table = asc.read(composite_file)
     ID = composite_table['ID'].data
 
-    det3_table    = asc.read(fitspath + 'get_det3_table2.tbl')
-    bin_table     = asc.read(fitspath + dataset + '_2d_binning_datadet3.tbl')
-    average_table = asc.read(fitspath + dataset + '_Average_R23_O32_Values.tbl')
-    stack_table   = asc.read(fitspath + dataset + '_temperatures_metalicity.tbl')
+    # Read in tables containing line ratios, bins, etc.
+    det3_table = asc.read(join(fitspath, 'get_det3_table2.tbl'))
+    bin_table = asc.read(join(fitspath, dataset+'_2d_binning_datadet3.tbl'))
+    average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
+    stack_table = asc.read(join(fitspath, dataset+'_temperatures_metallicity.tbl'))
 
 
 def run_ind_detection(fitspath, dataset, average_value_ascii):
