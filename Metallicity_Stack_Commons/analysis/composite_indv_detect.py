@@ -9,7 +9,7 @@ import glob
 from ..temp_metallicity_calc import metallicity_calculation
 
 
-def main(fitspath, dataset, composite_file):
+def main(fitspath, dataset, composite_file, outfile):
     """
     Purpose:
       Reads in composite table(s) containing bin information to
@@ -19,8 +19,7 @@ def main(fitspath, dataset, composite_file):
     :param fitspath: str containing folder path
     :param dataset: str containing sub-folder (specific to stacking approach)
     :param composite_file: str containing filename of composite data
-
-    :return: TBD
+    :param outfile: str containing filename of output file
     """
 
     # Read in composite table
@@ -52,7 +51,8 @@ def main(fitspath, dataset, composite_file):
     col_metal = Column(com_O_log, name='com_O_log')
     det3_table.add_columns([col_temp, col_metal])  # Add at the end (default)
 
-
+    # Write Astropy ASCII table containing composite T_e and derived metallicity
+    det3_table.write(outfile, format='ascii.fixed_width_two_line')
 
 
 def run_ind_detection(fitspath, dataset, average_value_ascii):
