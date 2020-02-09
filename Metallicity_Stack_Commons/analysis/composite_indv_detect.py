@@ -32,6 +32,16 @@ def main(fitspath, dataset, composite_file):
     average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
     stack_table = asc.read(join(fitspath, dataset+'_temperatures_metallicity.tbl'))
 
+    # Note: Need to update one of the above tables to contain temperature? and metallicity
+
+    bin_no = bin_table['Bin_number'].data
+
+    source_id = det3_table['Individual_IDs'].data
+    O2 = det3_table['O2'].data
+    O3 = det3_table['O3'].data
+    Hb = det3_table['Hb'].data
+    temp_bin = stackmeas_tab['Temperature'].data
+
 
 def run_ind_detection(fitspath, dataset, average_value_ascii):
 
