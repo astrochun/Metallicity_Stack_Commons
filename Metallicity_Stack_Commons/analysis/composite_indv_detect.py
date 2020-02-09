@@ -2,9 +2,7 @@ from os.path import join
 
 import numpy as np
 from astropy.io import ascii as asc
-from astropy.table import vstack
-from astropy.table import Table, Column
-import glob
+from astropy.table import Column
 
 from ..temp_metallicity_calc import metallicity_calculation
 
