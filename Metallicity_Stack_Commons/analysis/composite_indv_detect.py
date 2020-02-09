@@ -13,10 +13,11 @@ def main(fitspath, dataset, composite_file):
       determine temperature-based metallicity from composite average
       T_e and individual line ratios ([OII]/H-beta, [OIII]/H-beta)
 
-    :param fitspath:
-    :param dataset:
-    :param average_value_ascii:
-    :return:
+    :param fitspath: str containing folder path
+    :param dataset: str containing sub-folder (specific to stacking approach)
+    :param composite_file: str containing filename of composite data
+
+    :return: TBD
     """
 
     # Read in composite table
