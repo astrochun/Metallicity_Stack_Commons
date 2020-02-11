@@ -7,7 +7,7 @@ from astropy.table import Column
 from ..temp_metallicity_calc import metallicity_calculation
 
 
-def main(fitspath, dataset, composite_file, outfile):
+def main(fitspath, dataset, composite_file, outfile, det3=True):
     """
     Purpose:
       Reads in composite table(s) containing bin information to
@@ -18,6 +18,9 @@ def main(fitspath, dataset, composite_file, outfile):
     :param dataset: str containing sub-folder (specific to stacking approach)
     :param composite_file: str containing filename of composite data
     :param outfile: str containing filename of output file
+    :param det3: Bool indies whether individual galaxy files is limited to
+                 those satisfying emission-line det3 requirement
+                 Default: True
     """
 
     # Read in composite table
@@ -42,7 +45,15 @@ def main(fitspath, dataset, composite_file, outfile):
     O3 = det3_table['O3'].data  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
     Hb = det3_table['Hb'].data  # H-beta fluxes
 
-    com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
+    if det3 == True:
+        com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
+    else:
+        det3 = np.where(bin_table['Individual_Detections'])[0]
+        temp_com_O_log, temp_metal_dict = \
+            metallicity_calculation(adopted_temp[det3], O2[det3]/Hb[det3],
+                                    O3[det3]/Hb[det3])
+        com_O_log = np.zeros(len(det3_table))
+        com_O_log[det3] = temp_com_O_log
 
     # Update [det3_table] to include two new columns
     col_temp = Column(adopted_temp, name='Temperature')
