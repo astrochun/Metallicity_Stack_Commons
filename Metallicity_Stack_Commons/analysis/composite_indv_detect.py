@@ -7,7 +7,7 @@ from astropy.table import Column
 from ..temp_metallicity_calc import metallicity_calculation
 
 
-def main(fitspath, dataset, composite_file, outfile, det3=True):
+def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, outfile, det3=True):
     """
     Purpose:
       Reads in composite table(s) containing bin information to
@@ -17,6 +17,14 @@ def main(fitspath, dataset, composite_file, outfile, det3=True):
     :param fitspath: str containing folder path
     :param dataset: str containing sub-folder (specific to stacking approach)
     :param composite_file: str containing filename of composite data
+    :param indv_em_line_file: str containing filename that contains
+                              emission-line information for each galaxy
+        For Zcalbase_gal, file is: 'get_det3_table2.tbl'
+        For Evolution-of-Galaxies, file is: TBD
+    :param indv_bin_file: str containing filename tha contains bin information
+                          for each galaxy
+        For Zcalbase_gal, file is: dataset+'_2d_binning_datadet3.tbl'
+        For Evolution-of-Galaxies, file is: TBD
     :param outfile: str containing filename of output file
     :param det3: Bool indies whether individual galaxy files is limited to
                  those satisfying emission-line det3 requirement
@@ -30,8 +38,8 @@ def main(fitspath, dataset, composite_file, outfile, det3=True):
     bin_temp = composite_table['Temperature'].data
 
     # Read in tables containing line ratios, bins, etc.
-    det3_table = asc.read(join(fitspath, 'get_det3_table2.tbl'))
-    bin_table = asc.read(join(fitspath, dataset+'_2d_binning_datadet3.tbl'))
+    det3_table = asc.read(join(fitspath, indv_em_line_file))
+    bin_table = asc.read(join(fitspath, dataset+indv_bin_file))
     # Not used for now
     # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
 
