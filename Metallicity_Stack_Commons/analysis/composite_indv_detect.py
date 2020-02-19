@@ -5,6 +5,7 @@ from astropy.io import ascii as asc
 from astropy.table import Column
 
 from ..temp_metallicity_calc import metallicity_calculation
+from .. import OIII_r
 
 
 def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, outfile, det3=True):
@@ -49,9 +50,9 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         bin_idx = np.where(bin_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
 
-    O2 = det3_table['O2'].data  # [OII]3726,3728 fluxes
-    O3 = det3_table['O3'].data  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
-    Hb = det3_table['Hb'].data  # H-beta fluxes
+    O2 = det3_table['OII_3727_Flux_Observed'].data            # [OII]3726,3728 fluxes
+    O3 = det3_table['OIII_5007_Flux_Observed'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
+    Hb = det3_table['HBETA_Flux_Observed'].data               # H-beta fluxes
 
     if det3 == True:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
