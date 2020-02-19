@@ -34,7 +34,7 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     # Read in composite table
     composite_table = asc.read(composite_file)
 
-    bin_id = composite_table['ID'].data
+    bin_id = composite_table['bin_ID'].data
     bin_temp = composite_table['Temperature'].data
 
     # Read in tables containing line ratios, bins, etc.
@@ -46,7 +46,7 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     # Populate composite temperature for individual galaxies
     adopted_temp = np.zeros(len(det3_table))
     for comp_bin, comp_temp in zip(bin_id, bin_temp):
-        bin_idx = np.where(bin_table['Bin_number'].data == comp_bin)[0]
+        bin_idx = np.where(bin_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
 
     O2 = det3_table['O2'].data  # [OII]3726,3728 fluxes
