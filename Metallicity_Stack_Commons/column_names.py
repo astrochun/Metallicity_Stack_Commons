@@ -44,3 +44,16 @@ def merge_column_names(*args):
             merge_list += elem
 
     return merge_list
+
+
+def remove_from_list(list0, remove_entries):
+    """
+    Purpose:
+      Remove entries from list
+
+    :param list0: list of column names
+    :param remove_entries: list of column names to remove
+    """
+
+    for entry in remove_entries:
+        list0.remove(entry)
