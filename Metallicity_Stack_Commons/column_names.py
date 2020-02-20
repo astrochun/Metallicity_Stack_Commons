@@ -36,7 +36,7 @@ def merge_column_names(*args):
     :return merge_list:
     """
 
-    merge_list = []
+    merge_list = list()
 
     arg_count = len(args)
     if arg_count > 0:
