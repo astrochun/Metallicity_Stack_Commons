@@ -55,5 +55,9 @@ def remove_from_list(list0, remove_entries):
     :param remove_entries: list of column names to remove
     """
 
+    dup_list0 = list0.copy()
+
     for entry in remove_entries:
-        list0.remove(entry)
+        dup_list0.remove(entry)
+
+    return dup_list0
