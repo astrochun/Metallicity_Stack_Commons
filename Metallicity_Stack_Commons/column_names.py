@@ -1,3 +1,5 @@
+from . import line_name
+
 # These are common/general column names
 
 # Column names for bin information
@@ -12,6 +14,11 @@ bin_mzevolve_names0 = ['logM_min', 'logM_max', 'logM_avg', 'logLHb_min', 'logLHb
 # Column names for bin information in R23 and O32 line ratios
 bin_zcalbase_names0 = ['logR23_min', 'logR23_max', 'logR23_avg', 'logO32_min', 'logO32_max', 'logO32_avg']
 
+# Column names for Gaussian fitting
+gauss_names0 = ['Flux_Gaussian', 'Flux_Observed', 'S/N', 'Sigma', 'Norm']  # This is just the suffix
+gauss_lines_names0 = []
+for line0 in line_name:
+    gauss_lines_names0 += ['{}_{}'.format(line0, suffix) for suffix in gauss_names0]
 
 def merge_column_names(*args):
     """
