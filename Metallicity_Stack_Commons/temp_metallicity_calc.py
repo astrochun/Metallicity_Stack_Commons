@@ -2,6 +2,8 @@ import numpy as np
 
 from . import k_dict
 
+from .column_names import temp_metal_names0, remove_from_list
+
 k_4363 = k_dict['OIII_4363']
 k_5007 = k_dict['OIII_5007']
 
@@ -73,7 +75,8 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA):
     com_O = O_s_ion + O_d_ion
     com_O_log = np.log10(com_O) + 12
 
-    metal_dict = dict(O_s_ion=O_s_ion, O_d_ion=O_d_ion,
-                      O_s_ion_log=O_s_ion_log, O_d_ion_log=O_d_ion_log)
+    key_dict = remove_from_list(temp_metal_names0, ['T_e', '12+log(O/H)'])
+    key_values = [O_s_ion_log, O_d_ion_log, O_s_ion, O_d_ion]  # Order matters here
+    metal_dict = dict(zip(key_dict, key_values))
 
     return com_O_log, metal_dict
