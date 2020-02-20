@@ -20,6 +20,10 @@ gauss_lines_names0 = []
 for line0 in line_name:
     gauss_lines_names0 += ['{}_{}'.format(line0, suffix) for suffix in gauss_names0]
 
+# Temperature and metallicity properties
+temp_metal_names0 = ['T_e', '12+log(O/H)', '12+log(O+/H)', '12+log(O++/H)', 'log(O+/H)', 'log(O++/H)']
+
+
 def merge_column_names(*args):
     """
     Purpose:
