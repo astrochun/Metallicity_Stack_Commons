@@ -23,6 +23,11 @@ for line0 in line_name:
 # Temperature and metallicity properties
 temp_metal_names0 = ['T_e', '12+log(O/H)', 'log(O+/H)', 'log(O++/H)', 'O+/H', 'O++/H']
 
+# Dictionary containing filenames
+filename_dict = {}
+filename_dict['bin_info'] = 'bin_info.tbl'
+filename_dict['bin_fit'] = 'bin_emission_line_fit.tbl'
+
 
 def merge_column_names(*args):
     """
