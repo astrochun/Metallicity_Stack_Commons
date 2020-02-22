@@ -1,4 +1,5 @@
 from os.path import join
+from os.path import exists
 
 import numpy as np
 from astropy.io import ascii as asc
@@ -71,4 +72,9 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     det3_table.add_columns([col_temp, col_metal])  # Add at the end (default)
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
-    det3_table.write(outfile, format='ascii.fixed_width_two_line')
+
+    if exists(outfile):
+        print("File exists! Overwriting : ", outfile)
+    else:
+        print("Writing : ", outfile)
+    det3_table.write(outfile, overwrite=True, format='ascii.fixed_width_two_line')
