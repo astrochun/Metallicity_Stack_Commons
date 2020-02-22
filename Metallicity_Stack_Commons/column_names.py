@@ -1,4 +1,4 @@
-from . import line_name
+from . import line_name, line_type
 
 # These are common/general column names
 
@@ -20,9 +20,12 @@ bin_zcalbase_names0 = ['logR23_min', 'logR23_max', 'logR23_avg', 'logR23_median'
 # This is just the suffix
 gauss_names0 = ['Flux_Gaussian', 'Flux_Observed', 'S/N', 'Center', 'Norm',
                 'Median', 'Sigma']
+balmer_names0 = ['Abs_Norm', 'Abs_Sigma']
 gauss_lines_names0 = []
-for line0 in line_name:
+for line0, type0 in zip(line_name, line_type):
     gauss_lines_names0 += ['{}_{}'.format(line0, suffix) for suffix in gauss_names0]
+    if type0 == 'Balmer':
+        gauss_lines_names0 += ['{}_{}'.format(line0, suffix) for suffix in balmer_names0]
 
 # Temperature and metallicity properties
 temp_metal_names0 = ['T_e', '12+log(O/H)', 'log(O+/H)', 'log(O++/H)', 'O+/H', 'O++/H']
