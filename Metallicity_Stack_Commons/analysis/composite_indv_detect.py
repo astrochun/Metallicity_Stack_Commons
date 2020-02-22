@@ -18,15 +18,16 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     :param fitspath: str containing folder path
     :param dataset: str containing sub-folder (specific to stacking approach)
     :param composite_file: str containing filename of composite data
+             e.g., '[dataset]/bin_derived_properties.tbl' or
+                   '[dataset]/bin_derived_properties.revised.tbl'
     :param indv_em_line_file: str containing filename that contains
                               emission-line information for each galaxy
-        For Zcalbase_gal, file is: 'get_det3_table2.tbl'
-        For Evolution-of-Galaxies, file is: TBD
+             e.g., 'individual_properties.tbl'
     :param indv_bin_file: str containing filename tha contains bin information
                           for each galaxy
-        For Zcalbase_gal, file is: dataset+'_2d_binning_datadet3.tbl'
-        For Evolution-of-Galaxies, file is: TBD
+             e.g., '[dataset]/individual_bin_info.tbl'
     :param outfile: str containing filename of output file
+             e.g., '[dataset]/individual_derived_properties.tbl'
     :param det3: Bool indies whether individual galaxy files is limited to
                  those satisfying emission-line det3 requirement
                  Default: True
