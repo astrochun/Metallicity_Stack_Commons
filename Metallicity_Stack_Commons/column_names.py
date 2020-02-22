@@ -31,6 +31,7 @@ filename_dict['bin_fit'] = 'bin_emission_line_fit.tbl'
 filename_dict['bin_fit_rev'] = filename_dict['bin_fit'].replace('.tbl', '.revised.tbl')
 filename_dict['bin_derived_prop'] = 'bin_derived_properties.tbl'
 filename_dict['bin_derived_prop_rev'] = filename_dict['bin_derived_prop'].replace('.tbl', '.revised.tbl')
+filename_dict['indv_derived_prop'] = 'indv_derived_properties.tbl'
 
 
 def merge_column_names(*args):
