@@ -38,6 +38,7 @@ filename_dict['bin_derived_prop_rev'] = filename_dict['bin_derived_prop'].replac
 
 # Individual galaxy/spectra-related files
 filename_dict['indv_prop'] = 'individual_properties.tbl'
+filename_dict['indv_bin_info'] = 'individual_bin_info.tbl'
 filename_dict['indv_derived_prop'] = 'individual_derived_properties.tbl'
 
 
