@@ -36,7 +36,7 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     composite_table = asc.read(composite_file)
 
     bin_id = composite_table['bin_ID'].data
-    bin_temp = composite_table['Temperature'].data
+    bin_temp = composite_table['T_e'].data
 
     # Read in tables containing line ratios, bins, etc.
     det3_table = asc.read(join(fitspath, indv_em_line_file))
@@ -65,8 +65,8 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         com_O_log[det3] = temp_com_O_log
 
     # Update [det3_table] to include two new columns
-    col_temp = Column(adopted_temp, name='Temperature')
-    col_metal = Column(com_O_log, name='com_O_log')
+    col_temp = Column(adopted_temp, name='T_e')
+    col_metal = Column(com_O_log, name='12+log(O/H)')
     det3_table.add_columns([col_temp, col_metal])  # Add at the end (default)
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
