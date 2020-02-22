@@ -9,10 +9,12 @@ bin_names0 = ['bin_ID', 'N_stack', 'Detection']
 indv_names0 = ['ID', 'R23', 'O32']
 
 # Column names for bin information in stellar mass and H-beta luminosity
-bin_mzevolve_names0 = ['logM_min', 'logM_max', 'logM_avg', 'logLHb_min', 'logLHb_max', 'logLHb_avg']
+bin_mzevolve_names0 = ['logM_min', 'logM_max', 'logM_avg', 'logM_median',
+                       'logLHb_min', 'logLHb_max', 'logLHb_avg', 'logLHb_median']
 
 # Column names for bin information in R23 and O32 line ratios
-bin_zcalbase_names0 = ['logR23_min', 'logR23_max', 'logR23_avg', 'logO32_min', 'logO32_max', 'logO32_avg']
+bin_zcalbase_names0 = ['logR23_min', 'logR23_max', 'logR23_avg', 'logR23_median',
+                       'logO32_min', 'logO32_max', 'logO32_avg', 'logO32_median']
 
 # Column names for Gaussian fitting
 gauss_names0 = ['Flux_Gaussian', 'Flux_Observed', 'S/N', 'Sigma', 'Norm']  # This is just the suffix
