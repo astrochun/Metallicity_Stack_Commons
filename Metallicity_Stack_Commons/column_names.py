@@ -27,13 +27,18 @@ temp_metal_names0 = ['T_e', '12+log(O/H)', 'log(O+/H)', 'log(O++/H)', 'O+/H', 'O
 
 # Dictionary containing filenames
 filename_dict = dict()
+
+# Bin-related files
 filename_dict['bin_info'] = 'bin_info.tbl'
 filename_dict['bin_valid'] = 'bin_validation.tbl'
 filename_dict['bin_fit'] = 'bin_emission_line_fit.tbl'
 filename_dict['bin_fit_rev'] = filename_dict['bin_fit'].replace('.tbl', '.revised.tbl')
 filename_dict['bin_derived_prop'] = 'bin_derived_properties.tbl'
 filename_dict['bin_derived_prop_rev'] = filename_dict['bin_derived_prop'].replace('.tbl', '.revised.tbl')
-filename_dict['indv_derived_prop'] = 'indv_derived_properties.tbl'
+
+# Individual galaxy/spectra-related files
+filename_dict['indv_prop'] = 'individual_properties.tbl'
+filename_dict['indv_derived_prop'] = 'individual_derived_properties.tbl'
 
 
 def merge_column_names(*args):
