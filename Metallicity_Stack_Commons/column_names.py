@@ -17,7 +17,9 @@ bin_zcalbase_names0 = ['logR23_min', 'logR23_max', 'logR23_avg', 'logR23_median'
                        'logO32_min', 'logO32_max', 'logO32_avg', 'logO32_median']
 
 # Column names for Gaussian fitting
-gauss_names0 = ['Flux_Gaussian', 'Flux_Observed', 'S/N', 'Sigma', 'Norm']  # This is just the suffix
+# This is just the suffix
+gauss_names0 = ['Flux_Gaussian', 'Flux_Observed', 'S/N', 'Center', 'Norm',
+                'Median', 'Sigma']
 gauss_lines_names0 = []
 for line0 in line_name:
     gauss_lines_names0 += ['{}_{}'.format(line0, suffix) for suffix in gauss_names0]
