@@ -116,3 +116,14 @@ def indv_R23_O32():
     """
 
     return remove_from_list(indv_names0, ['logM', 'logLHb'])
+
+
+def indv_M_LHb():
+    """
+    Purpose:
+      Use remove_from_list() to provide simplified list that contains ID, logM and logLHb
+
+    :return: list containing just ID, logM, logLHb
+    """
+
+    return remove_from_list(indv_names0, ['logR23', 'logO32'])
