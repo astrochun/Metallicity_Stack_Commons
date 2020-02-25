@@ -105,3 +105,14 @@ def remove_from_list(list0, remove_entries):
         dup_list0.remove(entry)
 
     return dup_list0
+
+
+def indv_R23_O32():
+    """
+    Purpose:
+      Use remove_from_list() to provide simplified list that contains ID, logR23 and logO32
+
+    :return: list containing just ID, logR23, logO32
+    """
+
+    return remove_from_list(indv_names0, ['logM', 'logLHb'])
