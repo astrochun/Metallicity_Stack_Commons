@@ -6,7 +6,7 @@ from . import line_name, line_type
 bin_names0 = ['bin_ID', 'N_stack', 'Detection']
 
 # Column names for individual galaxies/spectra
-indv_names0 = ['ID', 'logR23', 'logO32']
+indv_names0 = ['ID', 'logR23', 'logO32', 'logM', 'logLHb']
 
 # Column names for bin information in stellar mass and H-beta luminosity
 bin_mzevolve_names0 = ['logM_min', 'logM_max', 'logM_avg', 'logM_median',
