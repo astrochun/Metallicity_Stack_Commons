@@ -84,3 +84,21 @@ def remove_from_list(list0, remove_entries):
         dup_list0.remove(entry)
 
     return dup_list0
+
+
+def line_fit_suffix_add(line_name0, line_type0):
+    """
+    Purpose:
+      Simple list comprehension combining emission line fit suffixes with
+      the emission line.  This works for individual lines
+
+    :param line_name0: str containing the line name
+    :param line_type0: str containing the emisison-line type (e.g., 'Balmer')
+    :return: gauss_lines_names: list with str formatted as [LINE]_[SUFFIX]
+    """
+
+    gauss_lines_names = ['{}_{}'.format(line_name0, suffix) for suffix in gauss_names0]
+    if line_type0 == 'Balmer':
+        gauss_lines_names += ['{}_{}'.format(line_name0, suffix) for suffix in balmer_names0]
+
+    return gauss_lines_names
