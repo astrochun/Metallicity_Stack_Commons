@@ -1,5 +1,25 @@
 from . import line_name, line_type
 
+
+# Need to define here
+def line_fit_suffix_add(line_name0, line_type0):
+    """
+    Purpose:
+      Simple list comprehension combining emission line fit suffixes with
+      the emission line.  This works for individual lines
+
+    :param line_name0: str containing the line name
+    :param line_type0: str containing the emisison-line type (e.g., 'Balmer')
+    :return: gauss_lines_names: list with str formatted as [LINE]_[SUFFIX]
+    """
+
+    gauss_lines_names = ['{}_{}'.format(line_name0, suffix) for suffix in gauss_names0]
+    if line_type0 == 'Balmer':
+        gauss_lines_names += ['{}_{}'.format(line_name0, suffix) for suffix in balmer_names0]
+
+    return gauss_lines_names
+
+
 # These are common/general column names
 
 # Column names for bin information
@@ -21,11 +41,12 @@ bin_zcalbase_names0 = ['logR23_min', 'logR23_max', 'logR23_avg', 'logR23_median'
 gauss_names0 = ['Flux_Gaussian', 'Flux_Observed', 'S/N', 'Center', 'Norm',
                 'Median', 'Sigma']
 balmer_names0 = ['Abs_Norm', 'Abs_Sigma']
+
+# Emission-line fit column names with [LINE] prefix
 gauss_lines_names0 = []
 for line0, type0 in zip(line_name, line_type):
-    gauss_lines_names0 += ['{}_{}'.format(line0, suffix) for suffix in gauss_names0]
-    if type0 == 'Balmer':
-        gauss_lines_names0 += ['{}_{}'.format(line0, suffix) for suffix in balmer_names0]
+    gauss_lines_names0 += line_fit_suffix_add(line0, type0)
+
 
 # Temperature and metallicity properties
 temp_metal_names0 = ['T_e', '12+log(O/H)', 'log(O+/H)', 'log(O++/H)', 'O+/H', 'O++/H']
@@ -84,21 +105,3 @@ def remove_from_list(list0, remove_entries):
         dup_list0.remove(entry)
 
     return dup_list0
-
-
-def line_fit_suffix_add(line_name0, line_type0):
-    """
-    Purpose:
-      Simple list comprehension combining emission line fit suffixes with
-      the emission line.  This works for individual lines
-
-    :param line_name0: str containing the line name
-    :param line_type0: str containing the emisison-line type (e.g., 'Balmer')
-    :return: gauss_lines_names: list with str formatted as [LINE]_[SUFFIX]
-    """
-
-    gauss_lines_names = ['{}_{}'.format(line_name0, suffix) for suffix in gauss_names0]
-    if line_type0 == 'Balmer':
-        gauss_lines_names += ['{}_{}'.format(line_name0, suffix) for suffix in balmer_names0]
-
-    return gauss_lines_names
