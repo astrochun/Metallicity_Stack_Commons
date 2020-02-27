@@ -26,7 +26,7 @@ def line_fit_suffix_add(line_name0, line_type0):
 bin_names0 = ['bin_ID', 'N_stack', 'Detection']
 
 # Column names for individual galaxies/spectra
-indv_names0 = ['ID', 'logR23', 'logO32', 'logM', 'logLHb']
+indv_names0 = ['ID', 'logR23', 'logO32', 'logM', 'logLHb', 'two_beta', 'three_beta']
 
 # Column names for bin information in stellar mass and H-beta luminosity
 bin_mzevolve_names0 = ['logM_min', 'logM_max', 'logM_avg', 'logM_median',
