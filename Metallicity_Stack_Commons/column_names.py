@@ -36,6 +36,10 @@ bin_mzevolve_names0 = ['logM_min', 'logM_max', 'logM_avg', 'logM_median',
 bin_zcalbase_names0 = ['logR23_min', 'logR23_max', 'logR23_avg', 'logR23_median',
                        'logO32_min', 'logO32_max', 'logO32_avg', 'logO32_median']
 
+# Column names for composite line ratios
+bin_ratios0 = ['logR23_composite', 'logO32_composite',
+               'two_beta_composite', 'three_beta_composite']
+
 # Column names for Gaussian fitting
 # This is just the suffix
 gauss_names0 = ['Flux_Gaussian', 'Flux_Observed', 'S/N', 'Center', 'Norm',
