@@ -41,20 +41,20 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     bin_temp = composite_table['T_e'].data
 
     # Read in tables containing line ratios, bins, etc.
-    det3_table = asc.read(join(fitspath, indv_em_line_file))
+    indv_em_line_table = asc.read(join(fitspath, indv_em_line_file))
     bin_table = asc.read(join(fitspath, dataset+indv_bin_file))
     # Not used for now
     # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
 
     # Populate composite temperature for individual galaxies
-    adopted_temp = np.zeros(len(det3_table))
+    adopted_temp = np.zeros(len(indv_em_line_table))
     for comp_bin, comp_temp in zip(bin_id, bin_temp):
         bin_idx = np.where(bin_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
 
-    O2 = det3_table['OII_3727_Flux_Observed'].data            # [OII]3726,3728 fluxes
-    O3 = det3_table['OIII_5007_Flux_Observed'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
-    Hb = det3_table['HBETA_Flux_Observed'].data               # H-beta fluxes
+    O2 = indv_em_line_table['OII_3727_Flux_Observed'].data            # [OII]3726,3728 fluxes
+    O3 = indv_em_line_table['OIII_5007_Flux_Observed'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
+    Hb = indv_em_line_table['HBETA_Flux_Observed'].data               # H-beta fluxes
 
     if det3:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
@@ -63,13 +63,13 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         temp_com_O_log, temp_metal_dict = \
             metallicity_calculation(adopted_temp[det3], O2[det3]/Hb[det3],
                                     O3[det3]/Hb[det3])
-        com_O_log = np.zeros(len(det3_table))
+        com_O_log = np.zeros(len(indv_em_line_table))
         com_O_log[det3] = temp_com_O_log
 
     # Update [det3_table] to include two new columns
     col_temp = Column(adopted_temp, name='T_e')
     col_metal = Column(com_O_log, name='12+log(O/H)')
-    det3_table.add_columns([col_temp, col_metal])  # Add at the end (default)
+    indv_em_line_table.add_columns([col_temp, col_metal])  # Add at the end (default)
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
 
@@ -77,4 +77,4 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         print("File exists! Overwriting : ", outfile)
     else:
         print("Writing : ", outfile)
-    det3_table.write(outfile, overwrite=True, format='ascii.fixed_width_two_line')
+    indv_em_line_table.write(outfile, overwrite=True, format='ascii.fixed_width_two_line')
