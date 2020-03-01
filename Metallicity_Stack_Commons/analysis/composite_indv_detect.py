@@ -66,7 +66,7 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         com_O_log = np.zeros(len(indv_em_line_table))
         com_O_log[det3] = temp_com_O_log
 
-    # Update [det3_table] to include two new columns
+    # Update [indv_em_line_table] to include two new columns
     col_temp = Column(adopted_temp, name='T_e')
     col_metal = Column(com_O_log, name='12+log(O/H)')
     indv_em_line_table.add_columns([col_temp, col_metal])  # Add at the end (default)
