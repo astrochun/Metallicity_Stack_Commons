@@ -29,7 +29,7 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
              e.g., '[dataset]/individual_bin_info.tbl'
     :param outfile: str containing filename of output file
              e.g., '[dataset]/individual_derived_properties.tbl'
-    :param det3: Bool indies whether individual galaxy files is limited to
+    :param det3: Bool indicates whether individual galaxy files is limited to
                  those satisfying emission-line det3 requirement
                  Default: True
     """
