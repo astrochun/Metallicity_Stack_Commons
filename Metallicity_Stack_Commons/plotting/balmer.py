@@ -126,8 +126,8 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
         txt0 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_fit[1], Hb_fit_neg[1]) + '\n'
         txt0 += 'F_G: %.3f F_S: %.3f' % (Bflux_g, Bflux_s)
 
-        ax_arr[row][2].plot(wave, y_norm, 'k', linewidth=0.3, label= 'Emission')
-        ax_arr[row][2].plot(wave, Bgauss0, 'm', linewidth= 0.25, label= 'Beta Fit')
+        ax_arr[row][2].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
+        ax_arr[row][2].plot(wave, Bgauss0, 'm', linewidth=0.25, label='Beta Fit')
         ax_arr[row][2].set_xlim(wave_beta-50, wave_beta+50)
 
         ax_arr[row][2].annotate(txt0, [0.95, 0.95], xycoords='axes fraction',
@@ -172,6 +172,7 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
             ax_arr[row][1].set_xticklabels([])
             ax_arr[row][2].set_xticklabels([])
 
-        if ii % nrows == nrows-1: fig.savefig(pdfpages, format='pdf')
+        if ii % nrows == nrows-1:
+            fig.savefig(pdfpages, format='pdf')
 
     pdfpages.close()
