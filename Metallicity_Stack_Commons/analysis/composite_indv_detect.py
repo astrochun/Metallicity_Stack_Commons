@@ -42,14 +42,14 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
 
     # Read in tables containing line ratios, bins, etc.
     indv_em_line_table = asc.read(join(fitspath, indv_em_line_file))
-    bin_table = asc.read(join(fitspath, dataset+indv_bin_file))
+    indv_bin_info_table = asc.read(join(fitspath, dataset+indv_bin_file))
     # Not used for now
     # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
 
     # Populate composite temperature for individual galaxies
     adopted_temp = np.zeros(len(indv_em_line_table))
     for comp_bin, comp_temp in zip(bin_id, bin_temp):
-        bin_idx = np.where(bin_table['bin_ID'].data == comp_bin)[0]
+        bin_idx = np.where(indv_bin_info_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
 
     O2 = indv_em_line_table['OII_3727_Flux_Observed'].data            # [OII]3726,3728 fluxes
@@ -59,7 +59,7 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     if det3:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
     else:
-        det3 = np.where(bin_table['Individual_Detections'])[0]
+        det3 = np.where(indv_bin_info_table['Individual_Detections'])[0]
         temp_com_O_log, temp_metal_dict = \
             metallicity_calculation(adopted_temp[det3], O2[det3]/Hb[det3],
                                     O3[det3]/Hb[det3])
