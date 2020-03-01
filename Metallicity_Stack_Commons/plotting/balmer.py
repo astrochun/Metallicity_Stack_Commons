@@ -18,8 +18,9 @@ from ..fitting import gauss, double_gauss
 
 from .. import scalefact, wavelength_dict
 
-nrows = 3
-ncols = 3
+n_rows = 3
+n_cols = 3
+
 
 def extract_fit(astropy_table, line_name, balmer=False):
     """
@@ -35,7 +36,7 @@ def extract_fit(astropy_table, line_name, balmer=False):
     """
 
     try:
-        xbar = astropy_table[line_name + '_Center'].data
+        astropy_table[line_name + '_Center'].data
     except KeyError:
         print("Line not present in table")
         print("Exiting!!!")
@@ -92,8 +93,8 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
     for ii in range(len(ID)):
    
-        if ii % nrows == 0:
-            fig, ax_arr = plt.subplots(nrows=nrows, ncols=ncols, squeeze=False)
+        if ii % n_rows == 0:
+            fig, ax_arr = plt.subplots(nrows=n_rows, ncols=n_cols, squeeze=False)
 
         y0 = stack2D[ii]
         y_norm = y0/scalefact
@@ -119,7 +120,7 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
         fit_result_in = [wave, y_norm, wave_delta, Hd_fit, Hd_fit_neg]
         Dgauss0, Dresid, Dx_sigsnip_2, Dflux_g, Dflux_s = fitting_result(fit_result_in)
 
-        row = ii % nrows
+        row = ii % n_rows
 
         txt0 = r'ID: %i' % (ID[ii]) + '\n'
         txt0 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_fit[1], Hb_fit_neg[1]) + '\n'
@@ -166,12 +167,12 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
         ax_arr[row][1].set_yticklabels([])
         ax_arr[row][2].set_yticklabels([])
 
-        if row != nrows-1 and ii != stack2D.shape[0]-1:
+        if row != n_rows-1 and ii != stack2D.shape[0]-1:
             ax_arr[row][0].set_xticklabels([])
             ax_arr[row][1].set_xticklabels([])
             ax_arr[row][2].set_xticklabels([])
 
-        if ii % nrows == nrows-1:
+        if ii % n_rows == n_rows-1:
             fig.savefig(pdfpages, format='pdf')
 
     pdfpages.close()
