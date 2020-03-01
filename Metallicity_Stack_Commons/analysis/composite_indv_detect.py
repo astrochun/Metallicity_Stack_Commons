@@ -56,7 +56,7 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     O3 = det3_table['OIII_5007_Flux_Observed'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
     Hb = det3_table['HBETA_Flux_Observed'].data               # H-beta fluxes
 
-    if det3 == True:
+    if det3:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
     else:
         det3 = np.where(bin_table['Individual_Detections'])[0]
