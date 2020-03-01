@@ -83,7 +83,6 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
     stack2D, header = fits.getdata(stack_name, header=True)
     wave = header['CRVAL1'] + header['CDELT1']*np.arange(header['NAXIS1'])
-    dispersion = header['CDELT1']
 
     astropy_table = asc.read(astropy_table_file)
 
