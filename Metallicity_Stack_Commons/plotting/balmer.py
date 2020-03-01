@@ -66,7 +66,7 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
     gauss0      = double_gauss(wave, *balmer_fit)
     neg0        = gauss(wave, *balmer_fit_neg)
     gauss0_diff = gauss0 - neg0
-    y_norm_diff = y_norm[x_sigsnip] - Bneg0[x_sigsnip]
+    y_norm_diff = y_norm[x_sigsnip] - neg0[x_sigsnip]
 
     # Residuals
     x_sigsnip_2 = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 3.0)[0]
