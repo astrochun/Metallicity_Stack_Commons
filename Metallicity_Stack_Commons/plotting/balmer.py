@@ -82,6 +82,7 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
     return gauss0, resid, x_sigsnip_2, flux_g, flux_s
 
 
+# noinspection PyUnboundLocalVariable
 def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
     stack2D, header = fits.getdata(stack_name, header=True)
