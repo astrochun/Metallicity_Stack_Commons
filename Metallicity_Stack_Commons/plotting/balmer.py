@@ -63,6 +63,8 @@ def extract_fit(astropy_table, line_name, balmer=False):
 
 
 def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
+    dx = wave[2] - wave[1]
+
     x_sigsnip   = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 2.5)[0]
     gauss0      = double_gauss(wave, *balmer_fit)
     neg0        = gauss(wave, *balmer_fit_neg)
