@@ -101,7 +101,6 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
         y0 = stack2D[ii]
         y_norm = y0/scalefact
-        dx = wave[2]-wave[1]
 
         Hb_fit, Hb_fit_neg = extract_fit(astropy_table[ii], 'HBETA', balmer=True)
         Hg_fit, Hg_fit_neg = extract_fit(astropy_table[ii], 'HGAMMA', balmer=True)
