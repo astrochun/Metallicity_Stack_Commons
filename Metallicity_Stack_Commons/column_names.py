@@ -46,7 +46,7 @@ bin_ratios0 = ['logR23_composite', 'logO32_composite',
 # Column names for Gaussian fitting
 # This is just the suffix
 gauss_names0 = ['Flux_Gaussian', 'Flux_Observed', 'S/N', 'Center', 'Norm',
-                'Median', 'Sigma']
+                'Median', 'Sigma', 'RMS']
 balmer_names0 = ['Abs_Norm', 'Abs_Sigma']
 
 # Emission-line fit column names with [LINE] prefix
