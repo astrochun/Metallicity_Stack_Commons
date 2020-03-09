@@ -1,6 +1,6 @@
 import numpy as np
 
-from . import line_name_short
+from . import line_name_short, OIII_r
 from .temp_metallicity_calc import R_calculation
 
 
@@ -22,9 +22,9 @@ def error_prop_flux_ratios(flux_dict):
 
     # Define flux ratios
     two_beta = OII/Hb
-    three_beta = OIII/Hb
+    three_beta = OIII_r * OIII/Hb
     logR23 = np.log10(two_beta + three_beta)
-    logO32 = np.log10(OIII/OII)
+    logO32 = np.log10(OIII_r * OIII/OII)
 
     # Define dictionary of flux ratios
     flux_ratios_dict = dict()
