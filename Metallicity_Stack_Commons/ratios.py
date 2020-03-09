@@ -33,6 +33,6 @@ def error_prop_flux_ratios(flux_dict):
     flux_ratios_dict['logR23'] = logR23
     flux_ratios_dict['logO32'] = logO32
 
-    R_calculation(OIII4363, OIII)
+    flux_ratios_dict['R'] = R_calculation(OIII4363, OIII)
 
     return flux_ratios_dict
