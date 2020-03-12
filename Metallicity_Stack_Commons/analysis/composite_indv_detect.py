@@ -42,7 +42,9 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
 
     # Read in tables containing line ratios, bins, etc.
     indv_em_line_table = asc.read(join(fitspath, indv_em_line_file))
-    indv_bin_info_table = asc.read(join(fitspath, dataset+indv_bin_file))
+    # indv_bin_info_table = asc.read(join(fitspath, dataset+indv_bin_file))
+    print(indv_bin_file)
+    indv_bin_info_table = asc.read(join(fitspath, indv_bin_file))
     # Not used for now
     # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
 
@@ -52,9 +54,10 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         bin_idx = np.where(indv_bin_info_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
 
-    O2 = indv_em_line_table['OII_3727_Flux_Observed'].data            # [OII]3726,3728 fluxes
-    O3 = indv_em_line_table['OIII_5007_Flux_Observed'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
-    Hb = indv_em_line_table['HBETA_Flux_Observed'].data               # H-beta fluxes
+    O2 = indv_em_line_table['OII_3727_Flux_Gaussian'].data            # [OII]3726,3728 fluxes
+    O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
+    Hb = indv_em_line_table['HBETA_Flux_Gaussian'].data               # H-beta fluxes
+
 
     if det3:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
