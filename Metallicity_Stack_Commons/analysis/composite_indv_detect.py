@@ -62,7 +62,7 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     if det3:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
     else:
-        det3 = np.where(indv_bin_info_table['Individual_Detections'])[0]
+        det3 = np.where((indv_bin_info_table['Detection'] == 1.0) | (indv_bin_info_table['Detection'] == 0.5))[0]
         temp_com_O_log, temp_metal_dict = \
             metallicity_calculation(adopted_temp[det3], O2[det3]/Hb[det3],
                                     O3[det3]/Hb[det3])
