@@ -3,7 +3,7 @@ from os.path import exists
 
 import numpy as np
 from astropy.io import ascii as asc
-from astropy.table import Column
+from astropy.table import Table
 
 from ..temp_metallicity_calc import metallicity_calculation
 from .. import OIII_r
@@ -60,7 +60,6 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
     Hb = indv_em_line_table['HBETA_Flux_Gaussian'].data               # H-beta fluxes
 
-
     if det3:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
     else:
@@ -72,10 +71,9 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         com_O_log[det3] = temp_com_O_log
 
     # Update [indv_em_line_table] to include three new columns
-    col_bin_id = Column(bin_id_indv, name='bin_ID')
-    col_temp = Column(adopted_temp, name='T_e')
-    col_metal = Column(com_O_log, name='12+log(O/H)')
-    indv_em_line_table.add_columns([col_temp, col_metal, col_bin_id])  # Add at the end (default)
+    arr0 = [indv_em_line_table['ID'], bin_id_indv, adopted_temp, com_O_log]
+    names0 = ['ID', 'bin_ID', 'T_e', '12+log(O/H)']
+    indv_derived_prop_table = Table(arr0, names=names0)
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
 
@@ -83,4 +81,4 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         print("File exists! Overwriting : ", outfile)
     else:
         print("Writing : ", outfile)
-    indv_em_line_table.write(outfile, overwrite=True, format='ascii.fixed_width_two_line')
+    indv_derived_prop_table.write(outfile, overwrite=True, format='ascii.fixed_width_two_line')
