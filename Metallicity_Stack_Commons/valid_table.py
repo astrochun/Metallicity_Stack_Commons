@@ -6,7 +6,7 @@ from astropy.table import Table
 
 from Metallicity_Stack_Commons.column_names import filename_dict, bin_names0
 
-def make_validation_table(fitspath): #bin_type_str
+def make_validation_table(fitspath):
     '''
     Purpose: 
         This function creates a validation table for a given binning set. The validation table
@@ -36,6 +36,7 @@ def make_validation_table(fitspath): #bin_type_str
                                         OIII4363_S/N
     '''
 
+    bin_table = asc.read(fitspath + filename_dict['bin_info'])
     em_table = asc.read(fitspath + filename_dict['bin_fit'])  #this is combine_flux_ascii
 
     bin_ID = em_table['bin_ID'].data
@@ -44,7 +45,7 @@ def make_validation_table(fitspath): #bin_type_str
     O_4363_sigma = em_table['OIII_4363_Sigma'].data
     O_5007_SN = em_table['OIII_5007_S/N'].data
     
-    N_stack = em_table['N_stack'].data
+    N_stack = bin_table['N_stack'].data
     Hgamma_SN    = em_table['HGAMMA_S/N'].data
     Hgamma = em_table['HGAMMA_Flux_Observed'].data
 
@@ -75,31 +76,4 @@ def make_validation_table(fitspath): #bin_type_str
     tab1 = Table([bin_ID, N_stack, detection, OIII4363, O_4363_SN], names=n)
     asc.write(tab1, ver_tab, format='fixed_width_two_line')
 
-def quality_assurance(bin_type_str, QA_flag):
-    '''
-    Purpose:
-        This function allows for manual flagging of sources for quality assurance of OIII4363 detections 
-        for the mass luminosity analysis. Based on the bin_type_str keyword, the user can override the 
-        detection flag by setting a specificbin index equal to the desired flag (1.0, 0.5, or 0.0).
-        
-    Usage:
-        valid_table.quality_assurance(bin_type_str, QA_flag)
-        
-    Params:
-        bin_type_str --> a string describing the binning type. (e.g. 'massLHbetabin' or 'massbin')
-        QA_flag --> a numpy zeros array the size of the number of bins. This is used to flag sources by
-            changing the value at a specific index to the desired flag.
-        
-    Returns: 
-        QA_flag --> the updated flag array.
-        
-    Outputs:
-        None
-    '''
-    if bin_type_str == 'mass_LHbeta_bin':
-        QA_flag[10] = 1.0    #has large line width on OIII4363
-        QA_flag[11] = 1.0    #has large line width on OIII4363
-    elif bin_type_str == 'massbin':   
-        QA_flag[5] = 1.0     #has large line width on OIII4363
-        
-    return QA_flag
+
