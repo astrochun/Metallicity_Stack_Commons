@@ -44,9 +44,9 @@ def main(fitspath, dataset, indv_em_line_file, indv_bin_file, outfile,
 
     t_comp = filename_dict['bin_derived_prop'] if not revised else \
         filename_dict['bin_derived_prop']
-    composite_file = os.path.join(fitspath, dataset, t_comp)
+    composite_file = join(fitspath, dataset, t_comp)
     if not exists(composite_file):
-        print("ERROR: File not found"+composite_file)
+        print("ERROR: File not found! "+composite_file)
         return
 
     # Read in composite table
@@ -55,10 +55,14 @@ def main(fitspath, dataset, indv_em_line_file, indv_bin_file, outfile,
     bin_id = composite_table['bin_ID'].data
     bin_temp = composite_table['T_e'].data
 
+    indv_em_line_file = join(fitspath, dataset, filename_dict['indv_prop'])
+    if not exists(indv_em_line_file):
+        print("ERROR: File not found! "+indv_em_line_file)
+        return
+
     # Read in tables containing line ratios, bins, etc.
-    indv_em_line_table = asc.read(join(fitspath, indv_em_line_file))
-    # indv_bin_info_table = asc.read(join(fitspath, dataset+indv_bin_file))
-    print(indv_bin_file)
+    indv_em_line_table = asc.read(indv_em_line_file)
+
     indv_bin_info_table = asc.read(join(fitspath, indv_bin_file))
     # Not used for now
     # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
