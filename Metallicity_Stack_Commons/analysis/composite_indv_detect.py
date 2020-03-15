@@ -57,6 +57,13 @@ def main(fitspath, dataset, revised=False, det3=True):
     bin_id = composite_table['bin_ID'].data
     bin_temp = composite_table['T_e'].data
 
+    # Read in validation table
+    valid_file = join(fitspath, dataset, filename_dict['bin_valid'])
+    if not exists(valid_file):
+        print("ERROR: File not found! "+valid_file)
+        return
+    valid_table = asc.read(valid_file)
+
     # Define [indv_em_line_file]
     indv_em_line_file = join(fitspath, dataset, filename_dict['indv_prop'])
     if not exists(indv_em_line_file):
@@ -78,10 +85,12 @@ def main(fitspath, dataset, revised=False, det3=True):
     # Populate composite temperature for individual galaxies
     adopted_temp = np.zeros(len(indv_em_line_table))
     bin_id_indv = np.zeros(len(indv_em_line_table))
-    for comp_bin, comp_temp in zip(bin_id, bin_temp):
+    detect_indv = np.zeros(len(indv_em_line_table))
+    for comp_bin, comp_temp, detect in zip(bin_id, bin_temp, valid_table['Detection']):
         bin_idx = np.where(indv_bin_info_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
         bin_id_indv[bin_idx]  = comp_bin
+        detect_indv[bin_idx]  = detect
 
     O2 = indv_em_line_table['OII_3727_Flux_Gaussian'].data            # [OII]3726,3728 fluxes
     O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
@@ -90,7 +99,7 @@ def main(fitspath, dataset, revised=False, det3=True):
     if not det3:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
     else:
-        det3 = np.where((indv_bin_info_table['Detection'] == 1.0) | (indv_bin_info_table['Detection'] == 0.5))[0]
+        det3 = np.where((detect_indv == 1.0) | (detect_indv == 0.5))[0]
         temp_com_O_log, temp_metal_dict = \
             metallicity_calculation(adopted_temp[det3], O2[det3]/Hb[det3],
                                     O3[det3]/Hb[det3])
