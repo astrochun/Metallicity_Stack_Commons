@@ -50,9 +50,11 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
 
     # Populate composite temperature for individual galaxies
     adopted_temp = np.zeros(len(indv_em_line_table))
+    bin_id_indv = np.zeros(len(indv_em_line_table))
     for comp_bin, comp_temp in zip(bin_id, bin_temp):
         bin_idx = np.where(indv_bin_info_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
+        bin_id_indv[bin_idx]  = comp_bin
 
     O2 = indv_em_line_table['OII_3727_Flux_Gaussian'].data            # [OII]3726,3728 fluxes
     O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
@@ -69,10 +71,11 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         com_O_log = np.zeros(len(indv_em_line_table))
         com_O_log[det3] = temp_com_O_log
 
-    # Update [indv_em_line_table] to include two new columns
+    # Update [indv_em_line_table] to include three new columns
+    col_bin_id = Column(bin_id_indv, name='bin_ID')
     col_temp = Column(adopted_temp, name='T_e')
     col_metal = Column(com_O_log, name='12+log(O/H)')
-    indv_em_line_table.add_columns([col_temp, col_metal])  # Add at the end (default)
+    indv_em_line_table.add_columns([col_temp, col_metal, col_bin_id])  # Add at the end (default)
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
 
