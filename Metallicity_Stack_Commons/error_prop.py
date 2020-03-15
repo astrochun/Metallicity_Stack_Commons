@@ -1,7 +1,12 @@
+from os.path import join
+
 from chun_codes import random_pdf, compute_onesig_pdf
 from . import line_name
 from astropy.io import ascii as asc
 import numpy as np
+
+from .column_names import filename_dict
+
 
 """
 def construct_pdf(values, RMS, seed_i=1, n_iter=1000):
@@ -23,9 +28,14 @@ def construct_pdf(values, RMS, seed_i=1, n_iter=1000):
 """
 
 
-def error_prop_chuncodes(path, flux_file, prop_file, verify_file):
+def error_prop_chuncodes(path):
+    flux_file = join(path, filename_dict['bin_fit'])
     flux_tab0  = asc.read(flux_file)
+
+    prop_file = join(path, filename_dict['bin_derived_prop'])
     prop_tab0  = asc.read(prop_file)
+
+    verify_file = join(path, filename_dict['bin_valid'])
     verify_tab = asc.read(verify_file)
 
     detect    = verify_tab['Detection']
@@ -36,7 +46,7 @@ def error_prop_chuncodes(path, flux_file, prop_file, verify_file):
     print(ID_detect)
 
     flux_tab = flux_tab0[detection]
-    # prop_tab = prop_tab0[detection]
+    prop_tab = prop_tab0[detection]
 
     flux_cols     = [str0+'_Flux_Gaussian' for str0 in line_name]
     flux_rms_cols = [str0+'_RMS' for str0 in line_name]
