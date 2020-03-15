@@ -51,13 +51,12 @@ def error_prop_chuncodes(path):
     flux_cols     = [str0+'_Flux_Gaussian' for str0 in line_name]
     flux_rms_cols = [str0+'_RMS' for str0 in line_name]
 
-    # Comment out for now
-    # Temp = prop_tab['Temperature'].data
-    # com_O_log = prop_tab['com_O_log'].data
-    # O_s_ion = prop_tab['O_s_ion'].data
-    # O_d_ion = prop_tab['O_d_ion'].data
-    # log_O_s = prop_tab['log_O_s'].data
-    # log_O_d = prop_tab['log_O_d'].data
+    Temp = prop_tab['T_e'].data
+    com_O_log = prop_tab['12+log(O/H)'].data
+    O_s_ion = prop_tab['O+/H'].data
+    O_d_ion = prop_tab['O++/H'].data
+    log_O_s = prop_tab['log(O+/H)'].data
+    log_O_d = prop_tab['log(O++/H)'].data
 
     # Error calculation
 
