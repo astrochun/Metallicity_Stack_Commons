@@ -82,7 +82,7 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
 
     # Include other metallicities
     arr0 += list(metal_dict.values())
-    names0 += metal_dict.keys
+    names0 += metal_dict.keys()
     indv_derived_prop_table = Table(arr0, names=names0)
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
