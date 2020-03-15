@@ -7,6 +7,10 @@ from astropy.table import Table
 
 from ..temp_metallicity_calc import metallicity_calculation
 from .. import OIII_r
+from ..column_names import bin_names0, indv_names0, temp_metal_names0
+
+ID_name = indv_names0[0]
+bin_ID_name = bin_names0[0]
 
 
 def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, outfile, det3=True):
@@ -77,8 +81,8 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
 
     # Define [indv_derived_prop_table] to include ID, bin_ID, composite T_e,
     # and 12+log(O/H)
-    arr0 = [indv_em_line_table['ID'], bin_id_indv, adopted_temp, com_O_log]
-    names0 = ['ID', 'bin_ID', 'T_e', '12+log(O/H)']
+    arr0 = [indv_em_line_table[ID_name], bin_id_indv, adopted_temp, com_O_log]
+    names0 = [ID_name, bin_ID_name] + temp_metal_names0[:2]
 
     # Include other metallicities
     arr0 += list(metal_dict.values())
