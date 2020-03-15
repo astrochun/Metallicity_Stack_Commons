@@ -87,7 +87,7 @@ def main(fitspath, dataset, revised=False, det3=True):
     O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
     Hb = indv_em_line_table['HBETA_Flux_Gaussian'].data               # H-beta fluxes
 
-    if det3:
+    if not det3:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
     else:
         det3 = np.where((indv_bin_info_table['Detection'] == 1.0) | (indv_bin_info_table['Detection'] == 0.5))[0]
