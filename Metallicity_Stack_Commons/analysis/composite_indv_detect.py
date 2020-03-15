@@ -14,8 +14,7 @@ ID_name = indv_names0[0]
 bin_ID_name = bin_names0[0]
 
 
-def main(fitspath, dataset, outfile,
-         revised=False, det3=True):
+def main(fitspath, dataset, revised=False, det3=True):
     """
     Purpose:
       Reads in composite table(s) containing bin information to
@@ -24,22 +23,24 @@ def main(fitspath, dataset, outfile,
 
     :param fitspath: str containing folder path
     :param dataset: str containing sub-folder (specific to stacking approach)
+    :param revised: Bool indicates whether to use revised bin properties
+                    (e.g., *.revised.tbl files)
+    :param det3: Bool indicates whether individual galaxy files is limited to
+                 those satisfying emission-line det3 requirement
+                 Default: True
 
     Files identified by default
     composite_file: str containing filename of composite data
       e.g., '[dataset]/bin_derived_properties.tbl' or
             '[dataset]/bin_derived_properties.revised.tbl'
-    :param indv_em_line_file: str containing filename that contains
-                              emission-line information for each galaxy
-             e.g., 'individual_properties.tbl'
-    :param indv_bin_file: str containing filename tha contains bin information
-                          for each galaxy
-             e.g., '[dataset]/individual_bin_info.tbl'
-    :param outfile: str containing filename of output file
-             e.g., '[dataset]/individual_derived_properties.tbl'
-    :param det3: Bool indicates whether individual galaxy files is limited to
-                 those satisfying emission-line det3 requirement
-                 Default: True
+    indv_em_line_file: str containing filename that contains
+                     emission-line information for each galaxy
+      e.g., 'individual_properties.tbl'
+    indv_bin_file: str containing filename tha contains bin information
+                   for each galaxy
+      e.g., '[dataset]/individual_bin_info.tbl'
+    outfile: str containing filename of output file
+      e.g., '[dataset]/individual_derived_properties.tbl'
     """
 
     # Define [composite_file]
@@ -110,6 +111,8 @@ def main(fitspath, dataset, outfile,
     arr0 += list(metal_dict.values())
     names0 += metal_dict.keys()
     indv_derived_prop_table = Table(arr0, names=names0)
+
+    outfile = join(fitspath, dataset, filename_dict['indv_derived_prop'])
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
     if exists(outfile):
