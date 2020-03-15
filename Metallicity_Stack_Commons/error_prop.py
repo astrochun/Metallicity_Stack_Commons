@@ -82,7 +82,7 @@ def error_prop_chuncodes(path):
         flux_tab0[line_name[aa] + '_Flux_Gaussian'][detection] = xpeak
 
     # Edit ASCII Table
-    new_flux_file = flux_file.replace('.tbl', 'revised.tbl')
+    new_flux_file = join(path, filename_dict['bin_fit_rev'])
 
     asc.write(flux_tab0, new_flux_file, format='fixed_width_two_line')
 
