@@ -14,7 +14,7 @@ ID_name = indv_names0[0]
 bin_ID_name = bin_names0[0]
 
 
-def main(fitspath, dataset, indv_em_line_file, indv_bin_file, outfile,
+def main(fitspath, dataset, outfile,
          revised=False, det3=True):
     """
     Purpose:
@@ -42,6 +42,7 @@ def main(fitspath, dataset, indv_em_line_file, indv_bin_file, outfile,
                  Default: True
     """
 
+    # Define [composite_file]
     t_comp = filename_dict['bin_derived_prop'] if not revised else \
         filename_dict['bin_derived_prop']
     composite_file = join(fitspath, dataset, t_comp)
@@ -55,17 +56,23 @@ def main(fitspath, dataset, indv_em_line_file, indv_bin_file, outfile,
     bin_id = composite_table['bin_ID'].data
     bin_temp = composite_table['T_e'].data
 
+    # Define [indv_em_line_file]
     indv_em_line_file = join(fitspath, dataset, filename_dict['indv_prop'])
     if not exists(indv_em_line_file):
         print("ERROR: File not found! "+indv_em_line_file)
         return
 
-    # Read in tables containing line ratios, bins, etc.
+    # Read in tables containing line ratios, etc.
     indv_em_line_table = asc.read(indv_em_line_file)
 
-    indv_bin_info_table = asc.read(join(fitspath, indv_bin_file))
-    # Not used for now
-    # average_table = asc.read(join(fitspath, dataset+'_Average_R23_O32_Values.tbl'))
+    # Define [indv_bin_file]
+    indv_bin_file = join(fitspath, dataset, filename_dict['indv_bin_info'])
+    if not exists(indv_bin_file):
+        print("ERROR: File not found! "+indv_bin_file)
+        return
+
+    # Read in tables containing bin info for individual
+    indv_bin_info_table = asc.read(indv_bin_file)
 
     # Populate composite temperature for individual galaxies
     adopted_temp = np.zeros(len(indv_em_line_table))
