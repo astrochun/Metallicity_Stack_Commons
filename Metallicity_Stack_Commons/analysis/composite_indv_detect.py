@@ -8,12 +8,14 @@ from astropy.table import Table
 from ..temp_metallicity_calc import metallicity_calculation
 from .. import OIII_r
 from ..column_names import bin_names0, indv_names0, temp_metal_names0
+from ..column_names import filename_dict
 
 ID_name = indv_names0[0]
 bin_ID_name = bin_names0[0]
 
 
-def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, outfile, det3=True):
+def main(fitspath, dataset, indv_em_line_file, indv_bin_file, outfile,
+         revised=False, det3=True):
     """
     Purpose:
       Reads in composite table(s) containing bin information to
@@ -22,9 +24,11 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
 
     :param fitspath: str containing folder path
     :param dataset: str containing sub-folder (specific to stacking approach)
-    :param composite_file: str containing filename of composite data
-             e.g., '[dataset]/bin_derived_properties.tbl' or
-                   '[dataset]/bin_derived_properties.revised.tbl'
+
+    Files identified by default
+    composite_file: str containing filename of composite data
+      e.g., '[dataset]/bin_derived_properties.tbl' or
+            '[dataset]/bin_derived_properties.revised.tbl'
     :param indv_em_line_file: str containing filename that contains
                               emission-line information for each galaxy
              e.g., 'individual_properties.tbl'
@@ -37,6 +41,13 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
                  those satisfying emission-line det3 requirement
                  Default: True
     """
+
+    t_comp = filename_dict['bin_derived_prop'] if not revised else \
+        filename_dict['bin_derived_prop']
+    composite_file = os.path.join(fitspath, dataset, t_comp)
+    if not exists(composite_file):
+        print("ERROR: File not found"+composite_file)
+        return
 
     # Read in composite table
     composite_table = asc.read(composite_file)
