@@ -75,7 +75,7 @@ def error_prop_chuncodes(path):
                                         silent=True, verbose=True)
 
         # Fill In Dictionary
-        flux_propdist_dict[line_name[aa] + '_pdf'] = flux_gpdf
+        flux_propdist_dict[line_name[aa]] = flux_gpdf
         flux_xpeak[line_name[aa] + '_xpeak'] = xpeak
         flux_lowhigh[line_name[aa] + '_lowhigh_error'] = err
 
