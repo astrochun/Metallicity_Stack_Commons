@@ -84,7 +84,11 @@ def error_prop_chuncodes(path):
     # Edit ASCII Table
     new_flux_file = join(path, filename_dict['bin_fit_rev'])
 
-    asc.write(flux_tab0, new_flux_file, format='fixed_width_two_line')
+    if exists(new_flux_file):
+        print("Overwriting: "+new_flux_file)
+    else:
+        print("Writing: "+new_flux_file)
+    asc.write(flux_tab0, new_flux_file, overwrite=True, format='fixed_width_two_line')
 
     # Save npz files
     np.savez(path + 'flux_propdist.npz', **flux_propdist_dict)
