@@ -70,9 +70,14 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
         com_O_log = np.zeros(len(indv_em_line_table))
         com_O_log[det3] = temp_com_O_log
 
-    # Update [indv_em_line_table] to include three new columns
+    # Define [indv_derived_prop_table] to include ID, bin_ID, composite T_e,
+    # and 12+log(O/H)
     arr0 = [indv_em_line_table['ID'], bin_id_indv, adopted_temp, com_O_log]
     names0 = ['ID', 'bin_ID', 'T_e', '12+log(O/H)']
+
+    # Include other metallicities
+    arr0 += list(metal_dict.values())
+    names0 += metal_dict.keys
     indv_derived_prop_table = Table(arr0, names=names0)
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
