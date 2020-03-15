@@ -81,7 +81,6 @@ def main(fitspath, dataset, composite_file, indv_em_line_file, indv_bin_file, ou
     indv_derived_prop_table = Table(arr0, names=names0)
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
-
     if exists(outfile):
         print("File exists! Overwriting : ", outfile)
     else:
