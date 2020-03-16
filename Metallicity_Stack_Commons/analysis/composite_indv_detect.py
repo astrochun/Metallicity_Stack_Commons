@@ -92,9 +92,10 @@ def main(fitspath, dataset, revised=False, det3=True):
         bin_id_indv[bin_idx]  = comp_bin
         detect_indv[bin_idx]  = detect
 
-    O2 = indv_em_line_table['OII_3727_Flux_Gaussian'].data            # [OII]3726,3728 fluxes
-    O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
-    Hb = indv_em_line_table['HBETA_Flux_Gaussian'].data               # H-beta fluxes
+    O2 = indv_em_line_table['OII_3727_Flux_Gaussian'].data   # [OII]3726,3728 fluxes
+    O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data  # [OIII]5007 fluxes
+    O3 = O3 * (1+1/OIII_r)  #Scale to include OIII4959; Assume 3.1:1 ratio
+    Hb = indv_em_line_table['HBETA_Flux_Gaussian'].data      # H-beta fluxes
 
     if not det3:
         com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
