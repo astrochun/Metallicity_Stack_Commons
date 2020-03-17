@@ -1,4 +1,8 @@
 from . import line_name, line_type
+import sys
+
+# Get python version
+py_vers = sys.version_info.major
 
 
 # Need to define here
@@ -46,7 +50,7 @@ bin_ratios0 = ['logR23_composite', 'logO32_composite',
 # Column names for Gaussian fitting
 # This is just the suffix
 gauss_names0 = ['Flux_Gaussian', 'Flux_Observed', 'S/N', 'Center', 'Norm',
-                'Median', 'Sigma']
+                'Median', 'Sigma', 'RMS']
 balmer_names0 = ['Abs_Norm', 'Abs_Sigma']
 
 # Emission-line fit column names with [LINE] prefix
@@ -106,7 +110,10 @@ def remove_from_list(list0, remove_entries):
     :param remove_entries: list of column names to remove
     """
 
-    dup_list0 = list0.copy()
+    if py_vers == 3:
+        dup_list0 = list0.copy()
+    if py_vers == 2:
+        dup_list0 = list(list0)
 
     for entry in remove_entries:
         dup_list0.remove(entry)
