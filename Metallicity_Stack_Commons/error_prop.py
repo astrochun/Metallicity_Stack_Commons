@@ -6,7 +6,7 @@ from astropy.io import ascii as asc
 import numpy as np
 
 from .column_names import filename_dict
-
+from .ratios import error_prop_flux_ratios
 
 """
 def construct_pdf(values, RMS, seed_i=1, n_iter=1000):
@@ -95,4 +95,7 @@ def error_prop_chuncodes(path):
     np.savez(path + 'flux_errors.npz', **flux_lowhigh)
     np.savez(path + 'flux_xpeak.npz', **flux_xpeak)
     # np.savez(path + 'Te_errors.npz', **Te_lowhigh)
+
+    # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
+    flux_ratios_dict = error_prop_flux_ratios(flux_propdist_dict)
 
