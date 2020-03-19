@@ -39,6 +39,9 @@ def error_prop_chuncodes(path):
     verify_tab = asc.read(verify_file)
 
     detect    = verify_tab['Detection']
+
+    # For now we are only considering those with reliable detection and
+    # excluding those with reliable non-detections (detect = 0.5)
     detection = np.where((detect == 1))[0]
 
     ID = verify_tab['ID']
