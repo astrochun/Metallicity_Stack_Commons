@@ -62,6 +62,9 @@ for line0, type0 in zip(line_name, line_type):
 # Temperature and metallicity properties
 temp_metal_names0 = ['T_e', '12+log(O/H)', 'log(O+/H)', 'log(O++/H)', 'O+/H', 'O++/H']
 
+# Validation Table
+valid_table_names0 = ['bin_ID','N_stack','Detection', 'OIII_4363_Flux_Observed', 'OIII_4363_S/N']
+
 # Dictionary containing filenames
 filename_dict = dict()
 
