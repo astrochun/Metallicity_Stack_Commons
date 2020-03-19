@@ -1,4 +1,4 @@
-from os.path import join
+from os.path import join, exists
 
 from chun_codes import random_pdf, compute_onesig_pdf
 from . import line_name
@@ -101,4 +101,3 @@ def error_prop_chuncodes(path):
 
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
     flux_ratios_dict = error_prop_flux_ratios(flux_pdf_dict)
-
