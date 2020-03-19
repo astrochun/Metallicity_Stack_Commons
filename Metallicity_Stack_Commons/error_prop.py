@@ -64,9 +64,9 @@ def error_prop_chuncodes(path):
     # Error calculation
 
     # Initialize Dictionary for flux_gpdf
-    flux_propdist_dict = {}
-    flux_xpeak = {}
-    flux_lowhigh = {}
+    flux_pdf_dict = dict()
+    flux_peak = dict()
+    flux_lowhigh = dict()
 
     # flux_data = [OII_flux, Hbeta_flux, Hdelta_flux, Hgamma_flux, OIII4363_flux, OIII4959_flux, OIII5007_flux]
     # RMS_data = [OII_RMS, Hbeta_RMS, Hdelta_RMS, Hgamma_RMS, OIII4363_RMS, OIII4959_RMS, OIII5007_RMS]
@@ -78,8 +78,8 @@ def error_prop_chuncodes(path):
                                         silent=True, verbose=True)
 
         # Fill In Dictionary
-        flux_propdist_dict[line_name[aa]] = flux_gpdf
-        flux_xpeak[line_name[aa] + '_xpeak'] = xpeak
+        flux_pdf_dict[line_name[aa]] = flux_gpdf
+        flux_peak[line_name[aa] + '_xpeak'] = xpeak
         flux_lowhigh[line_name[aa] + '_lowhigh_error'] = err
 
         flux_tab0[line_name[aa] + '_Flux_Gaussian'][detection] = xpeak
@@ -94,11 +94,11 @@ def error_prop_chuncodes(path):
     asc.write(flux_tab0, new_flux_file, overwrite=True, format='fixed_width_two_line')
 
     # Save npz files
-    np.savez(path + 'flux_propdist.npz', **flux_propdist_dict)
+    np.savez(path + 'flux_propdist.npz', **flux_pdf_dict)
     np.savez(path + 'flux_errors.npz', **flux_lowhigh)
-    np.savez(path + 'flux_xpeak.npz', **flux_xpeak)
+    np.savez(path + 'flux_peak.npz', **flux_peak)
     # np.savez(path + 'Te_errors.npz', **Te_lowhigh)
 
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
-    flux_ratios_dict = error_prop_flux_ratios(flux_propdist_dict)
+    flux_ratios_dict = error_prop_flux_ratios(flux_pdf_dict)
 
