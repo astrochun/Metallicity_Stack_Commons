@@ -1,3 +1,4 @@
+from os.path import exists
 import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
@@ -75,6 +76,19 @@ def make_validation_table(fitspath):
     n =('bin_ID','N_stack','Detection', 'OIII_4363_Flux_Observed', 'OIII_4363_S/N')
     tab1 = Table([bin_ID, N_stack, detection, OIII4363, O_4363_SN], names = valid_table_names0)   #names=n)
     asc.write(tab1, ver_tab, format='fixed_width_two_line')
+
+    # Write revised file for human editing
+    ver_tab_revised = fitspath + filename_dict['bin_valid_rev']
+    if not exists(ver_tab_revised):
+        asc.write(tab1, ver_tab_revised, format='fixed_width_two_line')
+        print("   ")
+        print("URGENT!!! HUMAN EDITING OF FILE NEEDED : "+ver_tab_revised)
+        print("   ")
+    else:
+        print("   ")
+        print("ERROR!!! FILE EXISTS!!!  WILL NOT OVERWRITE !!!")
+        print("ERROR!!! PLEASE RENAME/DELETE FILE TO REGENERATE !!!")
+        print("   ")
 
 
 def compare_to_by_eye(fitspath,dataset):
