@@ -54,9 +54,9 @@ def make_validation_table(fitspath):
     up_limit = (Hgamma/Hgamma_SN) *3
 
 
-    valid_stacks_idx = np.where((O_4363_SN >= 3) & (O_5007_SN > 100) & (O_4363_sigma < 2))[0] 
+    valid_stacks_idx = np.where((O_4363_SN >= 3) & (O_5007_SN > 100) & (O_4363_sigma < 1.6))[0] 
     reliable_5007_stacks = np.where((O_4363_SN < 3) & (O_5007_SN > 100))[0]
-    wide_lines_valid = np.where((O_4363_SN >= 3) & (O_5007_SN > 100) & (O_4363_sigma >= 2))[0]
+    wide_lines_valid = np.where((O_4363_SN >= 3) & (O_5007_SN > 100) & (O_4363_sigma >= 1.6))[0]
     detection[valid_stacks_idx] = 1
     detection[reliable_5007_stacks] = 0.5
     detection[wide_lines_valid] = 0.5
