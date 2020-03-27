@@ -5,7 +5,7 @@ from . import line_name
 from astropy.io import ascii as asc
 import numpy as np
 
-from .column_names import filename_dict, temp_metal_names0
+from .column_names import filename_dict, temp_metal_names0, npz_filename_dict
 from .ratios import error_prop_flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 
@@ -83,9 +83,17 @@ def fluxes_derived_prop(path, binned_data=True):
     asc.write(flux_tab0, new_flux_file, overwrite=True, format='fixed_width_two_line')
 
     # Save npz files
-    np.savez(path + 'flux_pdf.npz', **flux_pdf_dict)
-    np.savez(path + 'flux_errors.npz', **flux_lowhigh)
-    np.savez(path + 'flux_peaks.npz', **flux_peak)
+    npz_files = [npz_filename_dict['flux_pdf'],
+                 npz_filename_dict['flux_errors'],
+                 npz_filename_dict['flux_peak']]
+    dict_list = [flux_pdf_dict, flux_lowhigh, flux_peak]
+    for file, dict_input in zip(npz_files, dict_list):
+        npz_outfile = join(path, file)
+        if exists(npz_outfile):
+            print("Overwriting : "+npz_outfile)
+        else:
+            print("Writing : "+npz_outfile)
+        np.savez(npz_outfile, **dict_input)
     # np.savez(path + 'Te_errors.npz', **Te_lowhigh)
 
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
@@ -107,5 +115,16 @@ def fluxes_derived_prop(path, binned_data=True):
         metal_error[names0+'_lowhigh_error'] = err_prop
         metal_peak[names0+'_peak'] = peak_prop
 
-    np.savez(path+'metal_errors.npz', **metal_error)
-    np.savez(path+'metal_peaks.npz', **metal_peak)
+    npz_files = [npz_filename_dict['metal_errors'],
+                 npz_filename_dict['metal_peak']]
+    dict_list = [metal_error, metal_peak]
+    for file, dict_input in zip(npz_files, dict_list):
+        npz_outfile = join(path, file)
+        if exists(npz_outfile):
+            print("Overwriting : "+npz_outfile)
+        else:
+            print("Writing : "+npz_outfile)
+        np.savez(npz_outfile, **dict_input)
+
+    np.savez(join(path, 'metal_errors.npz'), **metal_error)
+    np.savez(join(path, 'metal_peaks.npz'), **metal_peak)
