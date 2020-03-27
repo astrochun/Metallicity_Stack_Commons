@@ -56,8 +56,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA):
     :param TWO_BETA: numpy array of [OII]/Hb flux ratio
     :param THREE_BETA: numpy array of [OIII]/Hb flux ratio
 
-    :return com_O_log: numpy array of 12+log(O/H)
-    :return metal_dict: dictionary containing O+/H, O++/H, log(O+/H), log(O++/H)
+    :return metal_dict: dictionary containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
 
     t_3 = T_e * 1e-4
@@ -75,8 +74,8 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA):
     com_O = O_s_ion + O_d_ion
     com_O_log = np.log10(com_O) + 12
 
-    key_dict = remove_from_list(temp_metal_names0, ['T_e', '12+log(O/H)'])
-    key_values = [O_s_ion_log, O_d_ion_log, O_s_ion, O_d_ion]  # Order matters here
+    key_dict = remove_from_list(temp_metal_names0, ['T_e'])
+    key_values = [com_O_log, O_s_ion_log, O_d_ion_log, O_s_ion, O_d_ion]  # Order matters here
     metal_dict = dict(zip(key_dict, key_values))
 
-    return com_O_log, metal_dict
+    return metal_dict
