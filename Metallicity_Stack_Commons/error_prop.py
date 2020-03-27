@@ -37,23 +37,23 @@ def error_prop_chuncodes(path, binned_data=True):
         prop_file = join(path, filename_dict['bin_derived_prop'])
         verify_file = join(path, filename_dict['bin_valid'])
 
-    flux_tab0  = asc.read(flux_file)
-    prop_tab0  = asc.read(prop_file)
+    flux_tab0 = asc.read(flux_file)
+    prop_tab0 = asc.read(prop_file)
 
     if binned_data:
         verify_tab = asc.read(verify_file)
-        detect = verify_tab['Detection']
+        detection = verify_tab['Detection'].data
 
         # For now we are only considering those with reliable detection and
         # excluding those with reliable non-detections (detect = 0.5)
-        detection = np.where((detect == 1))[0]
+        detect_idx = np.where((detection == 1))[0]
 
         ID = verify_tab['bin_ID'].data
-        ID_detect = ID[detection]
+        ID_detect = ID[detect_idx]
         print(ID_detect)
 
-        flux_tab = flux_tab0[detection]
-        prop_tab = prop_tab0[detection]
+        flux_tab = flux_tab0[detect_idx]
+        prop_tab = prop_tab0[detect_idx]
 
     flux_cols     = [str0+'_Flux_Gaussian' for str0 in line_name]
     flux_rms_cols = [str0+'_RMS' for str0 in line_name]
@@ -85,7 +85,7 @@ def error_prop_chuncodes(path, binned_data=True):
         flux_peak[line_name[aa] + '_xpeak'] = xpeak
         flux_lowhigh[line_name[aa] + '_lowhigh_error'] = err
 
-        flux_tab0[line_name[aa] + '_Flux_Gaussian'][detection] = xpeak
+        flux_tab0[line_name[aa] + '_Flux_Gaussian'][detect_idx] = xpeak
 
     # Edit ASCII Table
     new_flux_file = join(path, filename_dict['bin_fit_rev'])
