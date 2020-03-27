@@ -10,6 +10,16 @@ from .ratios import error_prop_flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 
 
+def write_npz(npz_files, dict_list):
+    for file, dict_input in zip(npz_files, dict_list):
+        npz_outfile = join(path, file)
+        if exists(npz_outfile):
+            print("Overwriting : "+npz_outfile)
+        else:
+            print("Writing : "+npz_outfile)
+        np.savez(npz_outfile, **dict_input)
+
+
 def fluxes_derived_prop(path, binned_data=True):
     """
     Purpose:
