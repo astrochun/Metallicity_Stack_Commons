@@ -4,13 +4,15 @@ from . import line_name_short, OIII_r
 from .temp_metallicity_calc import R_calculation
 
 
-def error_prop_flux_ratios(flux_dict):
+def error_prop_flux_ratios(flux_dict, EBV=None):
     """
     Purpose:
       Primary code to determine a variety of line ratios based on a dictionary
       containing emission-line fluxes
 
     :param flux_dict: dictionary containing line ratios
+    :param EBV: array of E(B-V). Same dimensions as contents of flux_dict
+
     :return flux_ratios_dict: dictionary containing flux ratios
     """
 
@@ -33,6 +35,10 @@ def error_prop_flux_ratios(flux_dict):
     flux_ratios_dict['logR23'] = logR23
     flux_ratios_dict['logO32'] = logO32
 
-    flux_ratios_dict['R'] = R_calculation(OIII4363, OIII)
+    if EBV is None:
+        print("Not applying dust attenuation correction")
+        EBV = np.zeros(OIII4363.shape)
+
+    flux_ratios_dict['R'] = R_calculation(OIII4363, OIII, EBV)
 
     return flux_ratios_dict
