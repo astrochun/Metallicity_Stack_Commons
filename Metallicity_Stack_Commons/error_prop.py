@@ -77,9 +77,8 @@ def error_prop_chuncodes(path, binned_data=True):
 
     for aa, flux, rms in zip(range(len(flux_cols)), flux_cols, flux_rms_cols):
         flux_gpdf = random_pdf(flux_tab[flux], flux_tab[rms], seed_i=aa,
-                               n_iter=1000, silent=False)
-        err, xpeak = compute_onesig_pdf(flux_gpdf, flux_tab[flux], usepeak=True,
-                                        silent=True, verbose=True)
+                               n_iter=1000)
+        err, xpeak = compute_onesig_pdf(flux_gpdf, flux_tab[flux], usepeak=True)
 
         # Fill In Dictionary
         flux_pdf_dict[line_name[aa]] = flux_gpdf
