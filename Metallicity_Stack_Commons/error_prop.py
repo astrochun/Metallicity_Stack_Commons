@@ -125,6 +125,3 @@ def fluxes_derived_prop(path, binned_data=True):
         else:
             print("Writing : "+npz_outfile)
         np.savez(npz_outfile, **dict_input)
-
-    np.savez(join(path, 'metal_errors.npz'), **metal_error)
-    np.savez(join(path, 'metal_peaks.npz'), **metal_peak)
