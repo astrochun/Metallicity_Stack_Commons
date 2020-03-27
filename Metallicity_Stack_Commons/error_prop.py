@@ -103,23 +103,23 @@ def fluxes_derived_prop(path, binned_data=True):
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
     flux_ratios_dict = error_prop_flux_ratios(flux_pdf_dict)
 
-    Te_dict = temp_calculation(flux_ratios_dict['R'])
-    metal_dict = metallicity_calculation(Te_dict, flux_ratios_dict['two_beta'],
+    Te_pdf = temp_calculation(flux_ratios_dict['R'])
+    metal_dict = metallicity_calculation(Te_pdf, flux_ratios_dict['two_beta'],
                                          flux_ratios_dict['three_beta'])
 
     # Loop for each derived properties (T_e, metallicity, etc.)
-    metal_error = dict()
-    metal_peak = dict()
+    derived_prop_error = dict()
+    derived_prop_peak = dict()
     for names0 in temp_metal_names0:
         arr0 = prop_tab[names0].data
 
-        pdf_arr = Te_dict if names0 == 'T_e' else metal_dict[names0]
+        pdf_arr = Te_pdf if names0 == 'T_e' else metal_dict[names0]
         err_prop, peak_prop = compute_onesig_pdf(pdf_arr, arr0, usepeak=True)
 
-        metal_error[names0+'_lowhigh_error'] = err_prop
-        metal_peak[names0+'_peak'] = peak_prop
+        derived_prop_error[names0+'_lowhigh_error'] = err_prop
+        derived_prop_peak[names0+'_peak'] = peak_prop
 
     npz_files = [npz_filename_dict['metal_errors'],
                  npz_filename_dict['metal_peak']]
-    dict_list = [metal_error, metal_peak]
+    dict_list = [derived_prop_error, derived_prop_peak]
     write_npz(path, npz_files, dict_list)
