@@ -29,7 +29,19 @@ def construct_pdf(values, RMS, seed_i=1, n_iter=1000):
 """
 
 
-def error_prop_chuncodes(path, binned_data=True):
+def fluxes_derived_prop(path, binned_data=True):
+    """
+    Purpose:
+      Use measurements and their uncertainties to perform a randomization
+      approach. The randomization is performed on individual emission lines.
+      It carries that information to derived flux ratios and then
+      determines electron temperature and metallicity
+
+    :param path: str of full path
+    :param binned_data: bool for whether to analysis binned data. Default: True
+
+    :return:
+    """
 
     # Define files to read in for binned data
     if binned_data:
