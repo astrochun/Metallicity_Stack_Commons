@@ -104,14 +104,13 @@ def fluxes_derived_prop(path, binned_data=True):
     flux_ratios_dict = error_prop_flux_ratios(flux_pdf_dict)
 
     Te_dict = temp_calculation(flux_ratios_dict['R'])
-    com_O_log_pdf, metal_dict = \
-        metallicity_calculation(Te_dict, flux_ratios_dict['two_beta'],
-                                flux_ratios_dict['three_beta'])
+    metal_dict = metallicity_calculation(Te_dict, flux_ratios_dict['two_beta'],
+                                         flux_ratios_dict['three_beta'])
 
     # Loop for each derived properties (T_e, metallicity, etc.)
     metal_error = dict()
     metal_peak = dict()
-    for names0 in temp_metal_names0[2:]:
+    for names0 in temp_metal_names0[1:]:
         arr0 = prop_tab[names0].data
 
         err_prop, peak_prop = compute_onesig_pdf(metal_dict[names0], arr0,
