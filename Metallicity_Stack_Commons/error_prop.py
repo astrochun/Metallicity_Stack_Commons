@@ -7,6 +7,7 @@ import numpy as np
 
 from .column_names import filename_dict
 from .ratios import error_prop_flux_ratios
+from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 
 """
 def construct_pdf(values, RMS, seed_i=1, n_iter=1000):
@@ -38,7 +39,7 @@ def error_prop_chuncodes(path):
     verify_file = join(path, filename_dict['bin_valid'])
     verify_tab = asc.read(verify_file)
 
-    detect    = verify_tab['Detection']
+    detect = verify_tab['Detection']
 
     # For now we are only considering those with reliable detection and
     # excluding those with reliable non-detections (detect = 0.5)
@@ -101,3 +102,8 @@ def error_prop_chuncodes(path):
 
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
     flux_ratios_dict = error_prop_flux_ratios(flux_pdf_dict)
+
+    Te_dict = temp_calculation(flux_ratios_dict['R'])
+    com_O_log_pdf, metal_dict = \
+        metallicity_calculation(Te_dict, flux_ratios_dict['two_beta'],
+                                flux_ratios_dict['three_beta'])
