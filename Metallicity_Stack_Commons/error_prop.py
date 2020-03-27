@@ -97,13 +97,7 @@ def fluxes_derived_prop(path, binned_data=True):
                  npz_filename_dict['flux_errors'],
                  npz_filename_dict['flux_peak']]
     dict_list = [flux_pdf_dict, flux_lowhigh, flux_peak]
-    for file, dict_input in zip(npz_files, dict_list):
-        npz_outfile = join(path, file)
-        if exists(npz_outfile):
-            print("Overwriting : "+npz_outfile)
-        else:
-            print("Writing : "+npz_outfile)
-        np.savez(npz_outfile, **dict_input)
+    write_npz(npz_files, dict_list)
     # np.savez(path + 'Te_errors.npz', **Te_lowhigh)
 
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
@@ -128,10 +122,4 @@ def fluxes_derived_prop(path, binned_data=True):
     npz_files = [npz_filename_dict['metal_errors'],
                  npz_filename_dict['metal_peak']]
     dict_list = [metal_error, metal_peak]
-    for file, dict_input in zip(npz_files, dict_list):
-        npz_outfile = join(path, file)
-        if exists(npz_outfile):
-            print("Overwriting : "+npz_outfile)
-        else:
-            print("Writing : "+npz_outfile)
-        np.savez(npz_outfile, **dict_input)
+    write_npz(npz_files, dict_list)
