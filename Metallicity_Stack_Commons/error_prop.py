@@ -64,14 +64,14 @@ def fluxes_derived_prop(path, binned_data=True):
     for aa, flux, rms in zip(range(len(flux_cols)), flux_cols, flux_rms_cols):
         flux_gpdf = random_pdf(flux_tab[flux], flux_tab[rms], seed_i=aa,
                                n_iter=1000)
-        err, xpeak = compute_onesig_pdf(flux_gpdf, flux_tab[flux], usepeak=True)
+        err, peak = compute_onesig_pdf(flux_gpdf, flux_tab[flux], usepeak=True)
 
         # Fill In Dictionary
         flux_pdf_dict[line_name[aa]] = flux_gpdf
-        flux_peak[line_name[aa] + '_xpeak'] = xpeak
+        flux_peak[line_name[aa] + '_peak'] = peak
         flux_lowhigh[line_name[aa] + '_lowhigh_error'] = err
 
-        flux_tab0[line_name[aa] + '_Flux_Gaussian'][detect_idx] = xpeak
+        flux_tab0[line_name[aa] + '_Flux_Gaussian'][detect_idx] = peak
 
     # Edit ASCII Table
     new_flux_file = join(path, filename_dict['bin_fit_rev'])
