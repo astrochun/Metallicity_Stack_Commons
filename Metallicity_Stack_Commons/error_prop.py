@@ -110,11 +110,12 @@ def fluxes_derived_prop(path, binned_data=True):
     # Loop for each derived properties (T_e, metallicity, etc.)
     metal_error = dict()
     metal_peak = dict()
-    for names0 in temp_metal_names0[1:]:
+    for names0 in temp_metal_names0:
         arr0 = prop_tab[names0].data
 
-        err_prop, peak_prop = compute_onesig_pdf(metal_dict[names0], arr0,
-                                                 usepeak=True)
+        pdf_arr = Te_dict if names0 == 'T_e' else metal_dict[names0]
+        err_prop, peak_prop = compute_onesig_pdf(pdf_arr, arr0, usepeak=True)
+
         metal_error[names0+'_lowhigh_error'] = err_prop
         metal_peak[names0+'_peak'] = peak_prop
 
