@@ -5,7 +5,7 @@ from . import line_name
 from astropy.io import ascii as asc
 import numpy as np
 
-from .column_names import filename_dict
+from .column_names import filename_dict, temp_metal_names0
 from .ratios import error_prop_flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 
@@ -51,13 +51,6 @@ def fluxes_derived_prop(path, binned_data=True):
     flux_cols     = [str0+'_Flux_Gaussian' for str0 in line_name]
     flux_rms_cols = [str0+'_RMS' for str0 in line_name]
 
-    Temp = prop_tab['T_e'].data
-    com_O_log = prop_tab['12+log(O/H)'].data
-    O_s_ion = prop_tab['O+/H'].data
-    O_d_ion = prop_tab['O++/H'].data
-    log_O_s = prop_tab['log(O+/H)'].data
-    log_O_d = prop_tab['log(O++/H)'].data
-
     # Error calculation
 
     # Initialize Dictionary for flux_gpdf
@@ -90,9 +83,9 @@ def fluxes_derived_prop(path, binned_data=True):
     asc.write(flux_tab0, new_flux_file, overwrite=True, format='fixed_width_two_line')
 
     # Save npz files
-    np.savez(path + 'flux_propdist.npz', **flux_pdf_dict)
+    np.savez(path + 'flux_pdf.npz', **flux_pdf_dict)
     np.savez(path + 'flux_errors.npz', **flux_lowhigh)
-    np.savez(path + 'flux_peak.npz', **flux_peak)
+    np.savez(path + 'flux_peaks.npz', **flux_peak)
     # np.savez(path + 'Te_errors.npz', **Te_lowhigh)
 
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
@@ -102,3 +95,17 @@ def fluxes_derived_prop(path, binned_data=True):
     com_O_log_pdf, metal_dict = \
         metallicity_calculation(Te_dict, flux_ratios_dict['two_beta'],
                                 flux_ratios_dict['three_beta'])
+
+    # Loop for each derived properties (T_e, metallicity, etc.)
+    metal_error = dict()
+    metal_peak = dict()
+    for names0 in temp_metal_names0[2:]:
+        arr0 = prop_tab[names0].data
+
+        err_prop, peak_prop = compute_onesig_pdf(metal_dict[names0], arr0,
+                                                 usepeak=True)
+        metal_error[names0+'_lowhigh_error'] = err_prop
+        metal_peak[names0+'_peak'] = peak_prop
+
+    np.savez(path+'metal_errors.npz', **metal_error)
+    np.savez(path+'metal_peaks.npz', **metal_peak)
