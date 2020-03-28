@@ -112,18 +112,18 @@ def fluxes_derived_prop(path, binned_data=True):
     derived_prop_pdf_dict.update(metal_dict)
 
     # Loop for each derived properties (T_e, metallicity, etc.)
-    derived_prop_error = dict()
-    derived_prop_peak = dict()
+    derived_prop_error_dict = dict()
+    derived_prop_peak_dict = dict()
     for names0 in temp_metal_names0:
         arr0 = prop_tab[names0].data
 
         err_prop, peak_prop = \
             compute_onesig_pdf(derived_prop_pdf_dict[names0], arr0, usepeak=True)
 
-        derived_prop_error[names0+'_lowhigh_error'] = err_prop
-        derived_prop_peak[names0+'_peak'] = peak_prop
+        derived_prop_error_dict[names0+'_lowhigh_error'] = err_prop
+        derived_prop_peak_dict[names0+'_peak'] = peak_prop
 
     npz_files = [npz_filename_dict['metal_errors'],
                  npz_filename_dict['metal_peak']]
-    dict_list = [derived_prop_error, derived_prop_peak]
+    dict_list = [derived_prop_error_dict, derived_prop_peak_dict]
     write_npz(path, npz_files, dict_list)
