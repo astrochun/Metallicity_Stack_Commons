@@ -123,6 +123,17 @@ def fluxes_derived_prop(path, binned_data=True):
         derived_prop_error_dict[names0+'_lowhigh_error'] = err_prop
         derived_prop_peak_dict[names0+'_peak'] = peak_prop
 
+        prop_tab0[names0][detect_idx] = peak_prop
+
+    # Edit ASCII Table
+    new_prop_file = join(path, filename_dict['bin_derived_prop_rev'])
+
+    if exists(new_prop_file):
+        print("Overwriting: "+new_prop_file)
+    else:
+        print("Writing: "+new_prop_file)
+    asc.write(prop_tab0, new_prop_file, overwrite=True, format='fixed_width_two_line')
+
     npz_files = [npz_filename_dict['der_prop_pdf'],
                  npz_filename_dict['der_prop_errors'],
                  npz_filename_dict['der_prop_peak']]
