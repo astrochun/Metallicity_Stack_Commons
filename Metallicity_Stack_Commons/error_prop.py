@@ -123,7 +123,9 @@ def fluxes_derived_prop(path, binned_data=True):
         derived_prop_error_dict[names0+'_lowhigh_error'] = err_prop
         derived_prop_peak_dict[names0+'_peak'] = peak_prop
 
-    npz_files = [npz_filename_dict['metal_errors'],
-                 npz_filename_dict['metal_peak']]
-    dict_list = [derived_prop_error_dict, derived_prop_peak_dict]
+    npz_files = [npz_filename_dict['der_prop_pdf'],
+                 npz_filename_dict['der_prop_errors'],
+                 npz_filename_dict['der_prop_peak']]
+    dict_list = [derived_prop_pdf_dict, derived_prop_error_dict,
+                 derived_prop_peak_dict]
     write_npz(path, npz_files, dict_list)
