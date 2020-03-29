@@ -61,38 +61,33 @@ def fluxes_derived_prop(path, binned_data=True):
     flux_cols     = [str0+'_Flux_Gaussian' for str0 in line_name]
     flux_rms_cols = [str0+'_RMS' for str0 in line_name]
 
-    # Error calculation
-
-    # Initialize Dictionary for flux_gpdf
+    # Initialize dictionary
     flux_pdf_dict = dict()
     flux_peak = dict()
     flux_lowhigh = dict()
 
-    # flux_data = [OII_flux, Hbeta_flux, Hdelta_flux, Hgamma_flux, OIII4363_flux, OIII4959_flux, OIII5007_flux]
-    # RMS_data = [OII_RMS, Hbeta_RMS, Hdelta_RMS, Hgamma_RMS, OIII4363_RMS, OIII4959_RMS, OIII5007_RMS]
-
+    # Randomization for emission-line fluxes
     for aa, flux, rms in zip(range(len(flux_cols)), flux_cols, flux_rms_cols):
-        flux_gpdf = random_pdf(flux_tab[flux], flux_tab[rms], seed_i=aa,
-                               n_iter=1000)
-        err, peak = compute_onesig_pdf(flux_gpdf, flux_tab[flux], usepeak=True)
+        flux_pdf = random_pdf(flux_tab[flux], flux_tab[rms], seed_i=aa,
+                              n_iter=1000)
+        err, peak = compute_onesig_pdf(flux_pdf, flux_tab[flux], usepeak=True)
 
         # Fill In Dictionary
-        flux_pdf_dict[line_name[aa]] = flux_gpdf
+        flux_pdf_dict[line_name[aa]] = flux_pdf
         flux_peak[line_name[aa] + '_peak'] = peak
         flux_lowhigh[line_name[aa] + '_lowhigh_error'] = err
 
         flux_tab0[line_name[aa] + '_Flux_Gaussian'][detect_idx] = peak
 
-    # Edit ASCII Table
+    # Write revised ASCII Table
     new_flux_file = join(path, filename_dict['bin_fit_rev'])
-
     if exists(new_flux_file):
         print("Overwriting: "+new_flux_file)
     else:
         print("Writing: "+new_flux_file)
     asc.write(flux_tab0, new_flux_file, overwrite=True, format='fixed_width_two_line')
 
-    # Save npz files
+    # Save flux npz files
     npz_files = [npz_filename_dict['flux_pdf'],
                  npz_filename_dict['flux_errors'],
                  npz_filename_dict['flux_peak']]
@@ -103,10 +98,14 @@ def fluxes_derived_prop(path, binned_data=True):
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
     flux_ratios_dict = error_prop_flux_ratios(flux_pdf_dict)
 
+    # Initialize dictionary
     derived_prop_pdf_dict = dict()
+
+    # Calculate temperature distribution
     Te_pdf = temp_calculation(flux_ratios_dict['R'])
     derived_prop_pdf_dict[temp_metal_names0[0]] = Te_pdf
 
+    # Calculate metallicity distribution
     metal_dict = metallicity_calculation(Te_pdf, flux_ratios_dict['two_beta'],
                                          flux_ratios_dict['three_beta'])
     derived_prop_pdf_dict.update(metal_dict)
