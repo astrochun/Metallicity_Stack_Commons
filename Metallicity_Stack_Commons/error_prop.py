@@ -71,7 +71,11 @@ def fluxes_derived_prop(path, binned_data=True):
     flux_cols     = [str0+'_Flux_Gaussian' for str0 in line_name]
     flux_rms_cols = [str0+'_RMS' for str0 in line_name]
 
-    # Initialize dictionary
+    #
+    # EMISSION-LINE SECTION
+    #
+
+    # Initialize dictionaries
     flux_pdf_dict = dict()
     flux_peak = dict()
     flux_lowhigh = dict()
@@ -82,14 +86,15 @@ def fluxes_derived_prop(path, binned_data=True):
                               n_iter=1000)
         err, peak = compute_onesig_pdf(flux_pdf, flux_tab[flux], usepeak=True)
 
-        # Fill In Dictionary
+        # Fill in dictionary
         flux_pdf_dict[line_name[aa]] = flux_pdf
         flux_peak[line_name[aa] + '_peak'] = peak
         flux_lowhigh[line_name[aa] + '_lowhigh_error'] = err
 
+        # Update values
         flux_tab0[line_name[aa] + '_Flux_Gaussian'][detect_idx] = peak
 
-    # Write revised ASCII Table
+    # Write revised emission-line fit ASCII table
     new_flux_file = join(path, filename_dict['bin_fit_rev'])
     if exists(new_flux_file):
         print("Overwriting: "+new_flux_file)
@@ -103,13 +108,18 @@ def fluxes_derived_prop(path, binned_data=True):
                  npz_filename_dict['flux_peak']]
     dict_list = [flux_pdf_dict, flux_lowhigh, flux_peak]
     write_npz(path, npz_files, dict_list)
-    # np.savez(path + 'Te_errors.npz', **Te_lowhigh)
 
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
     flux_ratios_dict = error_prop_flux_ratios(flux_pdf_dict)
 
-    # Initialize dictionary
+    #
+    # DERIVED PROPERTIES SECTION
+    #
+
+    # Initialize dictionaries
     derived_prop_pdf_dict = dict()
+    derived_prop_error_dict = dict()
+    derived_prop_peak_dict = dict()
 
     # Calculate temperature distribution
     Te_pdf = temp_calculation(flux_ratios_dict['R'])
@@ -121,28 +131,28 @@ def fluxes_derived_prop(path, binned_data=True):
     derived_prop_pdf_dict.update(metal_dict)
 
     # Loop for each derived properties (T_e, metallicity, etc.)
-    derived_prop_error_dict = dict()
-    derived_prop_peak_dict = dict()
     for names0 in temp_metal_names0:
         arr0 = prop_tab[names0].data
 
         err_prop, peak_prop = \
             compute_onesig_pdf(derived_prop_pdf_dict[names0], arr0, usepeak=True)
 
+        # Fill in dictionary
         derived_prop_error_dict[names0+'_lowhigh_error'] = err_prop
         derived_prop_peak_dict[names0+'_peak'] = peak_prop
 
+        # Update values
         prop_tab0[names0][detect_idx] = peak_prop
 
-    # Edit ASCII Table
+    # Write revised properties ASCII table
     new_prop_file = join(path, filename_dict['bin_derived_prop_rev'])
-
     if exists(new_prop_file):
         print("Overwriting: "+new_prop_file)
     else:
         print("Writing: "+new_prop_file)
     asc.write(prop_tab0, new_prop_file, overwrite=True, format='fixed_width_two_line')
 
+    # Save derived properties npz files
     npz_files = [npz_filename_dict['der_prop_pdf'],
                  npz_filename_dict['der_prop_errors'],
                  npz_filename_dict['der_prop_peak']]
