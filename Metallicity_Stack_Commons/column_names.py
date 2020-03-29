@@ -78,6 +78,15 @@ filename_dict['indv_prop'] = 'individual_properties.tbl'
 filename_dict['indv_bin_info'] = 'individual_bin_info.tbl'
 filename_dict['indv_derived_prop'] = 'individual_derived_properties.tbl'
 
+# numpy files
+npz_filename_dict = dict()
+npz_filename_dict['flux_pdf'] = 'flux_pdf.npz'
+npz_filename_dict['flux_errors'] = 'flux_errors.npz'
+npz_filename_dict['flux_peak'] = 'flux_peak.npz'
+npz_filename_dict['der_prop_pdf'] = 'derived_properties_pdf.npz'
+npz_filename_dict['der_prop_errors'] = 'derived_properties_errors.npz'
+npz_filename_dict['der_prop_peak'] = 'derived_properties_peak.npz'
+
 
 def merge_column_names(*args):
     """

@@ -5,11 +5,15 @@ import os
 import getpass
 import numpy as np
 
-version = "0.5.0"
+version = "0.6.0"
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
 line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
-line_name = ['OII_3727', 'HDELTA', 'HGAMMA', 'OIII_4363', 'HBETA', 'OIII_4958', 'OIII_5007']
+line_name = ['OII_3727', 'HDELTA', 'HGAMMA', 'OIII_4363', 'HBETA', 'OIII_4958',
+             'OIII_5007']
+
+line_name_short = {"OII": line_name[0], "4363": line_name[3],
+                   "HB": line_name[4], "OIII": line_name[-1]}
 
 fitting_lines_dict = {"lambda0": lambda0, "line_type": line_type, "line_name": line_name}
 
