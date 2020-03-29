@@ -11,6 +11,16 @@ from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 
 
 def write_npz(path, npz_files, dict_list):
+    """
+    Purpose:
+      Write numpy files with provided dictionaries
+
+    :param path: str - prefix for filename output
+    :param npz_files: list - contains npz file names
+    :param dict_list: list - contains dictionaries for each corresponding npz file
+
+    :return: Write npz files
+    """
     for file, dict_input in zip(npz_files, dict_list):
         npz_outfile = join(path, file)
         if exists(npz_outfile):
