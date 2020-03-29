@@ -170,7 +170,7 @@ def compare_to_by_eye(fitspath, dataset):
 
     ver_tab.remove_column('Detection')
     
-    detect_add = Column(name='Detections', data=check_ID)
+    detect_add = Column(name='Detection', data=check_ID)
     ver_tab.add_column(detect_add, 2)
 
     asc.write(ver_tab, fitspath + 'bin_validation_revised.tbl', format='fixed_width_two_line')
