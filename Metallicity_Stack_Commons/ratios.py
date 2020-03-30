@@ -24,9 +24,9 @@ def error_prop_flux_ratios(flux_dict, EBV=None):
 
     # Define flux ratios
     two_beta = OII/Hb
-    three_beta = OIII_r * OIII/Hb
+    three_beta = (1+1/OIII_r) * OIII/Hb
     logR23 = np.log10(two_beta + three_beta)
-    logO32 = np.log10(OIII_r * OIII/OII)
+    logO32 = np.log10((1+1/OIII_r) * OIII/OII)
 
     # Define dictionary of flux ratios
     flux_ratios_dict = dict()
