@@ -107,7 +107,7 @@ def main(fitspath, dataset, revised=False, det3=True):
     # Define [indv_derived_prop_table] to include ID, bin_ID, composite T_e,
     # and 12+log(O/H)
     arr0 = [indv_em_line_table[ID_name], bin_id_indv, adopted_temp]
-    names0 = [ID_name, bin_ID_name] + temp_metal_names0[0]
+    names0 = [ID_name, bin_ID_name, temp_metal_names0[0]]
 
     # Include other metallicities
     arr0 += list(metal_dict.values())
