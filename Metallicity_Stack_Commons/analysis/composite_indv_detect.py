@@ -94,28 +94,20 @@ def main(fitspath, dataset, revised=False, det3=True):
 
     O2 = indv_em_line_table['OII_3727_Flux_Gaussian'].data   # [OII]3726,3728 fluxes
     O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data  # [OIII]5007 fluxes
-    O3 = O3 * (1+1/OIII_r)  #Scale to include OIII4959; Assume 3.1:1 ratio
+    O3 = O3 * (1+1/OIII_r)  # Scale to include OIII4959; Assume 3.1:1 ratio
     Hb = indv_em_line_table['HBETA_Flux_Gaussian'].data      # H-beta fluxes
 
     if not det3:
-        com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
+        metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
     else:
-        det3 = np.where((detect_indv == 1.0) | (detect_indv == 0.5))[0]
-        temp_com_O_log, temp_metal_dict = \
-            metallicity_calculation(adopted_temp[det3], O2[det3]/Hb[det3],
-                                    O3[det3]/Hb[det3])
-        com_O_log = np.zeros(len(indv_em_line_table))
-        com_O_log[det3] = temp_com_O_log
-
-        metal_dict = dict()
-        for key0 in temp_metal_dict.keys():
-            metal_dict[key0] = np.zeros(len(indv_em_line_table))
-            metal_dict[key0][det3] = temp_metal_dict[key0]
+        det3_idx = np.where((detect_indv == 1.0) | (detect_indv == 0.5))[0]
+        metal_dict = \
+            metallicity_calculation(adopted_temp, O2/Hb, O3/Hb, det3=det3_idx)
 
     # Define [indv_derived_prop_table] to include ID, bin_ID, composite T_e,
     # and 12+log(O/H)
-    arr0 = [indv_em_line_table[ID_name], bin_id_indv, adopted_temp, com_O_log]
-    names0 = [ID_name, bin_ID_name] + temp_metal_names0[:2]
+    arr0 = [indv_em_line_table[ID_name], bin_id_indv, adopted_temp]
+    names0 = [ID_name, bin_ID_name, temp_metal_names0[0]]
 
     # Include other metallicities
     arr0 += list(metal_dict.values())
