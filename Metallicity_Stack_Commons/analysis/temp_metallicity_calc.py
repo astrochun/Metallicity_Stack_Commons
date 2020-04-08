@@ -2,7 +2,7 @@ import numpy as np
 
 from . import k_dict
 
-from .column_names import temp_metal_names0, remove_from_list
+from ..column_names import temp_metal_names0, remove_from_list
 
 k_4363 = k_dict['OIII_4363']
 k_5007 = k_dict['OIII_5007']
