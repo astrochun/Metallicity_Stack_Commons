@@ -5,7 +5,7 @@ import numpy as np
 from astropy.io import ascii as asc
 from astropy.table import Table
 
-from ..temp_metallicity_calc import metallicity_calculation
+from .temp_metallicity_calc import metallicity_calculation
 from .. import OIII_r
 from ..column_names import bin_names0, indv_names0, temp_metal_names0
 from ..column_names import filename_dict
