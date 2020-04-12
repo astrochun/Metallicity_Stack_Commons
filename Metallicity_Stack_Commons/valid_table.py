@@ -3,7 +3,7 @@ import numpy as np
 from astropy.io import ascii as asc
 from astropy.table import Table, Column
 
-from Metallicity_Stack_Commons.column_names import filename_dict, valid_table_names0  # , bin_names0, remove_from_list
+from Metallicity_Stack_Commons.Metallicity_Stack_Commons.column_names import filename_dict, valid_table_names0  # , bin_names0, remove_from_list
 
 
 def make_validation_table(fitspath):
@@ -72,7 +72,7 @@ def make_validation_table(fitspath):
     ver_tab = fitspath + filename_dict['bin_valid']
     tab1 = Table([bin_ID, N_stack, detection, OIII4363, O_4363_SN], names=valid_table_names0)
     asc.write(tab1, ver_tab, format='fixed_width_two_line')
-
+    '''
     # Write revised file for human editing
     ver_tab_revised = fitspath + filename_dict['bin_valid_rev']
     if not exists(ver_tab_revised):
@@ -85,7 +85,7 @@ def make_validation_table(fitspath):
         print("ERROR!!! FILE EXISTS!!!  WILL NOT OVERWRITE !!!")
         print("ERROR!!! PLEASE RENAME/DELETE FILE TO REGENERATE !!!")
         print("   ")
-
+    '''
 
 def compare_to_by_eye(fitspath, dataset):
     """
@@ -173,5 +173,5 @@ def compare_to_by_eye(fitspath, dataset):
     detect_add = Column(name='Detection', data=check_ID)
     ver_tab.add_column(detect_add, 2)
 
-    asc.write(ver_tab, fitspath + 'bin_validation_revised.tbl', format='fixed_width_two_line')
+    asc.write(ver_tab, fitspath + filename_dict['bin_valid_rev'], format='fixed_width_two_line')
     asc.write(ver_tab, fitspath + 'bin_validation_revised.csv', format='csv')
