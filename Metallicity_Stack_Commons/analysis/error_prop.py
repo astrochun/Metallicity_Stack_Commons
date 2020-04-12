@@ -1,7 +1,7 @@
 from os.path import join, exists
 
 from chun_codes import random_pdf, compute_onesig_pdf
-from . import line_name
+from .. import line_name
 from astropy.io import ascii as asc
 import numpy as np
 

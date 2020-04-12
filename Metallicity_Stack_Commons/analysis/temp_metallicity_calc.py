@@ -1,6 +1,6 @@
 import numpy as np
 
-from . import k_dict
+from .. import k_dict
 
 from ..column_names import temp_metal_names0, remove_from_list
 
