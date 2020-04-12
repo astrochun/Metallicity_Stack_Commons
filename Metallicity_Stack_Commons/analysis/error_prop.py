@@ -1,11 +1,11 @@
 from os.path import join, exists
 
 from chun_codes import random_pdf, compute_onesig_pdf
-from . import line_name
+from .. import line_name
 from astropy.io import ascii as asc
 import numpy as np
 
-from .column_names import filename_dict, temp_metal_names0, npz_filename_dict
+from ..column_names import filename_dict, temp_metal_names0, npz_filename_dict
 from .ratios import error_prop_flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 

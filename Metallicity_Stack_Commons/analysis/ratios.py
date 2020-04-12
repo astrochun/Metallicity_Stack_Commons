@@ -1,6 +1,6 @@
 import numpy as np
 
-from . import line_name_short, OIII_r
+from .. import line_name_short, OIII_r
 from .temp_metallicity_calc import R_calculation
 
 

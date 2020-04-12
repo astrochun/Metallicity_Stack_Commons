@@ -14,7 +14,7 @@ from astropy.io import fits
 from astropy.io import ascii as asc
 from matplotlib.backends.backend_pdf import PdfPages
 
-from ..fitting import gauss, double_gauss
+from ..analysis.fitting import gauss, double_gauss
 
 from .. import scalefact, wavelength_dict
 
