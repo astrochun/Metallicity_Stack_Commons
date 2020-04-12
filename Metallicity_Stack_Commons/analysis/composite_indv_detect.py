@@ -5,13 +5,18 @@ import numpy as np
 from astropy.io import ascii as asc
 from astropy.table import Table
 
-from ..temp_metallicity_calc import metallicity_calculation
+from .temp_metallicity_calc import metallicity_calculation
 from .. import OIII_r
 from ..column_names import bin_names0, indv_names0, temp_metal_names0
 from ..column_names import filename_dict
 
 ID_name = indv_names0[0]
 bin_ID_name = bin_names0[0]
+
+logR23_name = indv_names0[1]
+logO32_name = indv_names0[2]
+two_beta_name = indv_names0[5]
+three_beta_name = indv_names0[6]
 
 
 def main(fitspath, dataset, revised=False, det3=True):
@@ -57,6 +62,13 @@ def main(fitspath, dataset, revised=False, det3=True):
     bin_id = composite_table['bin_ID'].data
     bin_temp = composite_table['T_e'].data
 
+    # Read in validation table
+    valid_file = join(fitspath, dataset, filename_dict['bin_valid'])
+    if not exists(valid_file):
+        print("ERROR: File not found! "+valid_file)
+        return
+    valid_table = asc.read(valid_file)
+
     # Define [indv_em_line_file]
     indv_em_line_file = join(fitspath, dataset, filename_dict['indv_prop'])
     if not exists(indv_em_line_file):
@@ -78,34 +90,36 @@ def main(fitspath, dataset, revised=False, det3=True):
     # Populate composite temperature for individual galaxies
     adopted_temp = np.zeros(len(indv_em_line_table))
     bin_id_indv = np.zeros(len(indv_em_line_table))
-    for comp_bin, comp_temp in zip(bin_id, bin_temp):
+    detect_indv = np.zeros(len(indv_em_line_table))
+    for comp_bin, comp_temp, detect in zip(bin_id, bin_temp, valid_table['Detection']):
         bin_idx = np.where(indv_bin_info_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
         bin_id_indv[bin_idx]  = comp_bin
+        detect_indv[bin_idx]  = detect
 
-    O2 = indv_em_line_table['OII_3727_Flux_Gaussian'].data            # [OII]3726,3728 fluxes
-    O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data * OIII_r  # [OIII]4959,5007 fluxes (Assume 3.1:1 ratio)
-    Hb = indv_em_line_table['HBETA_Flux_Gaussian'].data               # H-beta fluxes
+    O2 = indv_em_line_table['OII_3727_Flux_Gaussian'].data   # [OII]3726,3728 fluxes
+    O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data  # [OIII]5007 fluxes
+    O3 = O3 * (1+1/OIII_r)  # Scale to include OIII4959; Assume 3.1:1 ratio
+    Hb = indv_em_line_table['HBETA_Flux_Gaussian'].data      # H-beta fluxes
 
-    if det3:
-        com_O_log, metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
+    two_beta = O2/Hb
+    three_beta = O3/Hb
+    logR23 = np.log10(two_beta + three_beta)
+    logO32 = np.log10(O3/O2)
+
+    if not det3:
+        metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
     else:
-        det3 = np.where((indv_bin_info_table['Detection'] == 1.0) | (indv_bin_info_table['Detection'] == 0.5))[0]
-        temp_com_O_log, temp_metal_dict = \
-            metallicity_calculation(adopted_temp[det3], O2[det3]/Hb[det3],
-                                    O3[det3]/Hb[det3])
-        com_O_log = np.zeros(len(indv_em_line_table))
-        com_O_log[det3] = temp_com_O_log
-
-        metal_dict = dict()
-        for key0 in temp_metal_dict.keys():
-            metal_dict[key0] = np.zeros(len(indv_em_line_table))
-            metal_dict[key0][det3] = temp_metal_dict[key0]
+        det3_idx = np.where((detect_indv == 1.0) | (detect_indv == 0.5))[0]
+        metal_dict = \
+            metallicity_calculation(adopted_temp, O2/Hb, O3/Hb, det3=det3_idx)
 
     # Define [indv_derived_prop_table] to include ID, bin_ID, composite T_e,
     # and 12+log(O/H)
-    arr0 = [indv_em_line_table[ID_name], bin_id_indv, adopted_temp, com_O_log]
-    names0 = [ID_name, bin_ID_name] + temp_metal_names0[:2]
+    arr0 = [indv_em_line_table[ID_name], bin_id_indv, logR23, logO32,
+            two_beta, three_beta, adopted_temp]
+    names0 = [ID_name, bin_ID_name, logR23_name, logO32_name, two_beta_name,
+              three_beta_name, temp_metal_names0[0]]
 
     # Include other metallicities
     arr0 += list(metal_dict.values())

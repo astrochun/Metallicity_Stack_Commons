@@ -2,7 +2,7 @@ from astropy.io import ascii as asc
 from astropy.table import Table
 import numpy as np
 
-from . import k_dict
+from .. import k_dict
 
 HgHb_CaseB = 0.468 # Hg/Hb ratio for zero reddening
 
