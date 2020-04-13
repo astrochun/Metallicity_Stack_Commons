@@ -1,4 +1,4 @@
-from os.path import exists
+# from os.path import exists
 import numpy as np
 from astropy.io import ascii as asc
 from astropy.table import Table, Column
