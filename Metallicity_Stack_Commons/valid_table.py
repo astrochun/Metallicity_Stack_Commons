@@ -3,7 +3,7 @@ import numpy as np
 from astropy.io import ascii as asc
 from astropy.table import Table, Column
 
-from Metallicity_Stack_Commons.Metallicity_Stack_Commons.column_names import filename_dict, valid_table_names0  # , bin_names0, remove_from_list
+from .column_names import filename_dict, valid_table_names0  # , bin_names0, remove_from_list
 
 
 def make_validation_table(fitspath):
@@ -86,6 +86,7 @@ def make_validation_table(fitspath):
         print("ERROR!!! PLEASE RENAME/DELETE FILE TO REGENERATE !!!")
         print("   ")
     '''
+
 
 def compare_to_by_eye(fitspath, dataset):
     """
