@@ -62,12 +62,17 @@ for line0, type0 in zip(line_name, line_type):
 # Temperature and metallicity properties
 temp_metal_names0 = ['T_e', '12+log(O/H)', 'log(O+/H)', 'log(O++/H)', 'O+/H', 'O++/H']
 
+# Validation Table
+valid_table_names0 = ['bin_ID','N_stack','Detection', 'OIII_4363_Flux_Observed', 'OIII_4363_S/N']
+
 # Dictionary containing filenames
 filename_dict = dict()
 
 # Bin-related files
 filename_dict['bin_info'] = 'bin_info.tbl'
 filename_dict['bin_valid'] = 'bin_validation.tbl'
+filename_dict['bin_valid_rev'] = 'bin_validation_revised.tbl'
+filename_dict['bin_valid_rev'] = filename_dict['bin_valid'].replace('.tbl', '.revised.tbl')
 filename_dict['bin_fit'] = 'bin_emission_line_fit.tbl'
 filename_dict['bin_fit_rev'] = filename_dict['bin_fit'].replace('.tbl', '.revised.tbl')
 filename_dict['bin_derived_prop'] = 'bin_derived_properties.tbl'
