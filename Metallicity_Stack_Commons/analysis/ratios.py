@@ -4,7 +4,7 @@ from .. import line_name_short, OIII_r
 from .temp_metallicity_calc import R_calculation
 
 
-def error_prop_flux_ratios(flux_dict, EBV=None):
+def flux_ratios(flux_dict, EBV=None):
     """
     Purpose:
       Primary code to determine a variety of line ratios based on a dictionary

@@ -6,7 +6,7 @@ from astropy.io import ascii as asc
 import numpy as np
 
 from ..column_names import filename_dict, temp_metal_names0, npz_filename_dict
-from .ratios import error_prop_flux_ratios
+from .ratios import flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 
 
@@ -110,7 +110,7 @@ def fluxes_derived_prop(path, binned_data=True):
     write_npz(path, npz_files, dict_list)
 
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
-    flux_ratios_dict = error_prop_flux_ratios(flux_pdf_dict)
+    flux_ratios_dict = flux_ratios(flux_pdf_dict)
 
     #
     # DERIVED PROPERTIES SECTION
