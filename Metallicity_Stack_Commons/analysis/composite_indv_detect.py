@@ -102,7 +102,7 @@ def main(fitspath, dataset, revised=False, det3=True):
     for line in line_name:
         flux_dict[line] = indv_em_line_table[line+'_Flux_Gaussian'].data
 
-    flux_ratios_dict = flux_ratios(flux_dict)
+    flux_ratios_dict = flux_ratios(flux_dict, get_R=False)
 
     two_beta = flux_ratios_dict[two_beta_name]
     three_beta = flux_ratios_dict[three_beta_name]
