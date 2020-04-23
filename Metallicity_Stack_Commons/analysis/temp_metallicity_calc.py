@@ -65,7 +65,11 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, det3=None):
     x2 = np.zeros(n_shape)
 
     if det3 is None:
-        det3 = np.arange(n_shape)
+        if len(n_shape) == 1:  # for one-dimensional
+            det3 = np.arange(n_shape[0])
+        else:  # for two-dimensional (e.g., MC results)
+            xy = np.meshgrid(np.arange(n_shape[0]), np.arange(n_shape[1]))
+            det3 = xy[0], xy[1]
 
     t_3[det3] = T_e[det3] * 1e-4
     t_2[det3] = 0.7 * t_3[det3] + 0.17
