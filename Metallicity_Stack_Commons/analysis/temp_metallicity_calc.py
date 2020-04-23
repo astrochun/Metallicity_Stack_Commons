@@ -57,6 +57,8 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, det3=None):
     :param THREE_BETA: numpy array of [OIII]/Hb flux ratio
     :param det3: Optional array to pass in to identify those satisfying det3
                  requirements. Default: None means full array is considered
+                 Note: for MC inputs, a 1-D np.array index satisfying det3
+                       requirements will suffice
     :return metal_dict: dictionary containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
 
