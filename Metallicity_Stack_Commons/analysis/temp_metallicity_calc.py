@@ -59,20 +59,20 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, det3=None):
     :return metal_dict: dictionary containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
 
-    n_sample = len(T_e)
-    t_3 = np.zeros(n_sample)
-    t_2 = np.zeros(n_sample)
-    x2 = np.zeros(n_sample)
+    n_shape = T_e.shape
+    t_3 = np.zeros(n_shape)
+    t_2 = np.zeros(n_shape)
+    x2 = np.zeros(n_shape)
 
     if det3 is None:
-        det3 = np.arange(n_sample)
+        det3 = np.arange(n_shape)
 
     t_3[det3] = T_e[det3] * 1e-4
     t_2[det3] = 0.7 * t_3[det3] + 0.17
     x2[det3]  = 1e-4 * 1e3 * t_2[det3] ** (-0.5)
 
-    O_s_ion_log = np.zeros(n_sample)
-    O_d_ion_log = np.zeros(n_sample)
+    O_s_ion_log = np.zeros(n_shape)
+    O_d_ion_log = np.zeros(n_shape)
 
     # Equations from Izotov et al. (2006)
     O_s_ion_log[det3] = np.log10(TWO_BETA[det3]) + 5.961 + 1.676 / t_2[det3] \
