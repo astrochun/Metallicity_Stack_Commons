@@ -59,24 +59,24 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, det3=None):
     :return metal_dict: dictionary containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
 
-    n_shape = T_e.shape
-    t_3 = np.zeros(n_shape)
-    t_2 = np.zeros(n_shape)
-    x2 = np.zeros(n_shape)
+    arr_shape = T_e.shape
+    t_3 = np.zeros(arr_shape)
+    t_2 = np.zeros(arr_shape)
+    x2 = np.zeros(arr_shape)
 
     if det3 is None:
-        if len(n_shape) == 1:  # for one-dimensional
-            det3 = np.arange(n_shape[0])
+        if len(arr_shape) == 1:  # for one-dimensional
+            det3 = np.arange(arr_shape[0])
         else:  # for two-dimensional (e.g., MC results)
-            xy = np.meshgrid(np.arange(n_shape[0]), np.arange(n_shape[1]))
+            xy = np.meshgrid(np.arange(arr_shape[0]), np.arange(arr_shape[1]))
             det3 = xy[0], xy[1]
 
     t_3[det3] = T_e[det3] * 1e-4
     t_2[det3] = 0.7 * t_3[det3] + 0.17
     x2[det3]  = 1e-4 * 1e3 * t_2[det3] ** (-0.5)
 
-    O_s_ion_log = np.zeros(n_shape)
-    O_d_ion_log = np.zeros(n_shape)
+    O_s_ion_log = np.zeros(arr_shape)
+    O_d_ion_log = np.zeros(arr_shape)
 
     # Equations from Izotov et al. (2006)
     O_s_ion_log[det3] = np.log10(TWO_BETA[det3]) + 5.961 + 1.676 / t_2[det3] \
