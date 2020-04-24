@@ -6,9 +6,10 @@ from astropy.io import ascii as asc
 from astropy.table import Table
 
 from .temp_metallicity_calc import metallicity_calculation
-from .. import OIII_r
 from ..column_names import bin_names0, indv_names0, temp_metal_names0
 from ..column_names import filename_dict
+from .ratios import flux_ratios
+from .. import line_name
 
 ID_name = indv_names0[0]
 bin_ID_name = bin_names0[0]
@@ -97,22 +98,25 @@ def main(fitspath, dataset, revised=False, det3=True):
         bin_id_indv[bin_idx]  = comp_bin
         detect_indv[bin_idx]  = detect
 
-    O2 = indv_em_line_table['OII_3727_Flux_Gaussian'].data   # [OII]3726,3728 fluxes
-    O3 = indv_em_line_table['OIII_5007_Flux_Gaussian'].data  # [OIII]5007 fluxes
-    O3 = O3 * (1+1/OIII_r)  # Scale to include OIII4959; Assume 3.1:1 ratio
-    Hb = indv_em_line_table['HBETA_Flux_Gaussian'].data      # H-beta fluxes
+    flux_dict = dict()
+    for line in line_name:
+        flux_dict[line] = indv_em_line_table[line+'_Flux_Gaussian'].data
 
-    two_beta = O2/Hb
-    three_beta = O3/Hb
-    logR23 = np.log10(two_beta + three_beta)
-    logO32 = np.log10(O3/O2)
+    flux_ratios_dict = flux_ratios(flux_dict, get_R=False)
+
+    two_beta = flux_ratios_dict[two_beta_name]
+    three_beta = flux_ratios_dict[three_beta_name]
+    logR23 = flux_ratios_dict[logR23_name]
+    logO32 = flux_ratios_dict[logO32_name]
 
     if not det3:
-        metal_dict = metallicity_calculation(adopted_temp, O2/Hb, O3/Hb)
+        metal_dict = \
+            metallicity_calculation(adopted_temp, two_beta, three_beta)
     else:
         det3_idx = np.where((detect_indv == 1.0) | (detect_indv == 0.5))[0]
         metal_dict = \
-            metallicity_calculation(adopted_temp, O2/Hb, O3/Hb, det3=det3_idx)
+            metallicity_calculation(adopted_temp, two_beta, three_beta,
+                                    det3=det3_idx)
 
     # Define [indv_derived_prop_table] to include ID, bin_ID, composite T_e,
     # and 12+log(O/H)
