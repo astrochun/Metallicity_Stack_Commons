@@ -95,6 +95,15 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
 
 # noinspection PyUnboundLocalVariable
 def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
+    """
+    Purpose:
+      Generate PDF plots that illustrate H-delta, H-gamma, and H-beta line
+      profiles and best fit
+
+    :param stack_name: filename of the stack spectra (str)
+    :param astropy_table_file: astropy table containing ID
+    :param out_pdf: Name of output file (str)
+    """
 
     stack2D, header = fits.getdata(stack_name, header=True)
     wave = header['CRVAL1'] + header['CDELT1']*np.arange(header['NAXIS1'])
