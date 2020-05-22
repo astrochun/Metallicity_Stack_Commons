@@ -63,6 +63,17 @@ def extract_fit(astropy_table, line_name, balmer=False):
 
 
 def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
+    """
+    Purpose:
+      Returns fitting results based on inputs of best fit
+
+    :param wave: numpy array of rest-frame wavelength
+    :param y_norm: Normalize 1-D spectra in units of 10^-17 erg/s/cm2/AA
+    :param lambda_cen: Central wavelength in Angstroms
+    :param balmer_fit: list containing Balmer emission fits
+    :param balmer_fit_neg: list containing the absorption ("stellar") Balmer fit
+    :return:
+    """
     dx = wave[2] - wave[1]
 
     x_sigsnip   = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 2.5)[0]
