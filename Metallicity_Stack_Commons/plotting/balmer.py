@@ -103,7 +103,7 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
     ID = astropy_table['ID'].data
 
-    pdfpages = PdfPages(out_pdf)
+    pdf_pages = PdfPages(out_pdf)
 
     for ii in range(len(ID)):
    
@@ -186,6 +186,6 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
             ax_arr[row][2].set_xticklabels([])
 
         if ii % n_rows == n_rows-1:
-            fig.savefig(pdfpages, format='pdf')
+            fig.savefig(pdf_pages, format='pdf')
 
-    pdfpages.close()
+    pdf_pages.close()
