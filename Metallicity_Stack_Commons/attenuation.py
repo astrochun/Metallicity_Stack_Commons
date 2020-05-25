@@ -4,32 +4,43 @@ import numpy as np
 
 from . import k_dict
 
-HgHb_CaseB = 0.468 # Hg/Hb ratio for zero reddening
+
+HgHb_CaseB = 0.468  # Hg/Hb ratio for zero reddening
 
 k_HBETA  = k_dict['HBETA']
 k_HGAMMA = k_dict['HGAMMA']
 
+
 def compute_EBV(fitspath, combine_asc):
+    """
+    Purpose:
+      Determines E(B-V) from Hg/Hb flux ratio
+
+    :param fitspath: str containing root path
+    :param combine_asc: Astropy table containing emission-line flux
+    """
 
     ID = combine_asc['ID']
     HBETA  = combine_asc['HBETA_Flux_Observed'].data
     HGAMMA = combine_asc['HGAMMA_Flux_Observed'].data
 
-    EBV = -2.5 * np.log10((HGAMMA / HBETA) / (HgHb_CaseB)) / (k_HGAMMA - k_HBETA)
+    EBV = -2.5 * np.log10((HGAMMA / HBETA) / HgHb_CaseB) / (k_HGAMMA - k_HBETA)
 
     out_ascii = fitspath + '/dust_attenuation_values.tbl'
 
     tab1 = Table([ID, EBV], names=('ID', 'E(B-V)'))
     asc.write(tab1, out_ascii, format='fixed_width_two_line')
 
+
 def compute_A(EBV):
 
     k_arr  = np.array(list(k_dict.values()))
 
     A_arr  = k_arr * EBV
-    A_dict = dict(zip(list(k_dict.keys()),A_arr))
+    A_dict = dict(zip(list(k_dict.keys()), A_arr))
 
     return A_dict
+
 
 def line_ratio_atten(ratio, EBV, wave_top, wave_bottom):
 
@@ -40,9 +51,9 @@ def line_ratio_atten(ratio, EBV, wave_top, wave_bottom):
 
     return ratio_atten
 
-def Hb_SFR(log_LHb, EBV):
 
-    '''
+def Hb_SFR(log_LHb, EBV):
+    """
     Purpose:
       Determine dust-corrected SFR using the H-beta luminosity and a
       measurement for nebular attenuation
@@ -56,7 +67,7 @@ def Hb_SFR(log_LHb, EBV):
 
     :return logSFR: numpy array or float containing the SFR in
             logarithmic units of M_sun/yr
-    '''
+    """
 
     logSFR = np.log10(4.4e-42 * 2.86) + 0.4*EBV*k_dict['HBETA'] + log_LHb
 
