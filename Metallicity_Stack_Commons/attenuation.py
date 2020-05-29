@@ -34,6 +34,16 @@ def compute_EBV(fitspath, combine_asc):
 
 
 def compute_A(EBV):
+    """
+    Purpose:
+      Compute A(Lambda) for all possible emission lines
+
+    :param EBV: float value of E(B-V)
+      Has not been configured to handle a large array.  Some array handling would be needed
+
+    :return A_dict: dict containing A(lambda) with keys identical to k_dict
+    """
+
     k_arr  = np.array(list(k_dict.values()))
 
     A_arr  = k_arr * EBV
