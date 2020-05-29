@@ -14,8 +14,10 @@ from astropy.io import fits
 from astropy.io import ascii as asc
 from matplotlib.backends.backend_pdf import PdfPages
 
+# This needs to be updated with new definitions and assignments
 from ..fitting import gauss, double_gauss
 
+# This needs to be updated with new definitions and assignments
 from .. import scalefact, wavelength_dict
 
 n_rows = 3
@@ -74,6 +76,7 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
     :param balmer_fit_neg: list containing the absorption ("stellar") Balmer fit
     :return:
     """
+
     dx = wave[2] - wave[1]
 
     x_sigsnip   = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 2.5)[0]
@@ -126,6 +129,7 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
         Hg_fit, Hg_fit_neg = extract_fit(astropy_table[ii], 'HGAMMA', balmer=True)
         Hd_fit, Hd_fit_neg = extract_fit(astropy_table[ii], 'HDELTA', balmer=True)
 
+        # This will need to be updated
         wave_beta  = wavelength_dict['HBETA']
         wave_gamma = wavelength_dict['HGAMMA']
         wave_delta = wavelength_dict['HDELTA']
@@ -144,6 +148,7 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
         row = ii % n_rows
 
+        # The below code could be refactored or simplified
         txt0 = r'ID: %i' % (ID[ii]) + '\n'
         txt0 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_fit[1], Hb_fit_neg[1]) + '\n'
         txt0 += 'F_G: %.3f F_S: %.3f' % (Bflux_g, Bflux_s)
