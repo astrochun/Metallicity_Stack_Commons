@@ -1,6 +1,7 @@
 from astropy.io import ascii as asc
 from astropy.table import Table
 import numpy as np
+from os.path import join
 
 from . import k_dict
 
@@ -26,14 +27,13 @@ def compute_EBV(fitspath, combine_asc):
 
     EBV = -2.5 * np.log10((HGAMMA / HBETA) / HgHb_CaseB) / (k_HGAMMA - k_HBETA)
 
-    out_ascii = fitspath + '/dust_attenuation_values.tbl'
+    out_ascii = join(fitspath, 'dust_attenuation_values.tbl')
 
     tab1 = Table([ID, EBV], names=('ID', 'E(B-V)'))
     asc.write(tab1, out_ascii, format='fixed_width_two_line')
 
 
 def compute_A(EBV):
-
     k_arr  = np.array(list(k_dict.values()))
 
     A_arr  = k_arr * EBV
