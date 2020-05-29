@@ -7,6 +7,7 @@ from . import k_dict
 
 
 HgHb_CaseB = 0.468  # Hg/Hb ratio for zero reddening
+HaHb_CaseB = 2.86   # Ha/Hb ratio for zero reddening
 
 k_HBETA  = k_dict['HBETA']
 k_HGAMMA = k_dict['HGAMMA']
@@ -79,6 +80,6 @@ def Hb_SFR(log_LHb, EBV):
             logarithmic units of M_sun/yr
     """
 
-    logSFR = np.log10(4.4e-42 * 2.86) + 0.4*EBV*k_dict['HBETA'] + log_LHb
+    logSFR = np.log10(4.4e-42 * HaHb_CaseB) + 0.4*EBV*k_HBETA + log_LHb
 
     return logSFR
