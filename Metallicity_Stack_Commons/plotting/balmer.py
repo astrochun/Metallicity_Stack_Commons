@@ -14,10 +14,8 @@ from astropy.io import fits
 from astropy.io import ascii as asc
 from matplotlib.backends.backend_pdf import PdfPages
 
-# This needs to be updated with new definitions and assignments
 from ..analysis.fitting import gauss, double_gauss
 
-# This needs to be updated with new definitions and assignments
 from .. import scalefact, wavelength_dict
 
 n_rows = 3
@@ -129,7 +127,6 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
         Hg_fit, Hg_fit_neg = extract_fit(astropy_table[ii], 'HGAMMA', balmer=True)
         Hd_fit, Hd_fit_neg = extract_fit(astropy_table[ii], 'HDELTA', balmer=True)
 
-        # This will need to be updated
         wave_beta  = wavelength_dict['HBETA']
         wave_gamma = wavelength_dict['HGAMMA']
         wave_delta = wavelength_dict['HDELTA']
