@@ -3,14 +3,16 @@ from astropy.table import Table
 import numpy as np
 from os.path import join
 
-from .. import k_dict
-
+from .. import k_dict, line_name_short
 
 HgHb_CaseB = 0.468  # Hg/Hb ratio for zero reddening
 HaHb_CaseB = 2.86   # Ha/Hb ratio for zero reddening
 
-k_HBETA  = k_dict['HBETA']
-k_HGAMMA = k_dict['HGAMMA']
+HB = line_name_short['HB']
+HG = line_name_short['HG']
+
+k_HBETA  = k_dict[HB]
+k_HGAMMA = k_dict[HG]
 
 
 def compute_EBV(fitspath, combine_asc):
@@ -23,8 +25,8 @@ def compute_EBV(fitspath, combine_asc):
     """
 
     ID = combine_asc['ID']
-    HBETA  = combine_asc['HBETA_Flux_Observed'].data
-    HGAMMA = combine_asc['HGAMMA_Flux_Observed'].data
+    HBETA  = combine_asc[HB+'_Flux_Observed'].data
+    HGAMMA = combine_asc[HG+'_Flux_Observed'].data
 
     EBV = -2.5 * np.log10((HGAMMA / HBETA) / HgHb_CaseB) / (k_HGAMMA - k_HBETA)
 
