@@ -4,6 +4,7 @@ import numpy as np
 from os.path import join
 
 from .. import k_dict, line_name_short
+from ..column_names import filename_dict
 
 HgHb_CaseB = 0.468  # Hg/Hb ratio for zero reddening
 HaHb_CaseB = 2.86   # Ha/Hb ratio for zero reddening
@@ -15,7 +16,7 @@ k_HBETA  = k_dict[HB]
 k_HGAMMA = k_dict[HG]
 
 
-def compute_EBV(fitspath, combine_asc):
+def compute_EBV(fitspath):
     """
     Purpose:
       Determines E(B-V) from Hg/Hb flux ratio
@@ -23,6 +24,10 @@ def compute_EBV(fitspath, combine_asc):
     :param fitspath: str containing root path
     :param combine_asc: Astropy table containing emission-line flux
     """
+
+    combine_file = join(fitspath, filename_dict['bin_fit_rev'])
+    print("Reading : " + combine_file)
+    combine_asc = asc.read(combine_file)
 
     ID = combine_asc['ID']
     HBETA  = combine_asc[HB+'_Flux_Observed'].data
