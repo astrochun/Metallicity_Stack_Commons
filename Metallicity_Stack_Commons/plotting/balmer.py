@@ -133,15 +133,15 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
         # Beta
         fit_result_in = [wave, y_norm, wave_beta, Hb_fit, Hb_fit_neg]
-        Bgauss0, Bresid, Bx_sigsnip_2, Bflux_g, Bflux_s = fitting_result(fit_result_in)
+        Bgauss0, Bresid, Bx_sigsnip_2, Bflux_g, Bflux_s = fitting_result(*fit_result_in)
 
         # Gamma
         fit_result_in = [wave, y_norm, wave_gamma, Hg_fit, Hg_fit_neg]
-        Ggauss0, Gresid, Gx_sigsnip_2, Gflux_g, Gflux_s = fitting_result(fit_result_in)
+        Ggauss0, Gresid, Gx_sigsnip_2, Gflux_g, Gflux_s = fitting_result(*fit_result_in)
 
         # Delta
         fit_result_in = [wave, y_norm, wave_delta, Hd_fit, Hd_fit_neg]
-        Dgauss0, Dresid, Dx_sigsnip_2, Dflux_g, Dflux_s = fitting_result(fit_result_in)
+        Dgauss0, Dresid, Dx_sigsnip_2, Dflux_g, Dflux_s = fitting_result(*fit_result_in)
 
         row = ii % n_rows
 
