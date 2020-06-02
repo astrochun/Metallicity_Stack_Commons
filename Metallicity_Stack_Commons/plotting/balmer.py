@@ -111,7 +111,7 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
     astropy_table = asc.read(astropy_table_file)
 
-    ID = astropy_table['ID'].data
+    ID = astropy_table['bin_ID'].data
 
     pdf_pages = PdfPages(out_pdf)
 
