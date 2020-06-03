@@ -1,7 +1,7 @@
 from astropy.io import ascii as asc
 from astropy.table import Table, Column
 import numpy as np
-from os.path import join
+from os.path import join, exists
 
 from .. import k_dict, line_name_short
 from ..column_names import filename_dict, dust0
@@ -46,8 +46,9 @@ def compute_EBV(fitspath, use_revised=False):
     col2 = Column(HdHb, name=dust0[1])
     col3 = Column(EBV, name=dust0[0])
 
-    out_ascii = join(fitspath, filename_dict['bin_derived_prop_rev']) if used_revised \
+    out_ascii = join(fitspath, filename_dict['bin_derived_prop_rev']) if use_revised \
         else join(fitspath, filename_dict['bin_derived_prop'])
+
     if not exists(out_ascii):
         print("File not found : ", out_ascii)
 
