@@ -11,7 +11,7 @@ HaHb_CaseB = 2.86   # Ha/Hb ratio for zero reddening
 
 HB = line_name_short['HB']
 HG = line_name_short['HG']
-HG = line_name_short['HD']
+HD = line_name_short['HD']
 
 k_HBETA  = k_dict[HB]
 k_HGAMMA = k_dict[HG]
@@ -33,7 +33,7 @@ def compute_EBV(fitspath):
     ID = combine_asc['bin_ID'].data
     HBETA  = combine_asc[HB+'_Flux_Observed'].data
     HGAMMA = combine_asc[HG+'_Flux_Observed'].data
-    HDELTA = combine_asc[HG+'_Flux_Observed'].data
+    HDELTA = combine_asc[HD+'_Flux_Observed'].data
 
     HgHb = HGAMMA / HBETA
     HdHb = HGAMMA / HBETA
