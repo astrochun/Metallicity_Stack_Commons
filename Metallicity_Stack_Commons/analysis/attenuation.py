@@ -1,5 +1,5 @@
 from astropy.io import ascii as asc
-from astropy.table import Table
+from astropy.table import Table, Column
 import numpy as np
 from os.path import join
 
@@ -11,6 +11,7 @@ HaHb_CaseB = 2.86   # Ha/Hb ratio for zero reddening
 
 HB = line_name_short['HB']
 HG = line_name_short['HG']
+HG = line_name_short['HD']
 
 k_HBETA  = k_dict[HB]
 k_HGAMMA = k_dict[HG]
@@ -32,11 +33,18 @@ def compute_EBV(fitspath):
     ID = combine_asc['bin_ID'].data
     HBETA  = combine_asc[HB+'_Flux_Observed'].data
     HGAMMA = combine_asc[HG+'_Flux_Observed'].data
+    HDELTA = combine_asc[HG+'_Flux_Observed'].data
 
-    EBV = -2.5 * np.log10((HGAMMA / HBETA) / HgHb_CaseB) / (k_HGAMMA - k_HBETA)
+    HgHb = HGAMMA / HBETA
+    HdHb = HGAMMA / HBETA
+
+    EBV = -2.5 * np.log10(HgHb/HgHb_CaseB)/(k_HGAMMA - k_HBETA)
+
+    col1 = Column(HgHb, name=dust0[1])
+    col2 = Column(HdHb, name=dust0[1])
+    col3 = Column(EBV, name=dust0[0])
 
     out_ascii = join(fitspath, 'dust_attenuation_values.tbl')
-
     tab1 = Table([ID, EBV], names=('bin_ID', dust0[0]))
     asc.write(tab1, out_ascii, format='fixed_width_two_line')
 
