@@ -29,7 +29,7 @@ def compute_EBV(fitspath):
     print("Reading : " + combine_file)
     combine_asc = asc.read(combine_file)
 
-    ID = combine_asc['ID']
+    ID = combine_asc['bin_ID'].data
     HBETA  = combine_asc[HB+'_Flux_Observed'].data
     HGAMMA = combine_asc[HG+'_Flux_Observed'].data
 
@@ -37,7 +37,7 @@ def compute_EBV(fitspath):
 
     out_ascii = join(fitspath, 'dust_attenuation_values.tbl')
 
-    tab1 = Table([ID, EBV], names=('ID', dust0[0]))
+    tab1 = Table([ID, EBV], names=('bin_ID', dust0[0]))
     asc.write(tab1, out_ascii, format='fixed_width_two_line')
 
 
