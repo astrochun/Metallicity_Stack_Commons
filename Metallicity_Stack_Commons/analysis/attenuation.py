@@ -43,8 +43,8 @@ def compute_EBV(fitspath, use_revised=False):
     EBV = -2.5 * np.log10(HgHb/HgHb_CaseB)/(k_HGAMMA - k_HBETA)
 
     col1 = Column(HgHb, name=dust0[1])
-    col2 = Column(HdHb, name=dust0[1])
-    col3 = Column(EBV, name=dust0[0])
+    col2 = Column(HdHb, name=dust0[2])
+    col3 = Column(EBV,  name=dust0[0])
 
     out_ascii = join(fitspath, filename_dict['bin_derived_prop_rev']) if use_revised \
         else join(fitspath, filename_dict['bin_derived_prop'])
