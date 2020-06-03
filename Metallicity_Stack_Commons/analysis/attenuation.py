@@ -4,7 +4,7 @@ import numpy as np
 from os.path import join
 
 from .. import k_dict, line_name_short
-from ..column_names import filename_dict
+from ..column_names import filename_dict, dust0
 
 HgHb_CaseB = 0.468  # Hg/Hb ratio for zero reddening
 HaHb_CaseB = 2.86   # Ha/Hb ratio for zero reddening
@@ -37,7 +37,7 @@ def compute_EBV(fitspath):
 
     out_ascii = join(fitspath, 'dust_attenuation_values.tbl')
 
-    tab1 = Table([ID, EBV], names=('ID', 'E(B-V)'))
+    tab1 = Table([ID, EBV], names=('ID', dust0[0]))
     asc.write(tab1, out_ascii, format='fixed_width_two_line')
 
 
