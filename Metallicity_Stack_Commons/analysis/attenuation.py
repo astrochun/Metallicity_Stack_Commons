@@ -44,8 +44,11 @@ def compute_EBV(fitspath):
     col2 = Column(HdHb, name=dust0[1])
     col3 = Column(EBV, name=dust0[0])
 
-    out_ascii = join(fitspath, 'dust_attenuation_values.tbl')
-    tab1 = Table([ID, EBV], names=('bin_ID', dust0[0]))
+    out_ascii = join(fitspath, filename_dict['bin_derived_prop_rev'])
+    tab1 = asc.read(out_ascii)
+    print("Adding dust attenuation information to " + out_ascii)
+
+    tab1.add_columns([col1, col2, col3])
     asc.write(tab1, out_ascii, format='fixed_width_two_line')
 
 
