@@ -48,11 +48,16 @@ def compute_EBV(fitspath, use_revised=False):
 
     out_ascii = join(fitspath, filename_dict['bin_derived_prop_rev']) if used_revised \
         else join(fitspath, filename_dict['bin_derived_prop'])
-    tab1 = asc.read(out_ascii)
-    print("Adding dust attenuation information to " + out_ascii)
+    if not exists(out_ascii):
+        print("File not found : ", out_ascii)
 
-    tab1.add_columns([col1, col2, col3])
-    asc.write(tab1, out_ascii, format='fixed_width_two_line')
+        raise FileNotFoundError
+    else:
+        tab1 = asc.read(out_ascii)
+        print("Adding dust attenuation information to " + out_ascii)
+
+        tab1.add_columns([col1, col2, col3])
+        asc.write(tab1, out_ascii, format='fixed_width_two_line')
 
 
 def compute_A(EBV):
