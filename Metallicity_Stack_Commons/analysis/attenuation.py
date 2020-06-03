@@ -38,7 +38,7 @@ def compute_EBV(fitspath, use_revised=False):
     HDELTA = combine_asc[HD+'_Flux_Observed'].data
 
     HgHb = HGAMMA / HBETA
-    HdHb = HGAMMA / HBETA
+    HdHb = HDELTA / HBETA
 
     EBV = -2.5 * np.log10(HgHb/HgHb_CaseB)/(k_HGAMMA - k_HBETA)
 
