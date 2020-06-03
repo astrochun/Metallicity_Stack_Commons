@@ -17,16 +17,18 @@ k_HBETA  = k_dict[HB]
 k_HGAMMA = k_dict[HG]
 
 
-def compute_EBV(fitspath):
+def compute_EBV(fitspath, use_revised=False):
     """
     Purpose:
       Determines E(B-V) from Hg/Hb flux ratio
 
     :param fitspath: str containing root path
-    :param combine_asc: Astropy table containing emission-line flux
+    :param use_revised: Boolean to indicate whether to use regular or revised tables
     """
 
-    combine_file = join(fitspath, filename_dict['bin_fit_rev'])
+    combine_file = join(fitspath, filename_dict['bin_fit_rev']) if use_revised \
+        else join(fitspath, filename_dict['bin_fit'])
+
     print("Reading : " + combine_file)
     combine_asc = asc.read(combine_file)
 
@@ -44,7 +46,8 @@ def compute_EBV(fitspath):
     col2 = Column(HdHb, name=dust0[1])
     col3 = Column(EBV, name=dust0[0])
 
-    out_ascii = join(fitspath, filename_dict['bin_derived_prop_rev'])
+    out_ascii = join(fitspath, filename_dict['bin_derived_prop_rev']) if used_revised \
+        else join(fitspath, filename_dict['bin_derived_prop'])
     tab1 = asc.read(out_ascii)
     print("Adding dust attenuation information to " + out_ascii)
 
