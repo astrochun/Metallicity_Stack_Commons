@@ -1,6 +1,6 @@
 # from os.path import exists
 import numpy as np
-from os.path import join
+from os.path import join, exists
 
 from astropy.io import ascii as asc
 from astropy.table import Table, Column
@@ -118,10 +118,14 @@ def compare_to_by_eye(fitspath, dataset):
 
     """
 
-    ver_table = join(fitspath, filename_dict['bin_valid'])
-    ver_tab = asc.read(ver_table)
-    indicate = ver_tab['Detection']
-    ID = ver_tab['bin_ID']
+    valid_rev_file = join(fitspath, filename_dict['bin_valid_rev'])
+    if exists(valid_rev_file):
+        print("!!! Revised validation table exists. Not overwriting! : ", valid_rev_file)
+    else:
+        valid_file = join(fitspath, filename_dict['bin_valid'])
+        valid_tab = asc.read(valid_file)
+        indicate = valid_tab['Detection']
+        ID = valid_tab['bin_ID']
 
     # Detections By Eye
     if dataset == 'Voronoi20':
