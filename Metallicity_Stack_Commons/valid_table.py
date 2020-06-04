@@ -1,5 +1,7 @@
 # from os.path import exists
 import numpy as np
+from os.path import join
+
 from astropy.io import ascii as asc
 from astropy.table import Table, Column
 
@@ -36,8 +38,8 @@ def make_validation_table(fitspath):
                                         OIII4363_S/N
     """
 
-    bin_table = asc.read(fitspath + filename_dict['bin_info'])
-    em_table = asc.read(fitspath + filename_dict['bin_fit']) 
+    bin_table = asc.read(join(fitspath, filename_dict['bin_info']))
+    em_table = asc.read(join(fitspath, filename_dict['bin_fit']))
 
     bin_ID = em_table['bin_ID'].data
     raw_OIII4363 = em_table['OIII_4363_Flux_Observed'].data
@@ -115,7 +117,8 @@ def compare_to_by_eye(fitspath, dataset):
                                         Notes
 
     """
-    ver_table = fitspath + filename_dict['bin_valid']
+
+    ver_table = join(fitspath, filename_dict['bin_valid'])
     ver_tab = asc.read(ver_table)
     indicate = ver_tab['Detection']
     ID = ver_tab['bin_ID']
