@@ -15,7 +15,7 @@ from astropy.io import ascii as asc
 from matplotlib.backends.backend_pdf import PdfPages
 
 from ..analysis.fitting import gauss, double_gauss
-# from ..analysis.attenuation import compute_EBV
+from ..analysis.attenuation import compute_EBV
 
 from .. import scalefact, wavelength_dict
 
@@ -144,6 +144,10 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
         fit_result_in = [wave, y_norm, wave_delta, Hd_fit, Hd_fit_neg]
         Dgauss0, Dresid, Dx_sigsnip_2, Dflux_g, Dflux_s = fitting_result(*fit_result_in)
 
+        # Calculate E(B-V)
+        EBV_HgHb = compute_EBV(Gflux_g/Bflux_g, source='HgHb')
+        EBV_HdHb = compute_EBV(Dflux_g/Bflux_g, source='HdHb')
+
         row = ii % n_rows
 
         # Label in upper left once
@@ -165,7 +169,7 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
         txt1 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hg_fit[1], Hg_fit_neg[1]) + '\n'
         txt1 += 'F_G: %.3f F_S: %.3f' % (Gflux_g, Gflux_s) + '\n'
-        txt1 += r'H$\gamma$/H$\beta$ = %.2f' % (Gflux_g/Bflux_g)
+        txt1 += r'H$\gamma$/H$\beta$: %.2f E(B-V): %.2f' % (Gflux_g/Bflux_g, EBV_HgHb)
 
         ax_arr[row][1].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
         ax_arr[row][1].plot(wave, Ggauss0, 'm', linewidth=0.25, label='Gamma Fit')
@@ -178,7 +182,7 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
         txt2 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hd_fit[1], Hd_fit_neg[1]) + '\n'
         txt2 += 'F_G: %.3f F_S: %.3f' % (Dflux_g, Dflux_s) + '\n'
-        txt2 += r'H$\delta$/H$\beta$ = %.2f' % (Dflux_g/Bflux_g)
+        txt2 += r'H$\delta$/H$\beta$: %.2f E(B-V): %.2f' % (Dflux_g/Bflux_g, EBV_HdHb)
 
         ax_arr[row][0].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
         ax_arr[row][0].plot(wave, Dgauss0, 'm', linewidth=0.25, label='Delta Fit')
