@@ -17,12 +17,37 @@ HD = line_name_short['HD']
 
 k_HBETA  = k_dict[HB]
 k_HGAMMA = k_dict[HG]
+k_HDELTA = k_dict[HD]
 
 
-def compute_EBV(fitspath, use_revised=False):
+def compute_EBV(ratio, source='HgHb'):
     """
     Purpose:
-      Determines E(B-V) from Hg/Hb flux ratio
+      Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
+
+    :param ratio: float or numpy array containing Hg/Hb or Hd/hb
+    :param source: str indicate ratio type.  Either 'HgHb' or 'HdHb'. Default: 'HgHb'
+    :return EBV: float or numpy array containing E(B-V).
+                 Note: Not correcting for negative reddening
+    """
+
+    if source == 'HgHb':
+        ratio0 = HgHb_CaseB
+        k1 = k_HGAMMA
+    if source == 'HdHb':
+        ratio0 = HdHb_CaseB
+        k1 = k_HDELTA
+
+    EBV = -2.5 * np.log10(ratio/ratio0)/(k1 - k_HBETA)
+
+    return EBV
+
+
+def EBV_table_update(fitspath, use_revised=False):
+    """
+    Purpose:
+      Determines E(B-V) from Hg/Hb and Hd/Hb flux ratios by calling
+      compute_EBV() and update table
 
     :param fitspath: str containing root path
     :param use_revised: Boolean to indicate whether to use regular or revised tables
@@ -42,11 +67,13 @@ def compute_EBV(fitspath, use_revised=False):
     HgHb = HGAMMA / HBETA
     HdHb = HDELTA / HBETA
 
-    EBV = -2.5 * np.log10(HgHb/HgHb_CaseB)/(k_HGAMMA - k_HBETA)
+    EBV_HgHb = compute_EBV(HgHb, source='HgHb')
+    EBV_HdHb = compute_EBV(HdHb, source='HdHb')
 
-    col1 = Column(HgHb, name=dust0[1])
-    col2 = Column(HdHb, name=dust0[2])
-    col3 = Column(EBV,  name=dust0[0])
+    col1 = Column(HgHb,     name=dust0[0])
+    col2 = Column(HdHb,     name=dust0[1])
+    col3 = Column(EBV_HgHb, name=dust0[2])
+    col4 = Column(EBV_HdHb, name=dust0[3])
 
     out_ascii = join(fitspath, filename_dict['bin_derived_prop_rev']) if use_revised \
         else join(fitspath, filename_dict['bin_derived_prop'])
@@ -59,8 +86,8 @@ def compute_EBV(fitspath, use_revised=False):
         tab1 = asc.read(out_ascii)
         print("Adding dust attenuation information to " + out_ascii)
 
-        tab1.add_columns([col1, col2, col3])
-        asc.write(tab1, out_ascii, format='fixed_width_two_line')
+        tab1.add_columns([col1, col2, col3, col4])
+        asc.write(tab1, out_ascii, format='fixed_width_two_line', overwrite=True)
 
 
 def compute_A(EBV):
