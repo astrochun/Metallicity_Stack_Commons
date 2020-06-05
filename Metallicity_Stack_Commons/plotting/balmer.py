@@ -36,22 +36,22 @@ def extract_fit(astropy_table, line_name, balmer=False):
     """
 
     try:
-        astropy_table[line_name + '_Center'].data
+        astropy_table[line_name + '_Center']
     except KeyError:
         print("Line not present in table")
         print("Exiting!!!")
         return
 
-    xbar = astropy_table[line_name + '_Center'].data
-    sp   = astropy_table[line_name + '_Sigma'].data
-    ap   = astropy_table[line_name + '_Norm'].data
-    con  = astropy_table[line_name + '_Median'].data
+    xbar = astropy_table[line_name + '_Center']
+    sp   = astropy_table[line_name + '_Sigma']
+    ap   = astropy_table[line_name + '_Norm']
+    con  = astropy_table[line_name + '_Median']
 
     param_list = [xbar, sp, ap, con]
 
     if balmer:
-        sn = astropy_table[line_name + '_Abs_Sigma'].data
-        an = astropy_table[line_name + '_Abs_Norm'].data
+        sn = astropy_table[line_name + '_Abs_Sigma']
+        an = astropy_table[line_name + '_Abs_Norm']
 
         param_list += [sn, an]
 
