@@ -6,8 +6,10 @@ from os.path import join, exists
 from .. import k_dict, line_name_short
 from ..column_names import filename_dict, dust0
 
-HgHb_CaseB = 0.468  # Hg/Hb ratio for zero reddening
-HaHb_CaseB = 2.86   # Ha/Hb ratio for zero reddening
+# Balmer decrement Case B, zero reddening
+HdHb_CaseB = 0.259  # Hd/Hb ratio
+HgHb_CaseB = 0.468  # Hg/Hb ratio
+HaHb_CaseB = 2.86   # Ha/Hb ratio
 
 HB = line_name_short['HB']
 HG = line_name_short['HG']
