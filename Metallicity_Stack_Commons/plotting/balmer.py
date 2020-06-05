@@ -8,6 +8,7 @@
       https://github.com/astrochun/Zcalbase_gal/blob/master/Analysis/DEEP2_R23_O32/balmer_plots.py
 """
 
+from os.path import join
 import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
@@ -18,6 +19,7 @@ from ..analysis.fitting import gauss, double_gauss
 from ..analysis.attenuation import compute_EBV
 
 from .. import scalefact, wavelength_dict
+from ..column_names import filename_dict
 
 n_rows = 3
 n_cols = 3
@@ -96,19 +98,28 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
 
 
 # noinspection PyUnboundLocalVariable
-def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
+def HbHgHd_fits(fitspath, stack_name, out_pdf_prefix='HbHgHd_fits',
+                use_revised=False):
     """
     Purpose:
       Generate PDF plots that illustrate H-delta, H-gamma, and H-beta line
       profiles and best fit
 
+    :param fitspath: full path (str)
     :param stack_name: filename of the stack spectra (str)
-    :param astropy_table_file: astropy table containing ID
-    :param out_pdf: Name of output file (str)
+    :param out_pdf_prefix: Prefix for outpute PDF file (str)
+    :param use_revised: Indicate whether to use regular or revised tables (bool)
     """
 
     stack2D, header = fits.getdata(stack_name, header=True)
     wave = header['CRVAL1'] + header['CDELT1']*np.arange(header['NAXIS1'])
+
+    if not use_revised:
+        astropy_table_file = join(fitspath, filename_dict['bin_fit'])
+        out_pdf = join(fitspath, out_pdf_prefix+'.pdf')
+    else:
+        astropy_table_file = join(fitspath, filename_dict['bin_fit_rev'])
+        out_pdf = join(fitspath, out_pdf_prefix+'.revised.pdf')
 
     astropy_table = asc.read(astropy_table_file)
 
