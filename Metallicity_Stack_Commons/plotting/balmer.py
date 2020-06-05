@@ -15,6 +15,7 @@ from astropy.io import ascii as asc
 from matplotlib.backends.backend_pdf import PdfPages
 
 from ..analysis.fitting import gauss, double_gauss
+# from ..analysis.attenuation import compute_EBV
 
 from .. import scalefact, wavelength_dict
 
@@ -145,9 +146,12 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
 
         row = ii % n_rows
 
+        # Label in upper left once
+        ax_arr[row][0].annotate(f'ID: {ID[ii]}', [0.05, 0.95], va='top', ha='left',
+                                xycoords='axes fraction', fontsize='8')
+
         # The below code could be refactored or simplified
-        txt0 = r'ID: %i' % (ID[ii]) + '\n'
-        txt0 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_fit[1], Hb_fit_neg[1]) + '\n'
+        txt0 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_fit[1], Hb_fit_neg[1]) + '\n'
         txt0 += 'F_G: %.3f F_S: %.3f' % (Bflux_g, Bflux_s)
 
         ax_arr[row][2].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
@@ -159,10 +163,10 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
         ax_arr[row][2].plot(wave[Bx_sigsnip_2], Bresid, 'r', linestyle='dashed',
                             linewidth=0.2, label='Residuals')
 
-        txt1 = r'ID: %i' % (ID[ii]) + '\n'
-        txt1 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hg_fit[1], Hg_fit_neg[1]) + '\n'
-        txt1 += 'F_G: %.3f F_S: %.3f' % (Gflux_g, Gflux_s)
-    
+        txt1 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hg_fit[1], Hg_fit_neg[1]) + '\n'
+        txt1 += 'F_G: %.3f F_S: %.3f' % (Gflux_g, Gflux_s) + '\n'
+        txt1 += r'H$\gamma$/H$\beta$ = %.2f' % (Gflux_g/Bflux_g)
+
         ax_arr[row][1].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
         ax_arr[row][1].plot(wave, Ggauss0, 'm', linewidth=0.25, label='Gamma Fit')
         ax_arr[row][1].set_xlim(wave_gamma-50, wave_gamma+50)
@@ -172,9 +176,9 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
         ax_arr[row][1].plot(wave[Gx_sigsnip_2], Gresid, 'r', linestyle='dashed',
                             linewidth=0.2, label='Residuals')
 
-        txt2 = r'ID: %i' % (ID[ii]) + '\n'
-        txt2 += r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hd_fit[1], Hd_fit_neg[1]) + '\n'
-        txt2 += 'F_G: %.3f F_S: %.3f' % (Dflux_g, Dflux_s)
+        txt2 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hd_fit[1], Hd_fit_neg[1]) + '\n'
+        txt2 += 'F_G: %.3f F_S: %.3f' % (Dflux_g, Dflux_s) + '\n'
+        txt2 += r'H$\delta$/H$\beta$ = %.2f' % (Dflux_g/Bflux_g)
 
         ax_arr[row][0].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
         ax_arr[row][0].plot(wave, Dgauss0, 'm', linewidth=0.25, label='Delta Fit')
