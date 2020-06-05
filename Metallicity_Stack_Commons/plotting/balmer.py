@@ -201,6 +201,7 @@ def HbHgHd_fits(stack_name, astropy_table_file, out_pdf):
             ax_arr[row][2].set_xticklabels([])
 
         if ii % n_rows == n_rows-1:
+            plt.subplots_adjust(left=0.15, right=0.95, bottom=0.1, top=0.95)
             fig.savefig(pdf_pages, format='pdf')
 
     pdf_pages.close()
