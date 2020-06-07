@@ -69,6 +69,7 @@ valid_table_names0 = ['bin_ID','N_stack','Detection', 'OIII_4363_Flux_Observed',
 filename_dict = dict()
 
 # Bin-related files
+filename_dict['comp_spec'] = 'composite_spectra.fits'
 filename_dict['bin_info'] = 'bin_info.tbl'
 filename_dict['bin_valid'] = 'bin_validation.tbl'
 filename_dict['bin_valid_rev'] = 'bin_validation_revised.tbl'
