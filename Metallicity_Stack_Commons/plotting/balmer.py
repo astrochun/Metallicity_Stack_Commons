@@ -98,7 +98,7 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg):
 
 
 # noinspection PyUnboundLocalVariable
-def HbHgHd_fits(fitspath, stack_name, out_pdf_prefix='HbHgHd_fits',
+def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
                 use_revised=False):
     """
     Purpose:
@@ -106,12 +106,12 @@ def HbHgHd_fits(fitspath, stack_name, out_pdf_prefix='HbHgHd_fits',
       profiles and best fit
 
     :param fitspath: full path (str)
-    :param stack_name: filename of the stack spectra (str)
     :param out_pdf_prefix: Prefix for outpute PDF file (str)
     :param use_revised: Indicate whether to use regular or revised tables (bool)
     """
 
-    stack2D, header = fits.getdata(stack_name, header=True)
+    comp_spec_file = filename_dict['comp_spec']
+    stack2D, header = fits.getdata(comp_spec_file, header=True)
     wave = header['CRVAL1'] + header['CDELT1']*np.arange(header['NAXIS1'])
 
     if not use_revised:
