@@ -201,7 +201,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         ax_arr[row][0].set_ylim(0, 1.5)
         
-        ax_arr[row][0].annotate(txt0, [0.95, 0.95], xycoords='axes fraction',
+        ax_arr[row][0].annotate(txt2, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
         ax_arr[row][0].plot(wave[Dx_sigsnip_2], Dresid, 'r', linestyle='dashed',
                             linewidth=0.2, label='Residuals')
