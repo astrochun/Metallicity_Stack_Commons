@@ -216,7 +216,10 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
             ax_arr[row][2].set_xticklabels([])
         else:
             ax_arr[row][0].set_xticklabels([4050, 4075, 4100, 4125])
-            #ax_arr[row][1].set_xticklabels([4325, 4350, 4375, 4400])
+            # ax_arr[row][1].set_xticklabels([4325, 4350, 4375, 4400])
+
+        for col in range(n_cols):
+            ax_arr[row][col].tick_params(direction='in')  # ticks on the inside
 
         if row == 1:
             ax_arr[row][0].set_ylabel(r"Flux [10$^{-17}$ erg s$^{-1}$ cm$^{-2}$ $\AA^{-1}$]",
