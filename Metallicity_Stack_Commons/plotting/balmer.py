@@ -230,7 +230,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         if ii % n_rows == n_rows-1:
             plt.subplots_adjust(left=0.1, right=0.99, bottom=0.1, top=0.99,
-                                hspace=0.05, wspace=0.05)
+                                hspace=0.05, wspace=0.025)
             fig.savefig(pdf_pages, format='pdf')
 
     pdf_pages.close()
