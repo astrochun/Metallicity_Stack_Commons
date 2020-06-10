@@ -215,6 +215,13 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
             ax_arr[row][1].set_xticklabels([])
             ax_arr[row][2].set_xticklabels([])
 
+        if row == 1:
+            ax_arr[row][0].set_ylabel(r"Flux [10$^{-17}$ erg s$^{-1}$ cm$^{-2}$ $\AA^{-1}$]",
+                                      fontsize=12)
+
+        if row == n_rows-1:
+            ax_arr[row][1].set_xlabel(r"Wavelength [$\AA$]", fontsize=12)
+
         if ii % n_rows == n_rows-1:
             plt.subplots_adjust(left=0.15, right=0.95, bottom=0.1, top=0.95)
             fig.savefig(pdf_pages, format='pdf')
