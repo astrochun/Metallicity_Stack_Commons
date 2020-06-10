@@ -110,7 +110,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
     :param use_revised: Indicate whether to use regular or revised tables (bool)
     """
 
-    comp_spec_file = filename_dict['comp_spec']
+    comp_spec_file = join(fitspath, filename_dict['comp_spec'])
     stack2D, header = fits.getdata(comp_spec_file, header=True)
     wave = header['CRVAL1'] + header['CDELT1']*np.arange(header['NAXIS1'])
 
