@@ -171,7 +171,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         ax_arr[row][2].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
         ax_arr[row][2].plot(wave, Bgauss0, 'm', linewidth=0.25, label='Beta Fit')
-        ax_arr[row][2].set_xlim(wave_beta-50, wave_beta+50)
+        ax_arr[row][2].set_xlim(4810, 4910)
 
         ax_arr[row][2].annotate(txt0, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
@@ -184,7 +184,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         ax_arr[row][1].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
         ax_arr[row][1].plot(wave, Ggauss0, 'm', linewidth=0.25, label='Gamma Fit')
-        ax_arr[row][1].set_xlim(wave_gamma-50, wave_gamma+50)
+        ax_arr[row][1].set_xlim(4290, 4390)
 
         ax_arr[row][1].annotate(txt1, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
@@ -197,9 +197,9 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         ax_arr[row][0].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
         ax_arr[row][0].plot(wave, Dgauss0, 'm', linewidth=0.25, label='Delta Fit')
-        ax_arr[row][0].set_xlim(wave_delta-50, wave_delta+50)
+        ax_arr[row][0].set_xlim(4050, 4150)
 
-        ax_arr[row][0].set_ylim(0, 1.5)
+        ax_arr[row][0].set_ylim(0, 1.6)
         
         ax_arr[row][0].annotate(txt2, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
@@ -214,16 +214,20 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
             ax_arr[row][0].set_xticklabels([])
             ax_arr[row][1].set_xticklabels([])
             ax_arr[row][2].set_xticklabels([])
+        else:
+            ax_arr[row][0].set_xticklabels([4050, 4075, 4100, 4125])
+            #ax_arr[row][1].set_xticklabels([4325, 4350, 4375, 4400])
 
         if row == 1:
             ax_arr[row][0].set_ylabel(r"Flux [10$^{-17}$ erg s$^{-1}$ cm$^{-2}$ $\AA^{-1}$]",
                                       fontsize=12)
 
-        if row == n_rows-1:
+        if row == n_rows-1 or ii == stack2D.shape[0]-1:
             ax_arr[row][1].set_xlabel(r"Wavelength [$\AA$]", fontsize=12)
 
         if ii % n_rows == n_rows-1:
-            plt.subplots_adjust(left=0.15, right=0.95, bottom=0.1, top=0.95)
+            plt.subplots_adjust(left=0.1, right=0.99, bottom=0.1, top=0.99,
+                                hspace=0.05, wspace=0.05)
             fig.savefig(pdf_pages, format='pdf')
 
     pdf_pages.close()
