@@ -33,7 +33,7 @@ bin_names0 = ['bin_ID', 'N_stack', 'Detection']
 indv_names0 = ['ID', 'logR23', 'logO32', 'logM', 'logLHb', 'two_beta', 'three_beta']
 
 # Dust attenuation
-dust0 = ['E(B-V)', 'HgHb', 'HdHb']
+dust0 = ['HgHb', 'HdHb', 'EBV_HgHb', 'EBV_HdHb']
 
 # Column names for bin information in stellar mass and H-beta luminosity
 bin_mzevolve_names0 = ['logM_min', 'logM_max', 'logM_avg', 'logM_median',
@@ -69,6 +69,7 @@ valid_table_names0 = ['bin_ID','N_stack','Detection', 'OIII_4363_Flux_Observed',
 filename_dict = dict()
 
 # Bin-related files
+filename_dict['comp_spec'] = 'composite_spectra.fits'
 filename_dict['bin_info'] = 'bin_info.tbl'
 filename_dict['bin_valid'] = 'bin_validation.tbl'
 filename_dict['bin_valid_rev'] = 'bin_validation_revised.tbl'
