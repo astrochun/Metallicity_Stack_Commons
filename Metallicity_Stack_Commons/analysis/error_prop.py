@@ -41,14 +41,13 @@ def fluxes_derived_prop(path, binned_data=True):
     :param path: str of full path
     :param binned_data: bool for whether to analysis binned data. Default: True
 
-    :return:
     """
 
     # Define files to read in for binned data
     if binned_data:
         flux_file = join(path, filename_dict['bin_fit'])
         prop_file = join(path, filename_dict['bin_derived_prop'])
-        verify_file = join(path, filename_dict['bin_valid'])
+        verify_file = join(path, filename_dict['bin_valid'])  # This might need to be the revised one
 
     flux_tab0 = asc.read(flux_file)
     prop_tab0 = asc.read(prop_file)
