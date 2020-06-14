@@ -39,7 +39,7 @@ def flux_ratios(flux_dict, EBV=None, get_R=True):
 
     if EBV is None:
         print("Not applying dust attenuation correction")
-        EBV = np.zeros(OIII4363.shape)
+        EBV = np.zeros(OIII.shape)
 
     if get_R:
         flux_ratios_dict['R'] = R_calculation(OIII4363, OIII, EBV)
