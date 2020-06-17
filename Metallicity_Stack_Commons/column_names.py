@@ -30,7 +30,7 @@ def line_fit_suffix_add(line_name0, line_type0):
 bin_names0 = ['bin_ID', 'N_stack', 'Detection']
 
 # Column names for individual galaxies/spectra
-indv_names0 = ['ID', 'logR23', 'logO32', 'logM', 'logLHb', 'two_beta', 'three_beta']
+indv_names0 = ['ID', 'logR23', 'logO32', 'logM', 'logLHb', 'two_beta', 'three_beta', 'R']
 
 # Dust attenuation
 dust0 = ['HgHb', 'HdHb', 'EBV_HgHb', 'EBV_HdHb']
@@ -45,7 +45,7 @@ bin_zcalbase_names0 = ['logR23_min', 'logR23_max', 'logR23_avg', 'logR23_median'
 
 # Column names for composite line ratios
 bin_ratios0 = ['logR23_composite', 'logO32_composite',
-               'two_beta_composite', 'three_beta_composite']
+               'two_beta_composite', 'three_beta_composite', 'R_composite']
 
 # Column names for Gaussian fitting
 # This is just the suffix
