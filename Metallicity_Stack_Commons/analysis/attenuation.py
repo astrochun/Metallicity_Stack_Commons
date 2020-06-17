@@ -20,13 +20,15 @@ k_HGAMMA = k_dict[HG]
 k_HDELTA = k_dict[HD]
 
 
-def compute_EBV(ratio, source='HgHb'):
+def compute_EBV(ratio, source='HgHb', zero_neg=True):
     """
     Purpose:
       Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
 
     :param ratio: float or numpy array containing Hg/Hb or Hd/hb
     :param source: str indicate ratio type.  Either 'HgHb' or 'HdHb'. Default: 'HgHb'
+    :param zero_neg: boolean to indicate whether to zero out negative reddening. Default: True
+
     :return EBV: float or numpy array containing E(B-V).
                  Note: Not correcting for negative reddening
     """
@@ -39,6 +41,11 @@ def compute_EBV(ratio, source='HgHb'):
         k1 = k_HDELTA
 
     EBV = -2.5 * np.log10(ratio/ratio0)/(k1 - k_HBETA)
+
+    if zero_neg:
+        neg_idx = np.where(EBV < 0.0)[0]
+        if len(neg_idx > 0):
+            EBV[neg_idx] = 0.0
 
     return EBV
 
