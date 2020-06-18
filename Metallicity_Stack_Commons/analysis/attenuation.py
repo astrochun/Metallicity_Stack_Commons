@@ -41,12 +41,17 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
         k1 = k_HDELTA
 
     EBV = -2.5 * np.log10(ratio/ratio0)/(k1 - k_HBETA)
+    print('Calculated EBV: ', EBV)
 
     if zero_neg:
-        neg_idx = np.where(EBV < 0.0)[0]
+        if EBV < 0.0:
+            EBV = 0.0
+            print('zero substituted for negative reddening')
+        '''neg_idx = np.where(EBV < 0.0)[0]
         if len(neg_idx > 0):
             EBV[neg_idx] = 0.0
-
+            print('zero substituted for negative reddening')'''
+    print('Returned EBV: ', EBV)
     return EBV
 
 
@@ -74,8 +79,12 @@ def EBV_table_update(fitspath, use_revised=False):
     HgHb = HGAMMA / HBETA
     HdHb = HDELTA / HBETA
 
-    EBV_HgHb = compute_EBV(HgHb, source='HgHb')
-    EBV_HdHb = compute_EBV(HdHb, source='HdHb')
+    EBV_HgHb = np.zeros(len(HgHb))
+    EBV_HdHb = np.zeros(len(HgHb))
+    #Must loop over each case because of the way EBV negative reddening is calculated for balmer plots
+    for ii in range(len(HgHb)):
+        EBV_HgHb[ii] = compute_EBV(HgHb[ii], source='HgHb')
+        EBV_HdHb[ii] = compute_EBV(HdHb[ii], source='HdHb')
 
     col1 = Column(HgHb,     name=dust0[0])
     col2 = Column(HdHb,     name=dust0[1])
