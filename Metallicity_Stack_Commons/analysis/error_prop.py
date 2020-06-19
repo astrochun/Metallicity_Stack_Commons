@@ -30,7 +30,7 @@ def write_npz(path, npz_files, dict_list):
         np.savez(npz_outfile, **dict_input)
 
 
-def fluxes_derived_prop(path, binned_data=True, revised = True):
+def fluxes_derived_prop(path, binned_data=True, revised=True):
     """
     Purpose:
       Use measurements and their uncertainties to perform a randomization
@@ -49,7 +49,7 @@ def fluxes_derived_prop(path, binned_data=True, revised = True):
         flux_file = join(path, filename_dict['bin_fit'])
         prop_file = join(path, filename_dict['bin_derived_prop'])
         if revised:
-            print('Using revised validation table')
+            print('Using REVISED validation table')
             verify_file = join(path, filename_dict['bin_valid_rev'])
         else:
             print('Using validation table')
