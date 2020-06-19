@@ -33,25 +33,31 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
                  Note: Not correcting for negative reddening
     """
 
+    if isinstance(ratio, list):
+        print("!!! Incorrect type for input [ratio].  Cannot be list !!!")
+        raise TypeError
+
     if source == 'HgHb':
         ratio0 = HgHb_CaseB
         k1 = k_HGAMMA
+
     if source == 'HdHb':
         ratio0 = HdHb_CaseB
         k1 = k_HDELTA
 
     EBV = -2.5 * np.log10(ratio/ratio0)/(k1 - k_HBETA)
-    print('Calculated EBV: ', EBV)
 
     if zero_neg:
-        if EBV < 0.0:
-            EBV = 0.0
-            print('zero substituted for negative reddening')
-        '''neg_idx = np.where(EBV < 0.0)[0]
-        if len(neg_idx > 0):
-            EBV[neg_idx] = 0.0
-            print('zero substituted for negative reddening')'''
-    print('Returned EBV: ', EBV)
+        if isinstance(EBV, float):
+            if EBV < 0.0:
+                EBV = 0.0
+                print('zero substituted for negative reddening')
+        else:
+            neg_idx = np.where(EBV < 0.0)[0]
+            if len(neg_idx > 0):
+                EBV[neg_idx] = 0.0
+                print('zero substituted for negative reddening')
+
     return EBV
 
 
