@@ -6,6 +6,8 @@ from os.path import join, exists
 from .. import k_dict, line_name_short
 from ..column_names import filename_dict, dust0
 
+from chun_codes import compute_onesig_pdf
+
 # Balmer decrement Case B, zero reddening
 HdHb_CaseB = 0.259  # Hd/Hb ratio
 HgHb_CaseB = 0.468  # Hg/Hb ratio
@@ -53,10 +55,18 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
                 EBV = 0.0
                 print('zero substituted for negative reddening')
         else:
-            neg_idx = np.where(EBV < 0.0)[0]
-            if len(neg_idx > 0):
-                EBV[neg_idx] = 0.0
-                print('zero substituted for negative reddening')
+            if len(EBV.shape) == 1:
+                neg_idx = np.where(EBV < 0.0)[0]
+                if len(neg_idx) > 0:
+                    EBV[neg_idx] = 0.0
+                    print('zero substituted for negative reddening')
+            if len(EBV.shape) == 2:
+                EBV_avg = np.average(EBV, axis=0)  # initial guess
+                EBV_err, EBV_peak = compute_onesig_pdf(EBV, EBV_avg, usepeak=True)
+                neg_idx = np.where(EBV_peak < 0.0)[0]
+                if len(neg_idx) > 0:
+                    print('EBV distribution shifted for peak')
+                    EBV[:, neg_idx] -= EBV_peak[neg_idx]
 
     return EBV
 
