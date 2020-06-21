@@ -72,12 +72,13 @@ filename_dict = dict()
 filename_dict['comp_spec'] = 'composite_spectra.fits'
 filename_dict['bin_info'] = 'bin_info.tbl'
 filename_dict['bin_valid'] = 'bin_validation.tbl'
-filename_dict['bin_valid_rev'] = 'bin_validation_revised.tbl'
 filename_dict['bin_valid_rev'] = filename_dict['bin_valid'].replace('.tbl', '.revised.tbl')
 filename_dict['bin_fit'] = 'bin_emission_line_fit.tbl'
-filename_dict['bin_fit_rev'] = filename_dict['bin_fit'].replace('.tbl', '.revised.tbl')
+filename_dict['bin_fit_rev'] = filename_dict['bin_fit'].replace('.tbl', '.MC.tbl')
 filename_dict['bin_derived_prop'] = 'bin_derived_properties.tbl'
-filename_dict['bin_derived_prop_rev'] = filename_dict['bin_derived_prop'].replace('.tbl', '.revised.tbl')
+filename_dict['bin_derived_prop_rev'] = filename_dict['bin_derived_prop'].replace('.tbl', '.MC.tbl')
+filename_dict['bin_derived_prop_dust'] = filename_dict['bin_derived_prop'].replace('.tbl', '.dustcorr.tbl')
+filename_dict['bin_derived_prop_rev_dust'] = filename_dict['bin_derived_prop_rev'].replace('.tbl', '.dustcorr.tbl')
 
 # Individual galaxy/spectra-related files
 filename_dict['indv_prop'] = 'individual_properties.tbl'
