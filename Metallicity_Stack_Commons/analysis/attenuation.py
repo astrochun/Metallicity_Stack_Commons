@@ -6,6 +6,8 @@ from os.path import join, exists
 from .. import k_dict, line_name_short
 from ..column_names import filename_dict, dust0
 
+from chun_codes import compute_onesig_pdf
+
 # Balmer decrement Case B, zero reddening
 HdHb_CaseB = 0.259  # Hd/Hb ratio
 HgHb_CaseB = 0.468  # Hg/Hb ratio
@@ -20,25 +22,51 @@ k_HGAMMA = k_dict[HG]
 k_HDELTA = k_dict[HD]
 
 
-def compute_EBV(ratio, source='HgHb'):
+def compute_EBV(ratio, source='HgHb', zero_neg=True):
     """
     Purpose:
       Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
 
     :param ratio: float or numpy array containing Hg/Hb or Hd/hb
     :param source: str indicate ratio type.  Either 'HgHb' or 'HdHb'. Default: 'HgHb'
+    :param zero_neg: boolean to indicate whether to zero out negative reddening. Default: True
+
     :return EBV: float or numpy array containing E(B-V).
                  Note: Not correcting for negative reddening
     """
 
+    if isinstance(ratio, list):
+        print("!!! Incorrect type for input [ratio].  Cannot be list !!!")
+        raise TypeError
+
     if source == 'HgHb':
         ratio0 = HgHb_CaseB
         k1 = k_HGAMMA
+
     if source == 'HdHb':
         ratio0 = HdHb_CaseB
         k1 = k_HDELTA
 
     EBV = -2.5 * np.log10(ratio/ratio0)/(k1 - k_HBETA)
+
+    if zero_neg:
+        if isinstance(EBV, float):
+            if EBV < 0.0:
+                EBV = 0.0
+                print('zero substituted for negative reddening')
+        else:
+            if len(EBV.shape) == 1:
+                neg_idx = np.where(EBV < 0.0)[0]
+                if len(neg_idx) > 0:
+                    EBV[neg_idx] = 0.0
+                    print('zero substituted for negative reddening')
+            if len(EBV.shape) == 2:
+                EBV_avg = np.average(EBV, axis=0)  # initial guess
+                EBV_err, EBV_peak = compute_onesig_pdf(EBV, EBV_avg, usepeak=True)
+                neg_idx = np.where(EBV_peak < 0.0)[0]
+                if len(neg_idx) > 0:
+                    print('EBV distribution shifted for peak')
+                    EBV[:, neg_idx] -= EBV_peak[neg_idx]
 
     return EBV
 
