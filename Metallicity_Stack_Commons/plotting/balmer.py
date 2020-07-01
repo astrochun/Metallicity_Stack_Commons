@@ -89,25 +89,30 @@ def fitting_result(wave, y_norm, lambda_cen, balmer_fit, balmer_fit_neg,
 
     dx = wave[2] - wave[1]
 
-    x_sigsnip   = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 2.5)[0]
-    gauss0      = double_gauss(wave, *balmer_fit)
-    neg0        = gauss(wave, *balmer_fit_neg)
-    gauss0_diff = gauss0 - neg0
-    y_norm_diff = y_norm[x_sigsnip] - neg0[x_sigsnip]
+    fit_dict = dict()
+
+    idx_sig = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 2.5)[0]
+    fit_dict['gauss'] = double_gauss(wave, *balmer_fit)
+    fit_dict['negative'] = gauss(wave, *balmer_fit_neg)
+
+    gauss0_diff = fit_dict['gauss'] - fit_dict['negative']
+    y_norm_diff = y_norm[idx_sig] - fit_dict['negative'][idx_sig]
 
     # Residuals
-    x_sigsnip_2 = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 3.0)[0]
-    resid       = y_norm[x_sigsnip_2] - gauss0[x_sigsnip_2] + balmer_fit[3]
+    idx_sig_2 = np.where(np.abs((wave - lambda_cen)) / balmer_fit[1] <= 3.0)[0]
+    fit_dict['residual'] = y_norm[idx_sig_2] - fit_dict['gauss'][idx_sig_2] + balmer_fit[3]
+
+    fit_dict['idx_sig'] = idx_sig_2
 
     # Fluxes
     if not use_revised:
-        flux_g = np.sum(gauss0_diff * dx)
-        flux_s = np.sum(y_norm_diff * dx)
+        fit_dict['flux_gauss'] = np.sum(gauss0_diff * dx)
+        fit_dict['flux_spec']  = np.sum(y_norm_diff * dx)
     else:
-        flux_g = flux_gauss
-        flux_s = flux_spec
+        fit_dict['flux_gauss'] = flux_gauss
+        fit_dict['flux_spec']  = flux_spec
 
-    return gauss0, resid, x_sigsnip_2, flux_g, flux_s
+    return fit_dict
 
 
 # noinspection PyUnboundLocalVariable
@@ -161,22 +166,19 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         # Beta
         fit_result_in = [wave, y_norm, wave_beta, Hb_fit, Hb_fit_neg, Hb_flux_gauss, Hb_flux_obs]
-        Bgauss0, Bresid, Bx_sigsnip_2, Bflux_g, Bflux_s = fitting_result(*fit_result_in,
-                                                                         use_revised=use_revised)
+        Hb_fit_dict = fitting_result(*fit_result_in, use_revised=use_revised)
 
         # Gamma
         fit_result_in = [wave, y_norm, wave_gamma, Hg_fit, Hg_fit_neg, Hg_flux_gauss, Hg_flux_obs]
-        Ggauss0, Gresid, Gx_sigsnip_2, Gflux_g, Gflux_s = fitting_result(*fit_result_in,
-                                                                         use_revised=use_revised)
+        Hg_fit_dict = fitting_result(*fit_result_in, use_revised=use_revised)
 
         # Delta
         fit_result_in = [wave, y_norm, wave_delta, Hd_fit, Hd_fit_neg, Hd_flux_gauss, Hd_flux_obs]
-        Dgauss0, Dresid, Dx_sigsnip_2, Dflux_g, Dflux_s = fitting_result(*fit_result_in,
-                                                                         use_revised=use_revised)
+        Hd_fit_dict = fitting_result(*fit_result_in, use_revised=use_revised)
 
         # Calculate E(B-V)
-        EBV_HgHb = compute_EBV(Gflux_g/Bflux_g, source='HgHb')
-        EBV_HdHb = compute_EBV(Dflux_g/Bflux_g, source='HdHb')
+        EBV_HgHb = compute_EBV(Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'], source='HgHb')
+        EBV_HdHb = compute_EBV(Hd_fit_dict['flux_gauss']/Hg_fit_dict['flux_gauss'], source='HdHb')
 
         row = ii % n_rows
 
@@ -186,44 +188,46 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         # The below code could be refactored or simplified
         txt0 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_fit[1], Hb_fit_neg[1]) + '\n'
-        txt0 += 'F_G: %.3f F_S: %.3f' % (Bflux_g, Bflux_s)
+        txt0 += 'F_G: %.3f F_S: %.3f' % (Hb_fit_dict['flux_gauss'], Hb_fit_dict['flux_spec'])
 
         ax_arr[row][2].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
-        ax_arr[row][2].plot(wave, Bgauss0, 'm', linewidth=0.25, label='Beta Fit')
+        ax_arr[row][2].plot(wave, Hb_fit_dict['gauss'], 'm', linewidth=0.25, label='Beta Fit')
         ax_arr[row][2].set_xlim(4810, 4910)
 
         ax_arr[row][2].annotate(txt0, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
-        ax_arr[row][2].plot(wave[Bx_sigsnip_2], Bresid, 'r', linestyle='dashed',
-                            linewidth=0.2, label='Residuals')
+        ax_arr[row][2].plot(wave[Hb_fit_dict['idx_sig']], Hb_fit_dict['residual'],
+                            'r', linestyle='dashed', linewidth=0.2, label='Residuals')
 
         txt1 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hg_fit[1], Hg_fit_neg[1]) + '\n'
-        txt1 += 'F_G: %.3f F_S: %.3f' % (Gflux_g, Gflux_s) + '\n'
-        txt1 += r'H$\gamma$/H$\beta$: %.2f E(B-V): %.2f' % (Gflux_g/Bflux_g, EBV_HgHb)
+        txt1 += 'F_G: %.3f F_S: %.3f' % (Hb_fit_dict['flux_gauss'], Hb_fit_dict['flux_spec']) + '\n'
+        txt1 += r'H$\gamma$/H$\beta$: %.2f E(B-V): %.2f' % (Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
+                                                            EBV_HgHb)
 
         ax_arr[row][1].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
-        ax_arr[row][1].plot(wave, Ggauss0, 'm', linewidth=0.25, label='Gamma Fit')
+        ax_arr[row][1].plot(wave, Hg_fit_dict['gauss'], 'm', linewidth=0.25, label='Gamma Fit')
         ax_arr[row][1].set_xlim(4290, 4390)
 
         ax_arr[row][1].annotate(txt1, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
-        ax_arr[row][1].plot(wave[Gx_sigsnip_2], Gresid, 'r', linestyle='dashed',
-                            linewidth=0.2, label='Residuals')
+        ax_arr[row][1].plot(wave[Hg_fit_dict['idx_sig']], Hg_fit_dict['residual'], 'r',
+                            linestyle='dashed', linewidth=0.2, label='Residuals')
 
         txt2 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hd_fit[1], Hd_fit_neg[1]) + '\n'
-        txt2 += 'F_G: %.3f F_S: %.3f' % (Dflux_g, Dflux_s) + '\n'
-        txt2 += r'H$\delta$/H$\beta$: %.2f E(B-V): %.2f' % (Dflux_g/Bflux_g, EBV_HdHb)
+        txt2 += 'F_G: %.3f F_S: %.3f' % (Hb_fit_dict['flux_gauss'], Hb_fit_dict['flux_spec']) + '\n'
+        txt2 += r'H$\delta$/H$\beta$: %.2f E(B-V): %.2f' % (Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
+                                                            EBV_HdHb)
 
         ax_arr[row][0].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
-        ax_arr[row][0].plot(wave, Dgauss0, 'm', linewidth=0.25, label='Delta Fit')
+        ax_arr[row][0].plot(wave, Hd_fit_dict['gauss'], 'm', linewidth=0.25, label='Delta Fit')
         ax_arr[row][0].set_xlim(4050, 4150)
 
         ax_arr[row][0].set_ylim(0, 1.6)
         
         ax_arr[row][0].annotate(txt2, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
-        ax_arr[row][0].plot(wave[Dx_sigsnip_2], Dresid, 'r', linestyle='dashed',
-                            linewidth=0.2, label='Residuals')
+        ax_arr[row][0].plot(wave[Hd_fit_dict['idx_sig']], Hd_fit_dict['residual'],
+                            'r', linestyle='dashed', linewidth=0.2, label='Residuals')
        
         ax_arr[row][0].set_yticklabels([0, 0.5, 1, 1.5])
         ax_arr[row][1].set_yticklabels([])
