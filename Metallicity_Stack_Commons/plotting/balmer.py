@@ -175,7 +175,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         # Calculate E(B-V)
         EBV_HgHb = compute_EBV(Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'], source='HgHb')
-        EBV_HdHb = compute_EBV(Hd_fit_dict['flux_gauss']/Hg_fit_dict['flux_gauss'], source='HdHb')
+        EBV_HdHb = compute_EBV(Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'], source='HdHb')
 
         row = ii % n_rows
 
@@ -199,7 +199,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         txt1 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hg_dict['line_fit'][1],
                                                         Hg_dict['line_fit_neg'][1]) + '\n'
-        txt1 += 'F_G: %.3f F_S: %.3f' % (Hb_fit_dict['flux_gauss'], Hb_fit_dict['flux_spec']) + '\n'
+        txt1 += 'F_G: %.3f F_S: %.3f' % (Hg_fit_dict['flux_gauss'], Hg_fit_dict['flux_spec']) + '\n'
         txt1 += r'H$\gamma$/H$\beta$: %.2f E(B-V): %.2f' % (Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
                                                             EBV_HgHb)
 
@@ -214,7 +214,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         txt2 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hd_dict['line_fit'][1],
                                                         Hd_dict['line_fit_neg'][1]) + '\n'
-        txt2 += 'F_G: %.3f F_S: %.3f' % (Hb_fit_dict['flux_gauss'], Hb_fit_dict['flux_spec']) + '\n'
+        txt2 += 'F_G: %.3f F_S: %.3f' % (Hd_fit_dict['flux_gauss'], Hd_fit_dict['flux_spec']) + '\n'
         txt2 += r'H$\delta$/H$\beta$: %.2f E(B-V): %.2f' % (Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
                                                             EBV_HdHb)
 
