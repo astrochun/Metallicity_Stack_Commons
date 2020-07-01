@@ -184,8 +184,8 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
                                 xycoords='axes fraction', fontsize='8')
 
         # The below code could be refactored or simplified
-        txt0 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_fit_dict['line_fit'][1],
-                                                        Hb_fit_dict['line_fit_neg'][1]) + '\n'
+        txt0 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_dict['line_fit'][1],
+                                                        Hb_dict['line_fit_neg'][1]) + '\n'
         txt0 += 'F_G: %.3f F_S: %.3f' % (Hb_fit_dict['flux_gauss'], Hb_fit_dict['flux_spec'])
 
         ax_arr[row][2].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
@@ -197,8 +197,8 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
         ax_arr[row][2].plot(wave[Hb_fit_dict['idx_sig']], Hb_fit_dict['residual'],
                             'r', linestyle='dashed', linewidth=0.2, label='Residuals')
 
-        txt1 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hg_fit_dict['line_fit'][1],
-                                                        Hg_fit_dict['line_fit_neg'][1]) + '\n'
+        txt1 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hg_dict['line_fit'][1],
+                                                        Hg_dict['line_fit_neg'][1]) + '\n'
         txt1 += 'F_G: %.3f F_S: %.3f' % (Hb_fit_dict['flux_gauss'], Hb_fit_dict['flux_spec']) + '\n'
         txt1 += r'H$\gamma$/H$\beta$: %.2f E(B-V): %.2f' % (Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
                                                             EBV_HgHb)
@@ -212,8 +212,8 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
         ax_arr[row][1].plot(wave[Hg_fit_dict['idx_sig']], Hg_fit_dict['residual'], 'r',
                             linestyle='dashed', linewidth=0.2, label='Residuals')
 
-        txt2 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hd_fit_dict['line_fit'][1],
-                                                        Hd_fit_dict['line_fit_neg'][1]) + '\n'
+        txt2 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hd_dict['line_fit'][1],
+                                                        Hd_dict['line_fit_neg'][1]) + '\n'
         txt2 += 'F_G: %.3f F_S: %.3f' % (Hb_fit_dict['flux_gauss'], Hb_fit_dict['flux_spec']) + '\n'
         txt2 += r'H$\delta$/H$\beta$: %.2f E(B-V): %.2f' % (Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
                                                             EBV_HdHb)
