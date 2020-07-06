@@ -1,6 +1,6 @@
 import numpy as np
 
-from .. import k_dict
+from .. import k_dict, OIII_r
 
 from ..column_names import temp_metal_names0, remove_from_list
 
@@ -25,7 +25,7 @@ def R_calculation(OIII4363, OIII5007, EBV):
     :return R_value: O++ excitation flux ratio
     """
 
-    R_value = OIII4363 / (OIII5007 * (1 + 1 / 3.1)) * 10 ** (0.4 * EBV * (k_4363 - k_5007))
+    R_value = OIII4363 / (OIII5007 * (1 + 1/OIII_r)) * 10 ** (0.4 * EBV * (k_4363 - k_5007))
 
     return R_value
 
