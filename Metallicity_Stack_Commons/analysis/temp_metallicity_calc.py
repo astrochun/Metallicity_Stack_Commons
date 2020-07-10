@@ -4,6 +4,8 @@ from .. import k_dict, OIII_r
 
 from ..column_names import temp_metal_names0, remove_from_list
 
+k_3727 = k_dict['OII_3727']
+k_4861 = k_dict['HBETA']
 k_4363 = k_dict['OIII_4363']
 k_5007 = k_dict['OIII_5007']
 
@@ -48,7 +50,7 @@ def temp_calculation(R):
     return T_e
 
 
-def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, det3=None):
+def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
     """
     Determines 12+log(O/H) from electron temperature and [OII]/Hb and [OIII]/Hb flux ratio
 
@@ -67,6 +69,10 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, det3=None):
     t_2 = np.zeros(arr_shape)
     x2 = np.zeros(arr_shape)
 
+    if EBV is None:
+        print("Not applying dust attenuation correction")
+        EBV = np.zeros(arr_shape)
+
     if det3 is None:
         det3 = np.arange(arr_shape[0])
 
@@ -83,6 +89,10 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, det3=None):
                         np.log10(1 + 1.35 * x2[det3]) - 12
     O_d_ion_log[det3] = np.log10(THREE_BETA[det3]) + 6.200 + 1.251 / t_3[det3] \
                         - 0.55 * np.log10(t_3[det3]) - 0.014 * (t_3[det3]) - 12
+
+    # Apply dust attenuation to derived properties
+    O_s_ion_log[det3] += 0.4 * EBV[det3] * (k_3727 - k_4861)
+    O_d_ion_log[det3] += 0.4 * EBV[det3] * (k_5007 - k_4861)
 
     O_s_ion = 10 ** O_s_ion_log
     O_d_ion = 10 ** O_d_ion_log
