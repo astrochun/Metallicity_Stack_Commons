@@ -15,7 +15,7 @@ b = 0.92506
 c = 0.98062
 
 
-def R_calculation(OIII4363, OIII5007, EBV):
+def R_calculation(OIII4363, OIII5007, EBV=None):
     """
     Computes the excitation flux ratio of [OIII]4363 to [OIII]5007.
     Adopts a 3.1-to-1 ratio for 5007/4959
@@ -26,6 +26,10 @@ def R_calculation(OIII4363, OIII5007, EBV):
 
     :return R_value: O++ excitation flux ratio
     """
+
+    if EBV is None:
+        print("Not applying dust attenuation correction")
+        EBV = np.zeros(OIII4363.shape)
 
     R_value = OIII4363 / (OIII5007 * (1 + 1/OIII_r)) * 10 ** (0.4 * EBV * (k_4363 - k_5007))
 
