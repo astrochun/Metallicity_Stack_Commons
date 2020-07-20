@@ -37,6 +37,12 @@ def flux_ratios(flux_dict, EBV=None, get_R=True):
     flux_ratios_dict['logR23'] = logR23
     flux_ratios_dict['logO32'] = logO32
 
+    # Add Balmer decrement
+    if line_name_short['HG'] in flux_dict:
+        flux_ratios_dict['HgHb'] = flux_dict[line_name_short['HG']] / Hb
+    if line_name_short['HD'] in flux_dict:
+        flux_ratios_dict['HdHb'] = flux_dict[line_name_short['HD']] / Hb
+
     if EBV is None:
         print("Not applying dust attenuation correction")
         EBV = np.zeros(OIII.shape)
