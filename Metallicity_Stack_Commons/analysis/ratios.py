@@ -43,11 +43,7 @@ def flux_ratios(flux_dict, EBV=None, get_R=True):
     if line_name_short['HD'] in flux_dict:
         flux_ratios_dict['HdHb'] = flux_dict[line_name_short['HD']] / Hb
 
-    if EBV is None:
-        print("Not applying dust attenuation correction")
-        EBV = np.zeros(OIII.shape)
-
     if get_R:
-        flux_ratios_dict['R'] = R_calculation(OIII4363, OIII, EBV)
+        flux_ratios_dict['R'] = R_calculation(OIII4363, OIII, EBV=EBV)
 
     return flux_ratios_dict
