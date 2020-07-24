@@ -27,12 +27,14 @@ def flux_ratios(flux_dict, flux_type='individual', EBV=None, get_R=True):
     three_beta_key = indv_names0[6]
     logR23_key = indv_names0[1]
     logO32_key = indv_names0[2]
+    R_key = indv_names0[7]
 
     if flux_type == 'composite':
         two_beta_key = bin_ratios0[2]
         three_beta_key = bin_ratios0[3]
         logR23_key = bin_ratios0[0]
         logO32_key = bin_ratios0[1]
+        R_key = bin_ratios0[4]
 
     # Retrieve emission line fluxes
     OII  = flux_dict[line_name_short['OII']]
@@ -60,6 +62,6 @@ def flux_ratios(flux_dict, flux_type='individual', EBV=None, get_R=True):
         EBV = np.zeros(OIII.shape)
 
     if get_R:
-        flux_ratios_dict['R'] = R_calculation(OIII4363, OIII, EBV)
+        flux_ratios_dict[R_key] = R_calculation(OIII4363, OIII, EBV)
 
     return flux_ratios_dict
