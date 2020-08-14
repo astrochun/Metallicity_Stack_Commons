@@ -4,14 +4,13 @@ from .. import line_name_short, OIII_r
 from .temp_metallicity_calc import R_calculation
 
 
-def flux_ratios(flux_dict, EBV=None, get_R=True):
+def flux_ratios(flux_dict, get_R=True):
     """
     Purpose:
       Primary code to determine a variety of line ratios based on a dictionary
       containing emission-line fluxes
 
     :param flux_dict: dictionary containing line ratios
-    :param EBV: array of E(B-V). Same dimensions as contents of flux_dict
     :param get_R: Boolean to indicate whether to get OIII4363/OIII5007 flux ratio for temp calculation
 
     :return flux_ratios_dict: dictionary containing flux ratios
@@ -44,6 +43,6 @@ def flux_ratios(flux_dict, EBV=None, get_R=True):
         flux_ratios_dict['HdHb'] = flux_dict[line_name_short['HD']] / Hb
 
     if get_R:
-        flux_ratios_dict['R'] = R_calculation(OIII4363, OIII, EBV=EBV)
+        flux_ratios_dict['R'] = R_calculation(OIII4363, OIII)
 
     return flux_ratios_dict
