@@ -44,9 +44,11 @@ def temp_calculation(R, EBV=None):
     :return T_e: numpy array of T_e (Kelvins)
     """
 
+    arr_shape = R.shape
+
     if EBV is None:
         print("temp_calculation - Not applying dust attenuation correction")
-        EBV = np.zeros(OIII4363.shape)
+        EBV = np.zeros(arr_shape)
 
     R_corr = R * 10 ** (0.4 * EBV * (k_4363 - k_5007))
 
