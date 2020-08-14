@@ -15,28 +15,22 @@ b = 0.92506
 c = 0.98062
 
 
-def R_calculation(OIII4363, OIII5007, EBV=None):
+def R_calculation(OIII4363, OIII5007):
     """
     Computes the excitation flux ratio of [OIII]4363 to [OIII]5007.
     Adopts a 3.1-to-1 ratio for 5007/4959
 
     :param OIII4363: numpy array of OIII4363 fluxes
     :param OIII5007: numpy array of OIII5007 fluxes
-    :param EBV: numpy array of E(B-V).  Set to zero if not applying attenuation
-
     :return R_value: O++ excitation flux ratio
     """
 
-    if EBV is None:
-        print("Not applying dust attenuation correction")
-        EBV = np.zeros(OIII4363.shape)
-
-    R_value = OIII4363 / (OIII5007 * (1 + 1/OIII_r)) * 10 ** (0.4 * EBV * (k_4363 - k_5007))
+    R_value = OIII4363 / (OIII5007 * (1 + 1/OIII_r))
 
     return R_value
 
 
-def temp_calculation(R):
+def temp_calculation(R, EBV=None):
     """
     Computes electron temperature (T_e) from O++ excitation flux ratio
 
@@ -45,11 +39,18 @@ def temp_calculation(R):
     where a = 13025, b=0.92506, and c=0.98062 (Nicholls et al. 2014)
 
     :param R: numpy array of O++ excitation flux ratio (see R_calculation)
+    :param EBV: numpy array of E(B-V).  Set to zero if not applying attenuation
 
     :return T_e: numpy array of T_e (Kelvins)
     """
 
-    T_e = a * (-np.log10(R) - b) ** (-1 * c)
+    if EBV is None:
+        print("temp_calculation - Not applying dust attenuation correction")
+        EBV = np.zeros(OIII4363.shape)
+
+    R_corr = R * 10 ** (0.4 * EBV * (k_4363 - k_5007))
+
+    T_e = a * (-np.log10(R_corr) - b) ** (-1 * c)
 
     return T_e
 
@@ -61,6 +62,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
     :param T_e: numpy array of temperature (see temp_calculation)
     :param TWO_BETA: numpy array of [OII]/Hb flux ratio
     :param THREE_BETA: numpy array of [OIII]/Hb flux ratio
+    :param EBV: Optional array input containing EBV distribution
     :param det3: Optional array to pass in to identify those satisfying det3
                  requirements. Default: None means full array is considered
                  Note: for MC inputs, a 1-D np.array index satisfying det3
@@ -74,7 +76,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
     x2 = np.zeros(arr_shape)
 
     if EBV is None:
-        print("Not applying dust attenuation correction")
+        print("metallicity_calculation - Not applying dust attenuation correction")
         EBV = np.zeros(arr_shape)
 
     if det3 is None:
