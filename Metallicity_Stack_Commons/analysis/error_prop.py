@@ -8,6 +8,7 @@ import numpy as np
 from ..column_names import filename_dict, temp_metal_names0, npz_filename_dict
 from .ratios import flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
+from .attenuation import compute_EBV
 
 
 def write_npz(path, npz_files, dict_list):
@@ -30,7 +31,7 @@ def write_npz(path, npz_files, dict_list):
         np.savez(npz_outfile, **dict_input)
 
 
-def fluxes_derived_prop(path, binned_data=True, revised=True):
+def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
     """
     Purpose:
       Use measurements and their uncertainties to perform a randomization
@@ -40,8 +41,8 @@ def fluxes_derived_prop(path, binned_data=True, revised=True):
 
     :param path: str of full path
     :param binned_data: bool for whether to analysis binned data. Default: True
+    :param apply_dust: bool for whether to apply dust attenuation. Default: False
     :param revised: bool to indicate if revised validation table is used. Default: True
-
     """
 
     # Define files to read in for binned data
@@ -118,6 +119,15 @@ def fluxes_derived_prop(path, binned_data=True, revised=True):
     flux_ratios_dict = flux_ratios(flux_pdf_dict)
 
     #
+    # Get EBV from Balmer decrement if apply_dust set
+    #
+
+    if apply_dust:
+        EBV = compute_EBV(flux_ratios_dict['HgHb'], source='HgHb')
+    else:
+        EBV = None
+
+    #
     # DERIVED PROPERTIES SECTION
     #
 
@@ -127,12 +137,12 @@ def fluxes_derived_prop(path, binned_data=True, revised=True):
     derived_prop_peak_dict = dict()
 
     # Calculate temperature distribution
-    Te_pdf = temp_calculation(flux_ratios_dict['R'])
+    Te_pdf = temp_calculation(flux_ratios_dict['R'], EBV=EBV)
     derived_prop_pdf_dict[temp_metal_names0[0]] = Te_pdf
 
     # Calculate metallicity distribution
     metal_dict = metallicity_calculation(Te_pdf, flux_ratios_dict['two_beta'],
-                                         flux_ratios_dict['three_beta'])
+                                         flux_ratios_dict['three_beta'], EBV=EBV)
     derived_prop_pdf_dict.update(metal_dict)
 
     # Loop for each derived properties (T_e, metallicity, etc.)
