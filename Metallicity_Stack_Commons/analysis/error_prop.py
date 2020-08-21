@@ -83,8 +83,8 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
 
     # Initialize dictionaries
     flux_pdf_dict = dict()
-    flux_peak = dict()
-    flux_lowhigh = dict()
+    flux_peak_dict = dict()
+    flux_error_dict = dict()
 
     # Randomization for emission-line fluxes
     for aa, flux, rms in zip(range(len(flux_cols)), flux_cols, flux_rms_cols):
@@ -94,8 +94,8 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
 
         # Fill in dictionary
         flux_pdf_dict[line_name[aa]] = flux_pdf
-        flux_peak[line_name[aa] + '_peak'] = peak
-        flux_lowhigh[line_name[aa] + '_lowhigh_error'] = err
+        flux_peak_dict[line_name[aa] + '_peak'] = peak
+        flux_error_dict[line_name[aa] + '_error'] = err
 
         # Update values
         flux_tab0[line_name[aa] + '_Flux_Gaussian'][detect_idx] = peak
@@ -112,7 +112,7 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
     npz_files = [npz_filename_dict['flux_pdf'],
                  npz_filename_dict['flux_errors'],
                  npz_filename_dict['flux_peak']]
-    dict_list = [flux_pdf_dict, flux_lowhigh, flux_peak]
+    dict_list = [flux_pdf_dict, flux_error_dict, flux_peak_dict]
     write_npz(path, npz_files, dict_list)
 
     # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
@@ -153,7 +153,7 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
             compute_onesig_pdf(derived_prop_pdf_dict[names0], arr0, usepeak=True)
 
         # Fill in dictionary
-        derived_prop_error_dict[names0+'_lowhigh_error'] = err_prop
+        derived_prop_error_dict[names0+'_error'] = err_prop
         derived_prop_peak_dict[names0+'_peak'] = peak_prop
 
         # Update values
