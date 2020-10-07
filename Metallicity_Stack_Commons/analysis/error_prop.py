@@ -116,7 +116,8 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
     dict_list = [flux_pdf_dict, flux_error_dict, flux_peak_dict]
     write_npz(path, npz_files, dict_list)
 
-    # Obtain distributions of line ratios: logR23, logO32, two_beta, three_beta, R
+    # Obtain line ratio distributions: logR23, logO32, two_beta, three_beta, R
+    # Also include Balmer decrements
     flux_ratios_dict = flux_ratios(flux_pdf_dict)
 
     #
@@ -163,7 +164,10 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
         prop_tab0[names0][detect_idx] = peak_prop
 
     # Write revised properties ASCII table
-    new_prop_file = join(path, filename_dict['bin_derived_prop_rev'])
+    if not apply_dust:
+        new_prop_file = join(path, filename_dict['bin_derived_prop_rev'])
+    else:
+        new_prop_file = join(path, filename_dict['bin_derived_prop_rev_dust'])
     if exists(new_prop_file):
         print("Overwriting: "+new_prop_file)
     else:
