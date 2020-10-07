@@ -106,7 +106,8 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
         print("Overwriting: "+new_flux_file)
     else:
         print("Writing: "+new_flux_file)
-    asc.write(flux_tab0, new_flux_file, overwrite=True, format='fixed_width_two_line')
+    asc.write(flux_tab0, new_flux_file, overwrite=True,
+              format='fixed_width_two_line')
 
     # Save flux npz files
     npz_files = [npz_filename_dict['flux_pdf'],
@@ -142,7 +143,8 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
 
     # Calculate metallicity distribution
     metal_dict = metallicity_calculation(Te_pdf, flux_ratios_dict['two_beta'],
-                                         flux_ratios_dict['three_beta'], EBV=EBV)
+                                         flux_ratios_dict['three_beta'],
+                                         EBV=EBV)
     derived_prop_pdf_dict.update(metal_dict)
 
     # Loop for each derived properties (T_e, metallicity, etc.)
@@ -150,7 +152,8 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
         arr0 = prop_tab[names0].data
 
         err_prop, peak_prop = \
-            compute_onesig_pdf(derived_prop_pdf_dict[names0], arr0, usepeak=True)
+            compute_onesig_pdf(derived_prop_pdf_dict[names0], arr0,
+                               usepeak=True)
 
         # Fill in dictionary
         derived_prop_error_dict[names0+'_error'] = err_prop
@@ -165,7 +168,8 @@ def fluxes_derived_prop(path, binned_data=True, apply_dust=False, revised=True):
         print("Overwriting: "+new_prop_file)
     else:
         print("Writing: "+new_prop_file)
-    asc.write(prop_tab0, new_prop_file, overwrite=True, format='fixed_width_two_line')
+    asc.write(prop_tab0, new_prop_file, overwrite=True,
+              format='fixed_width_two_line')
 
     # Save derived properties npz files
     npz_files = [npz_filename_dict['der_prop_pdf'],
