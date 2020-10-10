@@ -157,6 +157,14 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
         # Also include Balmer decrements
         flux_ratios_dict = flux_ratios(flux_pdf_dict)
 
+        for name0 in flux_ratios_dict.keys():
+            err_prop, peak_prop = compute_onesig_pdf(flux_ratios_dict[name0],
+                                                     prop_tab0[name0],
+                                                     usepeak=True)
+
+            # Update values
+            prop_tab0[name0][detect_idx] = peak_prop
+
         #
         # Get EBV from Balmer decrement if apply_dust set
         #
