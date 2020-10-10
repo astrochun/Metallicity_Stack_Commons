@@ -110,7 +110,10 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
         tbl_dict.update(derived_prop_dict)
 
         outfile = join(path, filename_dict['bin_derived_prop'])
-        print("Writing : ", outfile)
+        if not exists(outfile):
+            print("Writing : ", outfile)
+        else:
+            print("Overwriting : ", outfile)
         asc.write(tbl_dict, output=outfile, overwrite=True,
                   format='fixed_width_two_line')
     else:
