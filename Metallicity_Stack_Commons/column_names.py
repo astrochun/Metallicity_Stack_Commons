@@ -93,6 +93,9 @@ npz_filename_dict['flux_peak'] = 'flux_peak.npz'
 npz_filename_dict['der_prop_pdf'] = 'derived_properties_pdf.npz'
 npz_filename_dict['der_prop_errors'] = 'derived_properties_errors.npz'
 npz_filename_dict['der_prop_peak'] = 'derived_properties_peak.npz'
+npz_filename_dict['der_prop_dust_pdf'] = npz_filename_dict['der_prop_pdf'].replace('.npz', '.dustcorr.npz')
+npz_filename_dict['der_prop_dust_errors'] = npz_filename_dict['der_prop_errors'].replace('.npz', '.dustcorr.npz')
+npz_filename_dict['der_prop_dust_peak'] = npz_filename_dict['der_prop_peak'].replace('.npz', '.dustcorr.npz')
 
 
 def merge_column_names(*args):

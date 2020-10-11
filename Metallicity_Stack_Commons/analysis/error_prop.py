@@ -221,9 +221,15 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
                   format='fixed_width_two_line')
 
         # Save derived properties npz files
-        npz_files = [npz_filename_dict['der_prop_pdf'],
-                     npz_filename_dict['der_prop_errors'],
-                     npz_filename_dict['der_prop_peak']]
+        if not apply_dust:
+            npz_files = [npz_filename_dict['der_prop_pdf'],
+                         npz_filename_dict['der_prop_errors'],
+                         npz_filename_dict['der_prop_peak']]
+        else:
+            npz_files = [npz_filename_dict['der_prop_dust_pdf'],
+                         npz_filename_dict['der_prop_dust_errors'],
+                         npz_filename_dict['der_prop_dust_peak']]
+
         dict_list = [derived_prop_pdf_dict, derived_prop_error_dict,
                      derived_prop_peak_dict]
         write_npz(path, npz_files, dict_list)
