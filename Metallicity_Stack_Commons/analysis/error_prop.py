@@ -3,6 +3,7 @@ from os.path import join, exists
 from chun_codes import random_pdf, compute_onesig_pdf
 from .. import line_name
 from astropy.io import ascii as asc
+from astropy.table import Table, hstack
 import numpy as np
 
 from ..column_names import filename_dict, temp_metal_names0, npz_filename_dict, \
@@ -170,7 +171,19 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
         #
 
         if apply_dust:
-            EBV = compute_EBV(flux_ratios_dict['HgHb'], source='HgHb')
+            EBV_dict = {'EBV': np.repeat(np.nan, len(prop_tab0)),
+                        'EBV_low_err': np.repeat(np.nan, len(prop_tab0)),
+                        'EBV_high_err': np.repeat(np.nan, len(prop_tab0))}
+
+            EBV, EBV_peak = compute_EBV(flux_ratios_dict['HgHb'], source='HgHb')
+
+            err_prop, peak_prop = compute_onesig_pdf(EBV, EBV_peak, usepeak=True)
+
+            EBV_dict['EBV'][detect_idx] = peak_prop
+            EBV_dict['EBV_low_err'][detect_idx] = err_prop[:, 0]
+            EBV_dict['EBV_high_err'][detect_idx] = err_prop[:, 1]
+            EBV_table = Table(EBV_dict)
+            prop_tab0 = hstack([prop_tab0, EBV_table])
         else:
             EBV = None
 
