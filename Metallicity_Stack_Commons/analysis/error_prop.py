@@ -96,13 +96,26 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
 
         flux_ratios_dict = flux_ratios(flux_dict)
 
+        #
+        # Get EBV from Balmer decrement if apply_dust set
+        #
+
+        if apply_dust:
+            EBV = compute_EBV(flux_ratios_dict['HgHb'], source='HgHb')
+        else:
+            EBV = None
+
         derived_prop_dict = dict()
 
-        Te = temp_calculation(flux_ratios_dict['R'])
+        Te = temp_calculation(flux_ratios_dict['R'], EBV=EBV)
         derived_prop_dict[temp_metal_names0[0]] = Te
         metal_dict = metallicity_calculation(Te, flux_ratios_dict['two_beta'],
-                                             flux_ratios_dict['three_beta'])
+                                             flux_ratios_dict['three_beta'],
+                                             EBV=EBV)
         derived_prop_dict.update(metal_dict)
+
+        if apply_dust:
+            derived_prop_dict['EBV'] = EBV
 
         # Write Astropy table
         # Get bin IDs and composite measurements in one dicitonary and write to table
@@ -110,7 +123,10 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
         tbl_dict.update(flux_ratios_dict)
         tbl_dict.update(derived_prop_dict)
 
-        outfile = join(path, filename_dict['bin_derived_prop'])
+        if not apply_dust:
+            outfile = join(path, filename_dict['bin_derived_prop'])
+        else:
+            outfile = join(path, filename_dict['bin_derived_prop_dust'])
         if not exists(outfile):
             print("Writing : ", outfile)
         else:
