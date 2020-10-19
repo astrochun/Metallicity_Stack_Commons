@@ -33,6 +33,7 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
 
     :return EBV: float or numpy array containing E(B-V).
                  Note: Not correcting for negative reddening
+    :return EBV_peak: float or numpy array return when it is a 2-D distribution
     """
 
     if isinstance(ratio, list):
@@ -54,12 +55,14 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
             if EBV < 0.0:
                 EBV = 0.0
                 print('zero substituted for negative reddening')
+            return EBV
         else:
             if len(EBV.shape) == 1:
                 neg_idx = np.where(EBV < 0.0)[0]
                 if len(neg_idx) > 0:
                     EBV[neg_idx] = 0.0
                     print('zero substituted for negative reddening')
+                return EBV
             if len(EBV.shape) == 2:
                 EBV_avg = np.average(EBV, axis=0)  # initial guess
                 EBV_err, EBV_peak = compute_onesig_pdf(EBV, EBV_avg, usepeak=True)
@@ -68,7 +71,9 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
                     print('EBV distribution shifted for peak')
                     EBV[neg_idx, :] -= EBV_peak[neg_idx]
                     EBV_peak[neg_idx] = 0.0
-    return EBV, EBV_peak
+                return EBV, EBV_peak
+    else:
+        return EBV
 
 
 def EBV_table_update(fitspath, use_revised=False):
