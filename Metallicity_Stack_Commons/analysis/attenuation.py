@@ -27,7 +27,7 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
     Purpose:
       Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
 
-    :param ratio: float or numpy array containing Hg/Hb or Hd/hb
+    :param ratio: float or numpy array containing Hg/Hb or Hd/Hb
     :param source: str indicate ratio type.  Either 'HgHb' or 'HdHb'. Default: 'HgHb'
     :param zero_neg: boolean to indicate whether to zero out negative reddening. Default: True
 
