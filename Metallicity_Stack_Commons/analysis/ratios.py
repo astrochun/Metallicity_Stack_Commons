@@ -2,9 +2,10 @@ import numpy as np
 
 from .. import line_name_short, OIII_r
 from .temp_metallicity_calc import R_calculation
+from ..column_names import bin_ratios0
 
 
-def flux_ratios(flux_dict, get_R=True):
+def flux_ratios(flux_dict, binned_data=False, get_R=True):
     """
     Purpose:
       Primary code to determine a variety of line ratios based on a dictionary
@@ -12,7 +13,7 @@ def flux_ratios(flux_dict, get_R=True):
 
     :param flux_dict: dictionary containing line ratios
     :param get_R: Boolean to indicate whether to get OIII4363/OIII5007 flux ratio for temp calculation
-
+    :param binned_data: bool for whether to analysis binned data. Default: False
     :return flux_ratios_dict: dictionary containing flux ratios
     """
 
@@ -31,10 +32,16 @@ def flux_ratios(flux_dict, get_R=True):
 
     # Define dictionary of flux ratios
     flux_ratios_dict = dict()
-    flux_ratios_dict['two_beta'] = two_beta
-    flux_ratios_dict['three_beta'] = three_beta
-    flux_ratios_dict['logR23'] = logR23
-    flux_ratios_dict['logO32'] = logO32
+
+    if not binned_data:
+        bin_ratios = [ratios0.replace('_composite', '') for ratios0 in bin_ratios0]
+    else:
+        bin_ratios = bin_ratios0
+
+    flux_ratios_dict[bin_ratios[2]] = two_beta
+    flux_ratios_dict[bin_ratios[3]] = three_beta
+    flux_ratios_dict[bin_ratios[0]] = logR23
+    flux_ratios_dict[bin_ratios[1]] = logO32
 
     # Add Balmer decrement
     if line_name_short['HG'] in flux_dict:
@@ -43,6 +50,6 @@ def flux_ratios(flux_dict, get_R=True):
         flux_ratios_dict['HdHb'] = flux_dict[line_name_short['HD']] / Hb
 
     if get_R:
-        flux_ratios_dict['R'] = R_calculation(OIII4363, OIII)
+        flux_ratios_dict[bin_ratios[4]] = R_calculation(OIII4363, OIII)
 
     return flux_ratios_dict
