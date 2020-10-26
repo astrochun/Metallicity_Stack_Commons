@@ -7,7 +7,7 @@ from astropy.table import Table, hstack
 import numpy as np
 
 from ..column_names import filename_dict, temp_metal_names0, npz_filename_dict, \
-    bin_names0
+    bin_names0, bin_ratios0
 from .ratios import flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 from .attenuation import compute_EBV
@@ -60,6 +60,14 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
                 print('Using validation table')
                 verify_file = join(path, filename_dict['bin_valid'])
 
+        bin_ratios = bin_ratios0
+    else:
+        bin_ratios = [ratios0.replace('_composite', '') for ratios0 in bin_ratios0]
+
+    two_beta_name = bin_ratios[2]
+    three_beta_name = bin_ratios[3]
+    R_name = bin_ratios[4]
+
     flux_tab0 = asc.read(flux_file)
     if not raw:
         prop_tab0 = asc.read(prop_file)
@@ -94,7 +102,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
             # Fill in dictionary
             flux_dict[line_name[aa]] = flux_tab0[flux].data
 
-        flux_ratios_dict = flux_ratios(flux_dict)
+        flux_ratios_dict = flux_ratios(flux_dict, binned_data=binned_data)
 
         #
         # Get EBV from Balmer decrement if apply_dust set
@@ -107,10 +115,10 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
 
         derived_prop_dict = dict()
 
-        Te = temp_calculation(flux_ratios_dict['R'], EBV=EBV)
+        Te = temp_calculation(flux_ratios_dict[R_name], EBV=EBV)
         derived_prop_dict[temp_metal_names0[0]] = Te
-        metal_dict = metallicity_calculation(Te, flux_ratios_dict['two_beta'],
-                                             flux_ratios_dict['three_beta'],
+        metal_dict = metallicity_calculation(Te, flux_ratios_dict[two_beta_name],
+                                             flux_ratios_dict[three_beta_name],
                                              EBV=EBV)
         derived_prop_dict.update(metal_dict)
 
@@ -172,7 +180,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
 
         # Obtain line ratio distributions: logR23, logO32, two_beta, three_beta, R
         # Also include Balmer decrements
-        flux_ratios_dict = flux_ratios(flux_pdf_dict)
+        flux_ratios_dict = flux_ratios(flux_pdf_dict, binned_data=binned_data)
 
         for name0 in flux_ratios_dict.keys():
             err_prop, peak_prop = compute_onesig_pdf(flux_ratios_dict[name0],
@@ -213,12 +221,12 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
         derived_prop_peak_dict = dict()
 
         # Calculate temperature distribution
-        Te_pdf = temp_calculation(flux_ratios_dict['R'], EBV=EBV)
+        Te_pdf = temp_calculation(flux_ratios_dict[R_name], EBV=EBV)
         derived_prop_pdf_dict[temp_metal_names0[0]] = Te_pdf
 
         # Calculate metallicity distribution
-        metal_dict = metallicity_calculation(Te_pdf, flux_ratios_dict['two_beta'],
-                                             flux_ratios_dict['three_beta'],
+        metal_dict = metallicity_calculation(Te_pdf, flux_ratios_dict[two_beta_name],
+                                             flux_ratios_dict[three_beta_name],
                                              EBV=EBV)
         derived_prop_pdf_dict.update(metal_dict)
 
