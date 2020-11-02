@@ -1,0 +1,13 @@
+os: linux
+dist: bionic
+language: python
+python:
+  - "3.7"
+
+# command to install dependencies
+install:
+  - python setup.py -q install
+  - git clone https://github.com/astrochun/chun_codes.git chun_codes
+  - cd chun_codes
+  - python setup.py -q install
+  - cd ..
