@@ -11,6 +11,3 @@ install:
   - cd chun_codes
   - python setup.py -q install
   - cd ..
-
-# run script:
-script:
