@@ -5,7 +5,7 @@ import os
 import getpass
 import numpy as np
 
-version = "1.0.1"
+version = "1.1.6"
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
 line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
@@ -67,7 +67,7 @@ def dir_date(org_name, path_init='', year=False):
 
         From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
     Usage:
-        fitspath = general.get_time(org_name, path_init='', year=True)
+        fitspath = dir_date(org_name, path_init='', year=True)
 
     Params:
         org_name --> a string of the directory that the date subdirectory will be in.
