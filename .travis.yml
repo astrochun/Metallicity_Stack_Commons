@@ -3,8 +3,8 @@ dist: bionic
 language: python
 jobs:
   include:
-    - Python 3.7 on Bionic
-    - "3.7"
+    - name: "Python 3.7 on Bionic"
+    - python: 3.7
 
 # command to install dependencies
 before_install:
