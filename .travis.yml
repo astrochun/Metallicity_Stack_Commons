@@ -13,9 +13,11 @@ before_install:
   - pip install -U pytest
 install:
   - python setup.py install
-  - git clone https://github.com/astrochun/chun_codes.git chun_codes
+  - cd ..
+  - git clone https://github.com/astrochun/chun_codes.git
   - cd chun_codes
   - python setup.py install
-  - cd ..
+  - pip list
+  - cd ../Metallicity_Stack_Commons
 
 script: pytest
