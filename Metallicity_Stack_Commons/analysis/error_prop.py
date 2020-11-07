@@ -186,6 +186,8 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
         # Also include Balmer decrements
         flux_ratios_dict = flux_ratios(flux_pdf_dict, binned_data=binned_data)
 
+        flux_ratios_err_dict = dict()
+
         for name0 in flux_ratios_dict.keys():
             err_prop, peak_prop = compute_onesig_pdf(flux_ratios_dict[name0],
                                                      prop_tab0[name0],
@@ -193,6 +195,15 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
 
             # Update values
             prop_tab0[name0][detect_idx] = peak_prop
+
+            flux_ratios_err_dict[name0 + '_low_err'] = np.repeat(np.nan, len(prop_tab0))
+            flux_ratios_err_dict[name0 + '_high_err'] = np.repeat(np.nan, len(prop_tab0))
+            flux_ratios_err_dict[name0 + '_low_err'][detect_idx] = err_prop[:, 0]
+            flux_ratios_err_dict[name0 + '_high_err'][detect_idx] = err_prop[:, 1]
+
+        # Add flux ratio errors to table
+        prop_err_table = Table(flux_ratios_err_dict)
+        prop_tab0 = hstack([prop_tab0, prop_err_table])
 
         #
         # Get EBV from Balmer decrement if apply_dust set
@@ -226,6 +237,8 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
             EBV_dict[dust0[3]][detect_idx] = peak_prop
             EBV_dict[dust0[3] + '_low_err'][detect_idx] = err_prop[:, 0]
             EBV_dict[dust0[3] + '_high_err'][detect_idx] = err_prop[:, 1]
+
+            # Add EBV and errors to table
             EBV_table = Table(EBV_HdHb_dict)
             prop_tab0 = hstack([prop_tab0, EBV_table])
         else:
