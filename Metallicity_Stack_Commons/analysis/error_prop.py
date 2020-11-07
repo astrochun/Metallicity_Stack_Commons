@@ -101,7 +101,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
     if raw:
         flux_dict = dict()
-        for aa, flux, rms in zip(range(len(flux_cols)), flux_cols, flux_rms_cols):
+        for aa, flux in zip(range(len(flux_cols)), flux_cols):
 
             # Fill in dictionary
             flux_dict[line_name[aa]] = flux_tab0[flux].data
