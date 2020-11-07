@@ -2,7 +2,7 @@ import numpy as np
 
 from .. import line_name_short, OIII_r
 from .temp_metallicity_calc import R_calculation
-from ..column_names import bin_ratios0
+from ..column_names import bin_ratios0, dust0
 
 
 def flux_ratios(flux_dict, binned_data=False, get_R=True):
@@ -49,12 +49,12 @@ def flux_ratios(flux_dict, binned_data=False, get_R=True):
 
     # Add Balmer decrement
     if line_name_short['HG'] in flux_dict:
-        flux_ratios_dict['HgHb'] = flux_dict[line_name_short['HG']] / Hb
+        flux_ratios_dict[dust0[0]] = flux_dict[line_name_short['HG']] / Hb
     if line_name_short['HD'] in flux_dict:
-        flux_ratios_dict['HdHb'] = flux_dict[line_name_short['HD']] / Hb
+        flux_ratios_dict[dust0[1]] = flux_dict[line_name_short['HD']] / Hb
 
     if get_R:
-        OIII4363 = flux_dict[line_name_short['4363']] # Retrieve OIII4363
+        OIII4363 = flux_dict[line_name_short['4363']]  # Retrieve OIII4363
         flux_ratios_dict[R_key] = R_calculation(OIII4363, OIII)
 
     return flux_ratios_dict
