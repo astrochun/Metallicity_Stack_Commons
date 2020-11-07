@@ -250,8 +250,13 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
                                              EBV=EBV)
         derived_prop_pdf_dict.update(metal_dict)
 
+        prop_err_dict = dict()  # Initialize
+
         # Loop for each derived properties (T_e, metallicity, etc.)
         for names0 in temp_metal_names0:
+            prop_err_dict[names0 + '_low_err'] = np.repeat(np.nan, len(prop_tab0))
+            prop_err_dict[names0 + '_high_err'] = np.repeat(np.nan, len(prop_tab0))
+
             arr0 = prop_tab[names0].data
 
             err_prop, peak_prop = \
@@ -262,8 +267,15 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
             derived_prop_error_dict[names0+'_error'] = err_prop
             derived_prop_peak_dict[names0+'_peak'] = peak_prop
 
+            prop_err_dict[names0 + '_low_err'][detect_idx] = err_prop[:, 0]
+            prop_err_dict[names0 + '_high_err'][detect_idx] = err_prop[:, 1]
+
             # Update values
             prop_tab0[names0][detect_idx] = peak_prop
+
+        # Add errors to table
+        prop_err_table = Table(prop_err_dict)
+        prop_tab0 = hstack([prop_tab0, prop_err_table])
 
         # Write revised properties ASCII table
         if not apply_dust:
