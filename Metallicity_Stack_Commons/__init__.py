@@ -26,6 +26,8 @@ fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
 
 fitspath_caroline = 'C:/Users/carol/Google Drive/'
 
+fitspath_chun = '/Users/cly/GoogleDrive/Research/'
+
 scalefact = 1e-17
 
 # Flux ratio of [OIII]5007 to [OIII]4959
@@ -103,5 +105,8 @@ def get_user():
 
     if username == 'carol':
         fitspath = fitspath_caroline
+
+    if username == 'cly':
+        fitspath = fitspath_chun
 
     return fitspath
