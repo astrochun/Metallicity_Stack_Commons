@@ -1,10 +1,6 @@
-from astropy.io import ascii as asc
-from astropy.table import Table, Column
 import numpy as np
-from os.path import join, exists
 
 from .. import k_dict, line_name_short
-from ..column_names import filename_dict, dust0
 
 from chun_codes import compute_onesig_pdf
 
