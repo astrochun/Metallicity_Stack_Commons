@@ -33,7 +33,8 @@ def write_npz(path, npz_files, dict_list):
         np.savez(npz_outfile, **dict_input)
 
 
-def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, revised=True):
+def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
+                        revised=True):
     """
     Purpose:
       Use measurements and their uncertainties to perform a randomization
@@ -87,6 +88,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
 
             flux_tab = flux_tab0[detect_idx]
             prop_tab = prop_tab0[detect_idx]
+    else:
+        print("Individual sources not supported yet")
+        return
 
     flux_cols     = [str0+'_Flux_Gaussian' for str0 in line_name]
     flux_rms_cols = [str0+'_RMS' for str0 in line_name]
