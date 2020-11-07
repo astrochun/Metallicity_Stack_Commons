@@ -7,7 +7,7 @@ from astropy.table import Table, hstack
 import numpy as np
 
 from ..column_names import filename_dict, temp_metal_names0, npz_filename_dict, \
-    bin_names0, bin_ratios0
+    bin_names0, bin_ratios0, dust0
 from .ratios import flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 from .attenuation import compute_EBV
@@ -109,12 +109,15 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
         #
 
         if apply_dust:
-            EBV = compute_EBV(flux_ratios_dict['HgHb'], source='HgHb')
+            EBV = compute_EBV(flux_ratios_dict[dust0[0]], source=dust0[0])
+            EBV_HdHb = compute_EBV(flux_ratios_dict[dust0[1]], source=dust0[0])
         else:
             EBV = None
+            EBV_HdHb = None
 
         derived_prop_dict = dict()
 
+        # Using Hg/Hb Balmer decrement for dust corrections
         Te = temp_calculation(flux_ratios_dict[R_name], EBV=EBV)
         derived_prop_dict[temp_metal_names0[0]] = Te
         metal_dict = metallicity_calculation(Te, flux_ratios_dict[two_beta_name],
@@ -123,10 +126,11 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
         derived_prop_dict.update(metal_dict)
 
         if apply_dust:
-            derived_prop_dict['EBV'] = EBV
+            derived_prop_dict[dust0[2]] = EBV
+            derived_prop_dict[dust0[3]] = EBV_HdHb
 
         # Write Astropy table
-        # Get bin IDs and composite measurements in one dicitonary and write to table
+        # Get bin IDs and composite measurements in one dictionary and write to table
         tbl_dict = {bin_names0[0]: np.int_(flux_tab0[bin_names0[0]].data)}
         tbl_dict.update(flux_ratios_dict)
         tbl_dict.update(derived_prop_dict)
@@ -195,18 +199,34 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False, rev
         #
 
         if apply_dust:
-            EBV_dict = {'EBV': np.repeat(np.nan, len(prop_tab0)),
-                        'EBV_low_err': np.repeat(np.nan, len(prop_tab0)),
-                        'EBV_high_err': np.repeat(np.nan, len(prop_tab0))}
+            # Hg/Hb case
+            EBV_dict = {dust0[2]: np.repeat(np.nan, len(prop_tab0)),
+                        dust0[2] + '_low_err': np.repeat(np.nan, len(prop_tab0)),
+                        dust0[2] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
-            EBV, EBV_peak = compute_EBV(flux_ratios_dict['HgHb'], source='HgHb')
+            EBV, EBV_peak = compute_EBV(flux_ratios_dict[dust0[0]], source=dust0[0])
 
             err_prop, peak_prop = compute_onesig_pdf(EBV, EBV_peak, usepeak=True)
 
-            EBV_dict['EBV'][detect_idx] = peak_prop
-            EBV_dict['EBV_low_err'][detect_idx] = err_prop[:, 0]
-            EBV_dict['EBV_high_err'][detect_idx] = err_prop[:, 1]
+            EBV_dict[dust0[2]][detect_idx] = peak_prop
+            EBV_dict[dust0[2] + '_low_err'][detect_idx] = err_prop[:, 0]
+            EBV_dict[dust0[2] + '_high_err'][detect_idx] = err_prop[:, 1]
             EBV_table = Table(EBV_dict)
+            prop_tab0 = hstack([prop_tab0, EBV_table])
+
+            # Hd/Hb case
+            EBV_HdHb_dict = {dust0[3]: np.repeat(np.nan, len(prop_tab0)),
+                             dust0[3] + '_low_err': np.repeat(np.nan, len(prop_tab0)),
+                             dust0[3] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
+
+            EBV_HdHb, EBV_HdHb_peak = compute_EBV(flux_ratios_dict[dust0[1]], source=dust0[1])
+
+            err_prop, peak_prop = compute_onesig_pdf(EBV_HdHb, EBV_HdHb_peak, usepeak=True)
+
+            EBV_dict[dust0[3]][detect_idx] = peak_prop
+            EBV_dict[dust0[3] + '_low_err'][detect_idx] = err_prop[:, 0]
+            EBV_dict[dust0[3] + '_high_err'][detect_idx] = err_prop[:, 1]
+            EBV_table = Table(EBV_HdHb_dict)
             prop_tab0 = hstack([prop_tab0, EBV_table])
         else:
             EBV = None
