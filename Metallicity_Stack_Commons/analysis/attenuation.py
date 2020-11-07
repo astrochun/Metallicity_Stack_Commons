@@ -76,6 +76,9 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
         return EBV
 
 
+# Code is deprecated. See error_prop.fluxes_derived_prop for table update with EBV
+# Note that EBV derived from Hd/Hb is not conducted in error_prop.fluxes_derived_prop
+'''
 def EBV_table_update(fitspath, use_revised=False):
     """
     Purpose:
@@ -121,6 +124,7 @@ def EBV_table_update(fitspath, use_revised=False):
 
         tab1.add_columns([col1, col2, col3, col4])
         asc.write(tab1, out_ascii, format='fixed_width_two_line', overwrite=True)
+'''
 
 
 def compute_A(EBV):
