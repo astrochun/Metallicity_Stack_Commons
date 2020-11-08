@@ -69,12 +69,16 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
     three_beta_name = bin_ratios[3]
     R_name = bin_ratios[4]
 
+    print("Reading : " + flux_file)
     flux_tab0 = asc.read(flux_file)
+
     if not raw:
+        print("Reading : "+prop_file)
         prop_tab0 = asc.read(prop_file)
 
     if binned_data:
         if not raw:
+            print("Reading : "+verify_file)
             verify_tab = asc.read(verify_file)
             detection = verify_tab['Detection'].data
 
