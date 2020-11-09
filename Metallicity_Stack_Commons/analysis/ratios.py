@@ -21,6 +21,8 @@ def flux_ratios(flux_dict, binned_data=False, get_R=True):
         bin_ratios = [ratios0.replace('_composite', '') for ratios0 in bin_ratios0]
     else:
         bin_ratios = bin_ratios0
+        dust0[0] += '_composite'
+        dust0[1] += '_composite'
 
     two_beta_key = bin_ratios[2]
     three_beta_key = bin_ratios[3]
