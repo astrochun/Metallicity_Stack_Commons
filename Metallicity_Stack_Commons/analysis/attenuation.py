@@ -36,11 +36,11 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
         print("!!! Incorrect type for input [ratio].  Cannot be list !!!")
         raise TypeError
 
-    if source == 'HgHb':
+    if 'HgHb' in source:
         ratio0 = HgHb_CaseB
         k1 = k_HGAMMA
 
-    if source == 'HdHb':
+    if 'HdHb' in source:
         ratio0 = HdHb_CaseB
         k1 = k_HDELTA
 

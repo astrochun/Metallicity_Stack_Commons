@@ -62,6 +62,8 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                 verify_file = join(path, filename_dict['bin_valid'])
 
         bin_ratios = bin_ratios0
+        dust0[0] += '_composite'
+        dust0[1] += '_composite'
     else:
         bin_ratios = [ratios0.replace('_composite', '') for ratios0 in bin_ratios0]
 
