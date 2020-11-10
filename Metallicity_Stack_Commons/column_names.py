@@ -33,7 +33,7 @@ bin_names0 = ['bin_ID', 'N_stack', 'Detection']
 indv_names0 = ['ID', 'logR23', 'logO32', 'logM', 'logLHb', 'two_beta', 'three_beta', 'R']
 
 # Dust attenuation
-dust0 = ['HgHb', 'HdHb', 'EBV_HgHb', 'EBV_HdHb']
+dust0 = ['HgHb_composite', 'HdHb_composite', 'EBV_HgHb', 'EBV_HdHb']
 
 # Column names for bin information in stellar mass and H-beta luminosity
 bin_mzevolve_names0 = ['logM_min', 'logM_max', 'logM_avg', 'logM_median',

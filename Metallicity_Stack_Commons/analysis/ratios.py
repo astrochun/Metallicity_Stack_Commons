@@ -19,8 +19,10 @@ def flux_ratios(flux_dict, binned_data=False, get_R=True):
 
     if not binned_data:
         bin_ratios = [ratios0.replace('_composite', '') for ratios0 in bin_ratios0]
+        dust = [t_dust.replace('_composite', '') for t_dust in dust0]
     else:
         bin_ratios = bin_ratios0
+        dust = dust0
 
     two_beta_key = bin_ratios[2]
     three_beta_key = bin_ratios[3]
@@ -49,9 +51,9 @@ def flux_ratios(flux_dict, binned_data=False, get_R=True):
 
     # Add Balmer decrement
     if line_name_short['HG'] in flux_dict:
-        flux_ratios_dict[dust0[0]] = flux_dict[line_name_short['HG']] / Hb
+        flux_ratios_dict[dust[0]] = flux_dict[line_name_short['HG']] / Hb
     if line_name_short['HD'] in flux_dict:
-        flux_ratios_dict[dust0[1]] = flux_dict[line_name_short['HD']] / Hb
+        flux_ratios_dict[dust[1]] = flux_dict[line_name_short['HD']] / Hb
 
     if get_R:
         OIII4363 = flux_dict[line_name_short['4363']]  # Retrieve OIII4363
