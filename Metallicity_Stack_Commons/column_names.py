@@ -33,7 +33,7 @@ bin_names0 = ['bin_ID', 'N_stack', 'Detection']
 indv_names0 = ['ID', 'logR23', 'logO32', 'logM', 'logLHb', 'two_beta', 'three_beta', 'R']
 
 # Dust attenuation
-dust0 = ['HgHb', 'HdHb', 'EBV_HgHb', 'EBV_HdHb']
+dust0 = ['HgHb_composite', 'HdHb_composite', 'EBV_HgHb', 'EBV_HdHb']
 
 # Column names for bin information in stellar mass and H-beta luminosity
 bin_mzevolve_names0 = ['logM_min', 'logM_max', 'logM_avg', 'logM_median',
@@ -74,11 +74,15 @@ filename_dict['bin_info'] = 'bin_info.tbl'
 filename_dict['bin_valid'] = 'bin_validation.tbl'
 filename_dict['bin_valid_rev'] = filename_dict['bin_valid'].replace('.tbl', '.revised.tbl')
 filename_dict['bin_fit'] = 'bin_emission_line_fit.tbl'
-filename_dict['bin_fit_rev'] = filename_dict['bin_fit'].replace('.tbl', '.MC.tbl')
+filename_dict['bin_fit_MC'] = filename_dict['bin_fit'].replace('.tbl', '.MC.tbl')
 filename_dict['bin_derived_prop'] = 'bin_derived_properties.tbl'
-filename_dict['bin_derived_prop_rev'] = filename_dict['bin_derived_prop'].replace('.tbl', '.MC.tbl')
+filename_dict['bin_derived_prop_v1'] = 'bin_derived_properties.valid1.tbl'
+filename_dict['bin_derived_prop_MC'] = filename_dict['bin_derived_prop'].replace('.tbl', '.MC.tbl')
+filename_dict['bin_derived_prop_MC_v1'] = filename_dict['bin_derived_prop_v1'].replace('.tbl', '.MC.tbl')
 filename_dict['bin_derived_prop_dust'] = filename_dict['bin_derived_prop'].replace('.tbl', '.dustcorr.tbl')
-filename_dict['bin_derived_prop_rev_dust'] = filename_dict['bin_derived_prop_rev'].replace('.tbl', '.dustcorr.tbl')
+filename_dict['bin_derived_prop_dust_v1'] = filename_dict['bin_derived_prop_v1'].replace('.tbl', '.dustcorr.tbl')
+filename_dict['bin_derived_prop_MC_dust'] = filename_dict['bin_derived_prop_MC'].replace('.tbl', '.dustcorr.tbl')
+filename_dict['bin_derived_prop_MC_dust_v1'] = filename_dict['bin_derived_prop_MC_v1'].replace('.tbl', '.dustcorr.tbl')
 
 # Individual galaxy/spectra-related files
 filename_dict['indv_prop'] = 'individual_properties.tbl'
@@ -93,6 +97,18 @@ npz_filename_dict['flux_peak'] = 'flux_peak.npz'
 npz_filename_dict['der_prop_pdf'] = 'derived_properties_pdf.npz'
 npz_filename_dict['der_prop_errors'] = 'derived_properties_errors.npz'
 npz_filename_dict['der_prop_peak'] = 'derived_properties_peak.npz'
+npz_filename_dict['der_prop_dust_pdf'] = npz_filename_dict['der_prop_pdf'].replace('.npz', '.dustcorr.npz')
+npz_filename_dict['der_prop_dust_errors'] = npz_filename_dict['der_prop_errors'].replace('.npz', '.dustcorr.npz')
+npz_filename_dict['der_prop_dust_peak'] = npz_filename_dict['der_prop_peak'].replace('.npz', '.dustcorr.npz')
+
+t_keys = list(npz_filename_dict.keys())
+for key in t_keys:
+    if 'dust' not in key:
+        npz_filename_dict[key+'_v1'] = npz_filename_dict[key].replace('.npz',
+                                                                      '.valid1.npz')
+    else:
+        npz_filename_dict[key+'_v1'] = npz_filename_dict[key].replace('.dustcorr.npz',
+                                                                      '.valid1.dustcorr.npz')
 
 
 def merge_column_names(*args):
