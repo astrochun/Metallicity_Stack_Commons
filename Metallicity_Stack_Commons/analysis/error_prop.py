@@ -223,10 +223,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
             # Hg/Hb case
             EBV_dict = {dust[2]: np.repeat(np.nan, len(prop_tab0)),
                         dust[2] + '_low_err': np.repeat(np.nan, len(prop_tab0)),
-                        dust[2] + '_high_err': np.repeat(np.nan, len(prop_tab0)),
-                        dust[3]: np.repeat(np.nan, len(prop_tab0)),
-                        dust[3] + '_low_err': np.repeat(np.nan, len(prop_tab0)),
-                        dust[3] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
+                        dust[2] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
             EBV, EBV_peak = compute_EBV(flux_ratios_dict[dust[0]], source=dust[0])
 
@@ -247,9 +244,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
             err_prop, peak_prop = compute_onesig_pdf(EBV_HdHb, EBV_HdHb_peak, usepeak=True)
 
-            EBV_dict[dust[3]][detect_idx] = peak_prop
-            EBV_dict[dust[3] + '_low_err'][detect_idx] = err_prop[:, 0]
-            EBV_dict[dust[3] + '_high_err'][detect_idx] = err_prop[:, 1]
+            EBV_HdHb_dict[dust[3]][detect_idx] = peak_prop
+            EBV_HdHb_dict[dust[3] + '_low_err'][detect_idx] = err_prop[:, 0]
+            EBV_HdHb_dict[dust[3] + '_high_err'][detect_idx] = err_prop[:, 1]
 
             # Add EBV and errors to table
             EBV_table = Table(EBV_HdHb_dict)
