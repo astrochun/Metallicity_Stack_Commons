@@ -96,8 +96,11 @@ def dir_date(org_name, path_init='', year=False):
     return fitspath
 
 
-def get_user():
-    username = getpass.getuser()
+def get_user(username=None):
+
+    if isinstance(username, type(None)):
+        username = getpass.getuser()
+
     if username == 'reagenleimbach':
         fitspath = fitspath_reagen
 

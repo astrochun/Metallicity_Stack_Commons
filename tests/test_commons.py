@@ -1,4 +1,5 @@
 from Metallicity_Stack_Commons import column_names, dir_date
+from Metallicity_Stack_Commons import get_user, fitspath_reagen, fitspath_caroline
 
 from os.path import exists
 from os import rmdir
@@ -19,6 +20,12 @@ def test_dir_date():
 
     assert len(mmdd) == 5
     assert len(mmddyyyy) == 9
+
+
+def test_get_user():
+
+    assert get_user('reagenleimbach') == fitspath_reagen
+    assert get_user('carol') == fitspath_caroline
 
 
 def test_column_names():
