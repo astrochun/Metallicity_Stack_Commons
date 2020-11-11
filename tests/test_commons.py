@@ -12,6 +12,9 @@ def test_dir_date():
     assert exists(mmdd)
     assert exists(mmddyyyy)
 
+    # Check path existence
+    mmdd = dir_date('', '')
+
     if exists(mmdd):
         rmdir(mmdd)
 
