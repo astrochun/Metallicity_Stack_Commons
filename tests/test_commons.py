@@ -1,9 +1,21 @@
 from Metallicity_Stack_Commons import column_names, dir_date
 
+from os.path import exists
+from os import rmdir
+
 
 def test_dir_date():
     mmdd = dir_date('', '')
     mmddyyyy = dir_date('', '', year=True)
+
+    assert exists(mmdd)
+    assert exists(mmddyyyy)
+
+    if exists(mmdd):
+        rmdir(mmdd)
+
+    if exists(mmddyyyy):
+        rmdir(mmddyyyy)
 
     assert len(mmdd) == 5
     assert len(mmddyyyy) == 9
