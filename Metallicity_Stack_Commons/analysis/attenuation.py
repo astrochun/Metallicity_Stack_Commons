@@ -72,56 +72,6 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
         return EBV
 
 
-# Code is deprecated. See error_prop.fluxes_derived_prop for table update with EBV
-'''
-def EBV_table_update(fitspath, use_revised=False):
-    """
-    Purpose:
-      Determines E(B-V) from Hg/Hb and Hd/Hb flux ratios by calling
-      compute_EBV() and update table
-
-    :param fitspath: str containing root path
-    :param use_revised: Boolean to indicate whether to use regular or revised tables
-    """
-
-    combine_file = join(fitspath, filename_dict['bin_fit_rev']) if use_revised \
-        else join(fitspath, filename_dict['bin_fit'])
-
-    print("Reading : " + combine_file)
-    combine_asc = asc.read(combine_file)
-
-    ID = combine_asc['bin_ID'].data
-    HBETA  = combine_asc[HB+'_Flux_Observed'].data
-    HGAMMA = combine_asc[HG+'_Flux_Observed'].data
-    HDELTA = combine_asc[HD+'_Flux_Observed'].data
-
-    HgHb = HGAMMA / HBETA
-    HdHb = HDELTA / HBETA
-
-    EBV_HgHb = compute_EBV(HgHb, source='HgHb')
-    EBV_HdHb = compute_EBV(HdHb, source='HdHb')
-
-    col1 = Column(HgHb,     name=dust0[0])
-    col2 = Column(HdHb,     name=dust0[1])
-    col3 = Column(EBV_HgHb, name=dust0[2])
-    col4 = Column(EBV_HdHb, name=dust0[3])
-
-    out_ascii = join(fitspath, filename_dict['bin_derived_prop_rev']) if use_revised \
-        else join(fitspath, filename_dict['bin_derived_prop'])
-
-    if not exists(out_ascii):
-        print("File not found : ", out_ascii)
-
-        raise FileNotFoundError
-    else:
-        tab1 = asc.read(out_ascii)
-        print("Adding dust attenuation information to " + out_ascii)
-
-        tab1.add_columns([col1, col2, col3, col4])
-        asc.write(tab1, out_ascii, format='fixed_width_two_line', overwrite=True)
-'''
-
-
 def compute_A(EBV):
     """
     Purpose:
