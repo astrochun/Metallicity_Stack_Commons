@@ -190,9 +190,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                   format='fixed_width_two_line')
 
         # Save flux npz files
-        npz_files = [npz_filename_dict['flux_pdf'],
-                     npz_filename_dict['flux_errors'],
-                     npz_filename_dict['flux_peak']]
+        npz_files = [npz_filename_dict['flux_pdf' + rev_s],
+                     npz_filename_dict['flux_errors' + rev_s],
+                     npz_filename_dict['flux_peak' + rev_s]]
         dict_list = [flux_pdf_dict, flux_error_dict, flux_peak_dict]
         write_npz(path, npz_files, dict_list)
 
@@ -318,13 +318,13 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
         # Save derived properties npz files
         if not apply_dust:
-            npz_files = [npz_filename_dict['der_prop_pdf'],
-                         npz_filename_dict['der_prop_errors'],
-                         npz_filename_dict['der_prop_peak']]
+            npz_files = [npz_filename_dict['der_prop_pdf' + rev_s],
+                         npz_filename_dict['der_prop_errors' + rev_s],
+                         npz_filename_dict['der_prop_peak' + rev_s]]
         else:
-            npz_files = [npz_filename_dict['der_prop_dust_pdf'],
-                         npz_filename_dict['der_prop_dust_errors'],
-                         npz_filename_dict['der_prop_dust_peak']]
+            npz_files = [npz_filename_dict['der_prop_dust_pdf' + rev_s],
+                         npz_filename_dict['der_prop_dust_errors' + rev_s],
+                         npz_filename_dict['der_prop_dust_peak' + rev_s]]
 
         dict_list = [derived_prop_pdf_dict, derived_prop_error_dict,
                      derived_prop_peak_dict]

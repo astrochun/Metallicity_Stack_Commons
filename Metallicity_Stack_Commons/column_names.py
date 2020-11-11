@@ -101,6 +101,15 @@ npz_filename_dict['der_prop_dust_pdf'] = npz_filename_dict['der_prop_pdf'].repla
 npz_filename_dict['der_prop_dust_errors'] = npz_filename_dict['der_prop_errors'].replace('.npz', '.dustcorr.npz')
 npz_filename_dict['der_prop_dust_peak'] = npz_filename_dict['der_prop_peak'].replace('.npz', '.dustcorr.npz')
 
+t_keys = list(npz_filename_dict.keys())
+for key in t_keys:
+    if 'dust' not in key:
+        npz_filename_dict[key+'_v1'] = npz_filename_dict[key].replace('.npz',
+                                                                      '.valid1.npz')
+    else:
+        npz_filename_dict[key+'_v1'] = npz_filename_dict[key].replace('.dustcorr.npz',
+                                                                      '.valid1.dustcorr.npz')
+
 
 def merge_column_names(*args):
     """
