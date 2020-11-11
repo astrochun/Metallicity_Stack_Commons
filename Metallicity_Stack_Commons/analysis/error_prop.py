@@ -52,12 +52,11 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
     # Define files to read in for binned data
     if binned_data:
         flux_file = join(path, filename_dict['bin_fit'])
-
-        bin_ratios = [ratios0.replace('_composite', '') for ratios0 in bin_ratios0]
-        dust = [t_dust.replace('_composite', '') for t_dust in dust0]
-    else:
         bin_ratios = bin_ratios0
         dust = dust0
+    else:
+        bin_ratios = [ratios0.replace('_composite', '') for ratios0 in bin_ratios0]
+        dust = [t_dust.replace('_composite', '') for t_dust in dust0]
 
     # Define verification table
     if revised:
