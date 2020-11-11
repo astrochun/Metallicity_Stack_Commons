@@ -53,13 +53,17 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
     if binned_data:
         flux_file = join(path, filename_dict['bin_fit'])
         if not raw:
-            prop_file = join(path, filename_dict['bin_derived_prop'])
+            # Set rev_stuff based on revised=True/False
             if revised:
+                rev_s = ''
                 print('Using REVISED validation table')
                 verify_file = join(path, filename_dict['bin_valid_rev'])
             else:
+                rev_s = '_v1'
                 print('Using validation table')
                 verify_file = join(path, filename_dict['bin_valid'])
+
+            prop_file = join(path, filename_dict['bin_derived_prop' + rev_s])
 
         bin_ratios = bin_ratios0
         dust = dust0
@@ -146,9 +150,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         tbl_dict.update(derived_prop_dict)
 
         if not apply_dust:
-            outfile = join(path, filename_dict['bin_derived_prop'])
+            outfile = join(path, filename_dict['bin_derived_prop' + rev_s])
         else:
-            outfile = join(path, filename_dict['bin_derived_prop_dust'])
+            outfile = join(path, filename_dict['bin_derived_prop_dust' + rev_s])
         if not exists(outfile):
             print("Writing : ", outfile)
         else:
@@ -177,7 +181,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
             flux_tab0[line_name[aa] + '_Flux_Gaussian'][detect_idx] = peak
 
         # Write revised emission-line fit ASCII table
-        new_flux_file = join(path, filename_dict['bin_fit_rev'])
+        new_flux_file = join(path, filename_dict['bin_fit_MC'])
         if exists(new_flux_file):
             print("Overwriting: "+new_flux_file)
         else:
@@ -302,9 +306,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
         # Write revised properties ASCII table
         if not apply_dust:
-            new_prop_file = join(path, filename_dict['bin_derived_prop_rev'])
+            new_prop_file = join(path, filename_dict['bin_derived_prop_MC' + rev_s])
         else:
-            new_prop_file = join(path, filename_dict['bin_derived_prop_rev_dust'])
+            new_prop_file = join(path, filename_dict['bin_derived_prop_MC_dust' + rev_s])
         if exists(new_prop_file):
             print("Overwriting: "+new_prop_file)
         else:

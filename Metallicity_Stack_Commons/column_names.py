@@ -74,11 +74,15 @@ filename_dict['bin_info'] = 'bin_info.tbl'
 filename_dict['bin_valid'] = 'bin_validation.tbl'
 filename_dict['bin_valid_rev'] = filename_dict['bin_valid'].replace('.tbl', '.revised.tbl')
 filename_dict['bin_fit'] = 'bin_emission_line_fit.tbl'
-filename_dict['bin_fit_rev'] = filename_dict['bin_fit'].replace('.tbl', '.MC.tbl')
+filename_dict['bin_fit_MC'] = filename_dict['bin_fit'].replace('.tbl', '.MC.tbl')
 filename_dict['bin_derived_prop'] = 'bin_derived_properties.tbl'
-filename_dict['bin_derived_prop_rev'] = filename_dict['bin_derived_prop'].replace('.tbl', '.MC.tbl')
+filename_dict['bin_derived_prop_v1'] = 'bin_derived_properties.valid1.tbl'
+filename_dict['bin_derived_prop_MC'] = filename_dict['bin_derived_prop'].replace('.tbl', '.MC.tbl')
+filename_dict['bin_derived_prop_MC_v1'] = filename_dict['bin_derived_prop_v1'].replace('.tbl', '.MC.tbl')
 filename_dict['bin_derived_prop_dust'] = filename_dict['bin_derived_prop'].replace('.tbl', '.dustcorr.tbl')
-filename_dict['bin_derived_prop_rev_dust'] = filename_dict['bin_derived_prop_rev'].replace('.tbl', '.dustcorr.tbl')
+filename_dict['bin_derived_prop_dust_v1'] = filename_dict['bin_derived_prop_v1'].replace('.tbl', '.dustcorr.tbl')
+filename_dict['bin_derived_prop_MC_dust'] = filename_dict['bin_derived_prop_MC'].replace('.tbl', '.dustcorr.tbl')
+filename_dict['bin_derived_prop_MC_dust_v1'] = filename_dict['bin_derived_prop_MC_v1'].replace('.tbl', '.dustcorr.tbl')
 
 # Individual galaxy/spectra-related files
 filename_dict['indv_prop'] = 'individual_properties.tbl'
