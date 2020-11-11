@@ -164,7 +164,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
         # Randomization for emission-line fluxes
         for aa, flux, rms in zip(range(len(flux_cols)), flux_cols, flux_rms_cols):
-            flux_pdf = random_pdf(flux_tab[flux], flux_tab[rms], seed_i=aa,
+            flux_pdf = random_pdf(flux_tab[flux], flux_tab[rms], seed_i=aa+1,
                                   n_iter=1000)
             err, peak = compute_onesig_pdf(flux_pdf, flux_tab[flux], usepeak=True)
 
