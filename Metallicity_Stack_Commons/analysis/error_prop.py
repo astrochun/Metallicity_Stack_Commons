@@ -52,24 +52,29 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
     # Define files to read in for binned data
     if binned_data:
         flux_file = join(path, filename_dict['bin_fit'])
-        if not raw:
-            # Set rev_stuff based on revised=True/False
-            if revised:
-                rev_s = ''
-                print('Using REVISED validation table')
-                verify_file = join(path, filename_dict['bin_valid_rev'])
-            else:
-                rev_s = '_v1'
-                print('Using validation table')
-                verify_file = join(path, filename_dict['bin_valid'])
 
-            prop_file = join(path, filename_dict['bin_derived_prop' + rev_s])
-
-        bin_ratios = bin_ratios0
-        dust = dust0
-    else:
         bin_ratios = [ratios0.replace('_composite', '') for ratios0 in bin_ratios0]
         dust = [t_dust.replace('_composite', '') for t_dust in dust0]
+    else:
+        bin_ratios = bin_ratios0
+        dust = dust0
+
+    # Define verification table
+    if revised:
+        rev_s = ''
+        print('Using REVISED validation table')
+        verify_file = join(path, filename_dict['bin_valid_rev'])
+    else:
+        rev_s = '_v1'
+        print('Using validation table')
+        verify_file = join(path, filename_dict['bin_valid'])
+
+    if not raw:
+        # Set rev_stuff based on revised=True/False
+        prop_file = join(path, filename_dict['bin_derived_prop' + rev_s])
+
+        print("Reading : "+prop_file)
+        prop_tab0 = asc.read(prop_file)
 
     two_beta_name = bin_ratios[2]
     three_beta_name = bin_ratios[3]
@@ -77,10 +82,6 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
     print("Reading : " + flux_file)
     flux_tab0 = asc.read(flux_file)
-
-    if not raw:
-        print("Reading : "+prop_file)
-        prop_tab0 = asc.read(prop_file)
 
     if binned_data:
         if not raw:
