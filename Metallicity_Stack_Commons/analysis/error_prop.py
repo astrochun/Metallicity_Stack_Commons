@@ -216,8 +216,8 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
             flux_ratios_err_dict[name0 + '_high_err'][detect_idx] = err_prop[:, 1]
 
         # Add flux ratio errors to table
-        prop_err_table = Table(flux_ratios_err_dict)
-        prop_tab0 = hstack([prop_tab0, prop_err_table])
+        flux_ratios_err_table = Table(flux_ratios_err_dict)
+        prop_tab0 = hstack([prop_tab0, flux_ratios_err_table])
 
         #
         # Get EBV from Balmer decrement if apply_dust set
@@ -230,15 +230,13 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                         dust[2] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
             EBV, EBV_peak = compute_EBV(flux_ratios_dict[dust[0]], source=dust[0])
-            print(EBV_peak)
 
             err_prop, peak_prop = compute_onesig_pdf(EBV, EBV_peak, usepeak=True)
 
             EBV_dict[dust[2]][detect_idx] = peak_prop
             EBV_dict[dust[2] + '_low_err'][detect_idx] = err_prop[:, 0]
             EBV_dict[dust[2] + '_high_err'][detect_idx] = err_prop[:, 1]
-            EBV_table = Table(EBV_dict)
-            prop_tab0 = hstack([prop_tab0, EBV_table])
+            EBV_table = Table(EBV_dict)  # Add in at the end
 
             # Hd/Hb case
             EBV_HdHb_dict = {dust[3]: np.repeat(np.nan, len(prop_tab0)),
@@ -255,8 +253,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
             EBV_HdHb_dict[dust[3] + '_high_err'][detect_idx] = err_prop[:, 1]
 
             # Add EBV and errors to table
-            EBV_table = Table(EBV_HdHb_dict)
-            prop_tab0 = hstack([prop_tab0, EBV_table])
+            EBV_HdHb_table = Table(EBV_HdHb_dict)  # Add in at the end
         else:
             EBV = None
 
@@ -306,6 +303,10 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         prop_err_table = Table(prop_err_dict)
         prop_tab0 = hstack([prop_tab0, prop_err_table])
 
+        if apply_dust:
+            prop_tab0 = hstack([prop_tab0, EBV_table])
+            prop_tab0 = hstack([prop_tab0, EBV_HdHb_table])
+
         # Write revised properties ASCII table
         if not apply_dust:
             new_prop_file = join(path, filename_dict['bin_derived_prop_MC' + rev_s])
@@ -315,6 +316,21 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
             print("Overwriting: "+new_prop_file)
         else:
             print("Writing: "+new_prop_file)
+
+        '''
+        # Order of table:
+        tab_order = [prop_tab0.colnames[0]]
+        tab_order += flux_ratios_dict.keys()
+        tab_order += temp_metal_names0
+        if apply_dust:
+            tab_order += EBV_dict.keys()
+            tab_order += EBV_HdHb_dict.keys()
+
+        if not raw:
+            tab_order += prop_err_dict.keys()
+
+        asc.write(prop_tab0[tab_order], new_prop_file, overwrite=True,
+        '''
         asc.write(prop_tab0, new_prop_file, overwrite=True,
                   format='fixed_width_two_line')
 
