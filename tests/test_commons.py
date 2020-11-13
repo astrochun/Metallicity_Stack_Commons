@@ -1,9 +1,10 @@
-from Metallicity_Stack_Commons import column_names, dir_date
+from Metallicity_Stack_Commons import column_names, dir_date, exclude_outliers
 from Metallicity_Stack_Commons import get_user, fitspath_reagen, fitspath_caroline
 
 from os.path import exists
 from os import rmdir
 
+import numpy as np
 
 def test_dir_date():
     mmdd = dir_date('', '')
@@ -29,6 +30,23 @@ def test_get_user():
 
     assert get_user('reagenleimbach') == fitspath_reagen
     assert get_user('carol') == fitspath_caroline
+
+
+def test_exclude_outliers():
+
+    obj_no = ['11111111', '22222222',
+              '32007727', '32101412', '42006031', '32035286', '14023705']
+
+    for obj in [obj_no, np.array(obj_no)]:
+        flag = exclude_outliers(obj)
+
+        assert not flag[0]
+        assert not flag[1]
+        assert flag[2]
+        assert flag[3]
+        assert flag[4]
+        assert flag[5]
+        assert flag[6]
 
 
 def test_column_names():
