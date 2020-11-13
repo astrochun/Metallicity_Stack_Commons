@@ -1,5 +1,5 @@
 from astropy.io import ascii as asc
-from astropy.table import Table, Column
+from astropy.table import Column
 import numpy as np
 from os.path import join, exists
 
