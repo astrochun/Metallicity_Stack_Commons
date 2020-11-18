@@ -94,3 +94,17 @@ def test_column_names():
     column_merge = column_names.merge_column_names(['AAA'], ['BBB'])
     assert isinstance(column_merge, list)
     assert len(column_merge) == 2
+
+
+def test_indv_R23_O32():
+
+    indv_r23_o32_list = column_names.indv_R23_O32()
+    assert isinstance(indv_r23_o32_list, list)
+    assert len(indv_r23_o32_list) == 6
+
+
+def test_indv_M_LHb():
+
+    indv_m_lhb_list = column_names.indv_M_LHb()
+    assert isinstance(indv_m_lhb_list, list)
+    assert len(indv_m_lhb_list) == 6
