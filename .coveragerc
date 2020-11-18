@@ -1,0 +1,4 @@
+[run]
+omit =
+  Metallicity_Stack_Commons/update_det4363_info.py
+  Metallicity_Stack_Commons/valid_table.py

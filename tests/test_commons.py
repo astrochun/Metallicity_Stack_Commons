@@ -6,6 +6,7 @@ from os import rmdir
 
 import numpy as np
 
+
 def test_dir_date():
     mmdd = dir_date('', '')
     mmddyyyy = dir_date('', '', year=True)
