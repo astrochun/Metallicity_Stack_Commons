@@ -1,7 +1,8 @@
 from chun_codes import match_nosort
 from astropy.io import fits
 
-def get index(det4363_table, input_table, column_name):
+
+def get_index(det4363_table, input_table, column_name):
     """
     Uses either OBJNO or AP/SLIT info to get index for an existing table
 
@@ -15,9 +16,9 @@ def get index(det4363_table, input_table, column_name):
     """
 
     if column_name != 'OBJNO' or column_name != 'SLIT' or column_name != 'AP':
-         print("column_name not understood")
-         print("Exiting!!!")
-         return
+        print("column_name not understood")
+        print("Exiting!!!")
+        return
 
     det4363_id = det4363_table[column_name]
     input_id   = input_table[column_name]
@@ -25,4 +26,3 @@ def get index(det4363_table, input_table, column_name):
     det4363_idx, input_idx = match_nosort(det4363_id, input_id)
 
     return det4363_idx, input_idx
-
