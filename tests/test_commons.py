@@ -89,7 +89,7 @@ def test_column_names():
     assert len(column_names.filename_dict.keys()) == 17
 
     assert isinstance(column_names.npz_filename_dict, dict)
-    assert len(column_names.npz_filename_dict.keys()) == 6
+    assert len(column_names.npz_filename_dict.keys()) == 18
 
     column_merge = column_names.merge_column_names(['AAA'], ['BBB'])
     assert isinstance(column_merge, list)
