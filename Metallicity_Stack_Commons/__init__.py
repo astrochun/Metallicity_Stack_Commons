@@ -5,7 +5,7 @@ import os
 import getpass
 import numpy as np
 
-version = "1.1.6"
+version = "1.2.0"
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
 line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
