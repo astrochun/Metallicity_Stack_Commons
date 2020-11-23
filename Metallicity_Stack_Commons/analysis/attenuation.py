@@ -65,7 +65,7 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
                 neg_idx = np.where(EBV_peak < 0.0)[0]
                 if len(neg_idx) > 0:
                     print('EBV distribution shifted for peak')
-                    EBV[neg_idx, :] -= EBV_peak[neg_idx]
+                    EBV[neg_idx, :] -= EBV_peak[neg_idx].reshape((len(neg_idx), 1))
                     EBV_peak[neg_idx] = 0.0
                 return EBV, EBV_peak
     else:
