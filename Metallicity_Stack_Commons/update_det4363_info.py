@@ -1,5 +1,4 @@
 from chun_codes import match_nosort
-from astropy.io import fits
 
 
 def get_index(det4363_table, input_table, column_name):
