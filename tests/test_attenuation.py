@@ -54,7 +54,14 @@ def test_compute_EBV():
             # Test EBV distribution case
             values = [value, value - dx, value + dx]
             Balmer_dist = random_pdf(values, [dx] * len(values), seed_i=1, n_iter=5000)
-            EBV_dist = attenuation.compute_EBV(Balmer_dist, source=source, zero_neg=zero)
+            if not zero:
+                EBV_dist = attenuation.compute_EBV(Balmer_dist, source=source,
+                                                   zero_neg=zero)
+            else:
+                EBV_dist, EBV_peak = attenuation.compute_EBV(Balmer_dist,
+                                                             source=source,
+                                                             zero_neg=zero)
+
             '''
             # For writing initial file
             npz_outfile = join('tests_data', f'EBV_dist_{source}_{zero}.npz')
