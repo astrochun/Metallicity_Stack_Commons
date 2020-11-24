@@ -5,7 +5,7 @@ import os
 import getpass
 import numpy as np
 
-version = "1.0.1"
+version = "1.2.0"
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
 line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
@@ -25,6 +25,8 @@ wavelength_dict = dict(zip(all_line_name, all_lambda0))
 fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
 
 fitspath_caroline = 'C:/Users/carol/Google Drive/'
+
+fitspath_chun = '/Users/cly/GoogleDrive/Research/'
 
 scalefact = 1e-17
 
@@ -67,7 +69,7 @@ def dir_date(org_name, path_init='', year=False):
 
         From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
     Usage:
-        fitspath = general.get_time(org_name, path_init='', year=True)
+        fitspath = dir_date(org_name, path_init='', year=True)
 
     Params:
         org_name --> a string of the directory that the date subdirectory will be in.
@@ -96,12 +98,18 @@ def dir_date(org_name, path_init='', year=False):
     return fitspath
 
 
-def get_user():
-    username = getpass.getuser()
+def get_user(username=None):
+
+    if isinstance(username, type(None)):
+        username = getpass.getuser()
+
     if username == 'reagenleimbach':
         fitspath = fitspath_reagen
 
     if username == 'carol':
         fitspath = fitspath_caroline
+
+    if username == 'cly':
+        fitspath = fitspath_chun
 
     return fitspath

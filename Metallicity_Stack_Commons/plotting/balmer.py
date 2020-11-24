@@ -136,7 +136,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
         astropy_table_file = join(fitspath, filename_dict['bin_fit'])
         out_pdf = join(fitspath, out_pdf_prefix+'.pdf')
     else:
-        astropy_table_file = join(fitspath, filename_dict['bin_fit_rev'])
+        astropy_table_file = join(fitspath, filename_dict['bin_fit_MC'])
         out_pdf = join(fitspath, out_pdf_prefix+'.MC.pdf')
 
     astropy_table = asc.read(astropy_table_file)
