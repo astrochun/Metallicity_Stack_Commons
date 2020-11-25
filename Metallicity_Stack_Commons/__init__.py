@@ -22,11 +22,11 @@ all_lambda0   = [lambda0[0]] + [3728.91] + lambda0[1:]
 all_line_name = ['OII_3726', 'OII_3729'] + line_name[1:]
 wavelength_dict = dict(zip(all_line_name, all_lambda0))
 
-fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
-
-fitspath_caroline = 'C:/Users/carol/Google Drive/'
-
-fitspath_chun = '/Users/cly/GoogleDrive/Research/'
+fitspath_dict = {
+    'reagenleimbach': '/Users/reagenleimbach/Desktop/Zcalbase_gal/',
+    'carol': 'C:/Users/carol/Google Drive/',
+    'cly': '/Users/cly/GoogleDrive/Research/'
+}
 
 scalefact = 1e-17
 
@@ -103,13 +103,6 @@ def get_user(username=None):
     if isinstance(username, type(None)):
         username = getpass.getuser()
 
-    if username == 'reagenleimbach':
-        fitspath = fitspath_reagen
-
-    if username == 'carol':
-        fitspath = fitspath_caroline
-
-    if username == 'cly':
-        fitspath = fitspath_chun
+    fitspath = fitspath_dict[username]
 
     return fitspath
