@@ -1,5 +1,5 @@
 from Metallicity_Stack_Commons import column_names, dir_date, exclude_outliers
-from Metallicity_Stack_Commons import get_user, fitspath_reagen, fitspath_caroline
+from Metallicity_Stack_Commons import get_user, fitspath_dict
 
 from os.path import exists
 from os import rmdir
@@ -29,8 +29,8 @@ def test_dir_date():
 
 def test_get_user():
 
-    assert get_user('reagenleimbach') == fitspath_reagen
-    assert get_user('carol') == fitspath_caroline
+    for username in ['reagenleimbach', 'carol']:
+        assert get_user(username=username) == fitspath_dict[username]
 
 
 def test_exclude_outliers():
