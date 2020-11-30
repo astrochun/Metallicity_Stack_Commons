@@ -12,10 +12,10 @@ import pytest
 
 def test_dir_date():
     mmdd = dir_date('', '')
-    mmddyyyy = dir_date('', '', year=True)
+    yyyymmdd = dir_date('', '', year=True)
 
     assert exists(mmdd)
-    assert exists(mmddyyyy)
+    assert exists(yyyymmdd)
 
     # Check path existence
     mmdd = dir_date('', '')
@@ -23,11 +23,11 @@ def test_dir_date():
     if exists(mmdd):
         rmdir(mmdd)
 
-    if exists(mmddyyyy):
-        rmdir(mmddyyyy)
+    if exists(yyyymmdd):
+        rmdir(yyyymmdd)
 
     assert len(mmdd) == 5
-    assert len(mmddyyyy) == 9
+    assert len(yyyymmdd) == 9
 
 
 def test_get_user():

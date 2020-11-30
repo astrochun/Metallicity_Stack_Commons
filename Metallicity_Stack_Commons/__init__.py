@@ -84,7 +84,7 @@ def dir_date(folder_name, path_init='', year=False):
 
     list_path = [path_init, folder_name, "%02i%02i" % (today.month, today.day), '']
     if year:
-        list_path[-2] += "%02i" % today.year
+        list_path[-2] = "%i" % today.year + list_path[-2]
 
     fitspath = os.path.join(*list_path)
     try:
