@@ -5,6 +5,9 @@ from os.path import exists
 from os import rmdir
 
 import numpy as np
+import getpass
+
+import pytest
 
 
 def test_dir_date():
@@ -31,6 +34,11 @@ def test_get_user():
 
     for username in ['reagenleimbach', 'carol']:
         assert get_user(username=username) == fitspath_dict[username]
+
+    with pytest.raises(ValueError):
+        get_user(username='test')
+
+    assert get_user() == fitspath_dict[getpass.getuser()]
 
 
 def test_exclude_outliers():

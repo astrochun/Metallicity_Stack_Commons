@@ -25,7 +25,8 @@ wavelength_dict = dict(zip(all_line_name, all_lambda0))
 fitspath_dict = {
     'reagenleimbach': '/Users/reagenleimbach/Desktop/Zcalbase_gal/',
     'carol': 'C:/Users/carol/Google Drive/',
-    'cly': '/Users/cly/GoogleDrive/Research/'
+    'cly': '/Users/cly/GoogleDrive/Research/',
+    'travis': '/home/travis'
 }
 
 scalefact = 1e-17
@@ -103,6 +104,9 @@ def get_user(username=None):
     if isinstance(username, type(None)):
         username = getpass.getuser()
 
-    fitspath = fitspath_dict[username]
+    if username in fitspath_dict.keys():
+        fitspath = fitspath_dict[username]
+    else:
+        raise ValueError("Incorrect username input")
 
     return fitspath
