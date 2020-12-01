@@ -23,10 +23,10 @@ all_line_name = ['OII_3726', 'OII_3729'] + line_name[1:]
 wavelength_dict = dict(zip(all_line_name, all_lambda0))
 
 fitspath_dict = {
-    'reagenleimbach': '/Users/reagenleimbach/Desktop/Zcalbase_gal/',
+    'reagenleimbach': '/Users/reagenleimbach/GoogleDrive/Research/',
     'carol': 'C:/Users/carol/Google Drive/',
     'cly': '/Users/cly/GoogleDrive/Research/',
-    'travis': '/home/travis'
+    'travis': '/home/travis/'
 }
 
 scalefact = 1e-17
