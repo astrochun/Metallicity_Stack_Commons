@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7.0', '3.7.5', '3.8']
+        python-version: ['3.6.7', '3.7.5', '3.8']
 
     steps:
     - name: Checkout MSC
@@ -29,10 +29,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install pytest pytest-cov
+    - name: Install MSC
+      run: |
         python setup.py install
-        cd chun_codes
+    - name: Install chun_codes
+      run: |
         python setup.py install
-        cd ..
+      working-directory: chun_codes
     - name: Test with pytest
       run: |
         pytest --cov-report term-missing --cov=Metallicity_Stack_Commons tests
