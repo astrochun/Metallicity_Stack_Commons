@@ -11,20 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.6.5', '3.7.5', '3.8']
+        python-version: ['3.7.0', '3.7.5', '3.8']
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout MSC
+      uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Checkout chun_codes
+      uses: actions/checkout@v2
+      with:
+        repository: astrochun/chun_codes
+        path: chun_codes
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install pytest pytest-cov
         python setup.py install
-        git clone https://github.com/astrochun/chun_codes.git chun_codes
         cd chun_codes
         python setup.py install
         cd ..
