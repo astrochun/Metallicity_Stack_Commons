@@ -26,7 +26,8 @@ fitspath_dict = {
     'reagenleimbach': '/Users/reagenleimbach/GoogleDrive/Research/',
     'carol': 'C:/Users/carol/Google Drive/',
     'cly': '/Users/cly/GoogleDrive/Research/',
-    'travis': '/home/travis/'
+    'travis': '/home/travis/',
+    'runner': '/home/runner/'
 }
 
 scalefact = 1e-17
