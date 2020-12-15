@@ -22,11 +22,13 @@ all_lambda0   = [lambda0[0]] + [3728.91] + lambda0[1:]
 all_line_name = ['OII_3726', 'OII_3729'] + line_name[1:]
 wavelength_dict = dict(zip(all_line_name, all_lambda0))
 
-fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
-
-fitspath_caroline = 'C:/Users/carol/Google Drive/'
-
-fitspath_chun = '/Users/cly/GoogleDrive/Research/'
+fitspath_dict = {
+    'reagenleimbach': '/Users/reagenleimbach/GoogleDrive/Research/',
+    'carol': 'C:/Users/carol/Google Drive/',
+    'cly': '/Users/cly/GoogleDrive/Research/',
+    'travis': '/home/travis/',
+    'runner': '/home/runner/'
+}
 
 scalefact = 1e-17
 
@@ -59,35 +61,31 @@ def exclude_outliers(objno):
     return flag
 
 
-def dir_date(org_name, path_init='', year=False):
+def dir_date(folder_name, path_init='', year=False):
     """
     Purpose:
-        This function finds and returns the path to a directory named after the
-        current date (MMDDYYYY). If the directory doesn't exist yet, it creates
-        a new directory named after the current date in the provided org_name
-        directory.
+      This function finds and returns the path to a directory named after the
+      current date (MMDDYYYY). If the directory doesn't exist yet, it creates
+      a new directory named after the current date in the provided folder_name
+      directory.
 
         From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
+
+    :param folder_name: str containing directory for date subdirectory will be in
+    :param path_init: root path. Default: empty string
+    :param year: Indicate whether to include year in date folder. Default: False
+
+    :return: fitspath: Full path to the date directory
+
     Usage:
-        fitspath = dir_date(org_name, path_init='', year=True)
-
-    Params:
-        org_name --> a string of the directory that the date subdirectory will be in.
-
-    Returns:
-        fitspath --> the path to the date directory.
-
-    Outputs:
-        "Path already exists" --> prints this message if the current date directory already exists.
-        fitspath --> prints the path to the directory.
-
+        fitspath = dir_date(folder_name, path_init='', year=True)
     """
 
     today = date.today()
 
-    list_path = [path_init, org_name, "%02i%02i" % (today.month, today.day), '']
+    list_path = [path_init, folder_name, "%02i%02i" % (today.month, today.day), '']
     if year:
-        list_path[-2] += "%02i" % today.year
+        list_path[-2] = "%i" % today.year + list_path[-2]
 
     fitspath = os.path.join(*list_path)
     try:
@@ -103,13 +101,9 @@ def get_user(username=None):
     if isinstance(username, type(None)):
         username = getpass.getuser()
 
-    if username == 'reagenleimbach':
-        fitspath = fitspath_reagen
-
-    if username == 'carol':
-        fitspath = fitspath_caroline
-
-    if username == 'cly':
-        fitspath = fitspath_chun
+    if username in fitspath_dict.keys():
+        fitspath = fitspath_dict[username]
+    else:
+        raise ValueError("Incorrect username input")
 
     return fitspath
