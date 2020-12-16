@@ -10,6 +10,7 @@ from ..column_names import bin_names0, indv_names0, temp_metal_names0
 from ..column_names import filename_dict
 from .ratios import flux_ratios
 from .. import line_name
+from ..logging import log_stdout
 
 ID_name = indv_names0[0]
 bin_ID_name = bin_names0[0]
@@ -20,7 +21,7 @@ two_beta_name = indv_names0[5]
 three_beta_name = indv_names0[6]
 
 
-def main(fitspath, dataset, revised=False, det3=True):
+def main(fitspath, dataset, revised=False, det3=True, log=None):
     """
     Purpose:
       Reads in composite table(s) containing bin information to
@@ -34,6 +35,7 @@ def main(fitspath, dataset, revised=False, det3=True):
     :param det3: Bool indicates whether individual galaxy files is limited to
                  those satisfying emission-line det3 requirement
                  Default: True
+    :param log: LogClass object
 
     Files identified by default
     composite_file: str containing filename of composite data
@@ -48,6 +50,9 @@ def main(fitspath, dataset, revised=False, det3=True):
     outfile: str containing filename of output file
       e.g., '[dataset]/individual_derived_properties.tbl'
     """
+
+    if log is None:
+        log = log_stdout()
 
     # Define [composite_file]
     t_comp = filename_dict['bin_derived_prop'] if not revised else \
@@ -66,14 +71,14 @@ def main(fitspath, dataset, revised=False, det3=True):
     # Read in validation table
     valid_file = join(fitspath, dataset, filename_dict['bin_valid'])
     if not exists(valid_file):
-        print("ERROR: File not found! "+valid_file)
+        log.warning("ERROR: File not found! "+valid_file)
         return
     valid_table = asc.read(valid_file)
 
     # Define [indv_em_line_file]
     indv_em_line_file = join(fitspath, dataset, filename_dict['indv_prop'])
     if not exists(indv_em_line_file):
-        print("ERROR: File not found! "+indv_em_line_file)
+        log.warning("ERROR: File not found! "+indv_em_line_file)
         return
 
     # Read in tables containing line ratios, etc.
@@ -82,7 +87,7 @@ def main(fitspath, dataset, revised=False, det3=True):
     # Define [indv_bin_file]
     indv_bin_file = join(fitspath, dataset, filename_dict['indv_bin_info'])
     if not exists(indv_bin_file):
-        print("ERROR: File not found! "+indv_bin_file)
+        log.warning("ERROR: File not found! "+indv_bin_file)
         return
 
     # Read in tables containing bin info for individual
@@ -134,7 +139,7 @@ def main(fitspath, dataset, revised=False, det3=True):
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
     if exists(outfile):
-        print("File exists! Overwriting : ", outfile)
+        log.info("File exists! Overwriting : ", outfile)
     else:
-        print("Writing : ", outfile)
+        log.info("Writing : ", outfile)
     indv_derived_prop_table.write(outfile, overwrite=True, format='ascii.fixed_width_two_line')
