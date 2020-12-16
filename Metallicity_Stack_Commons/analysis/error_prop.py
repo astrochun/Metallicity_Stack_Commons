@@ -2,6 +2,8 @@ from os.path import join, exists
 
 from chun_codes import random_pdf, compute_onesig_pdf
 from .. import line_name
+from ..logging import log_stdout
+
 from astropy.io import ascii as asc
 from astropy.table import Table, hstack
 import numpy as np
@@ -13,7 +15,7 @@ from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 from .attenuation import compute_EBV
 
 
-def write_npz(path, npz_files, dict_list):
+def write_npz(path, npz_files, dict_list, log=None):
     """
     Purpose:
       Write numpy files with provided dictionaries
@@ -21,20 +23,25 @@ def write_npz(path, npz_files, dict_list):
     :param path: str - prefix for filename output
     :param npz_files: list - contains npz file names
     :param dict_list: list - contains dictionaries for each corresponding npz file
+    :param log: LogClass object
 
     :return: Write npz files
     """
+
+    if log is None:
+        log = log_stdout()
+
     for file, dict_input in zip(npz_files, dict_list):
         npz_outfile = join(path, file)
         if exists(npz_outfile):
-            print("Overwriting : "+npz_outfile)
+            log.info("Overwriting : "+npz_outfile)
         else:
-            print("Writing : "+npz_outfile)
+            log.info("Writing : "+npz_outfile)
         np.savez(npz_outfile, **dict_input)
 
 
 def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
-                        revised=True):
+                        revised=True, log=None):
     """
     Purpose:
       Use measurements and their uncertainties to perform a randomization
@@ -47,7 +54,11 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
     :param binned_data: bool for whether to analysis binned data. Default: True
     :param apply_dust: bool for whether to apply dust attenuation. Default: False
     :param revised: bool to indicate if revised validation table is used. Default: True
+    :param log: LogClass object
     """
+
+    if log is None:
+        log = log_stdout()
 
     # Define files to read in for binned data
     if binned_data:
@@ -61,30 +72,30 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
     # Define verification table
     if revised:
         rev_s = ''
-        print('Using REVISED validation table')
+        log.info('Using REVISED validation table')
         verify_file = join(path, filename_dict['bin_valid_rev'])
     else:
         rev_s = '_v1'
-        print('Using validation table')
+        log.info('Using validation table')
         verify_file = join(path, filename_dict['bin_valid'])
 
     if not raw:
         # Set rev_stuff based on revised=True/False
         prop_file = join(path, filename_dict['bin_derived_prop' + rev_s])
 
-        print("Reading : "+prop_file)
+        log.info("Reading : "+prop_file)
         prop_tab0 = asc.read(prop_file)
 
     two_beta_name = bin_ratios[2]
     three_beta_name = bin_ratios[3]
     R_name = bin_ratios[4]
 
-    print("Reading : " + flux_file)
+    log.info("Reading : " + flux_file)
     flux_tab0 = asc.read(flux_file)
 
     if binned_data:
         if not raw:
-            print("Reading : "+verify_file)
+            log.info("Reading : "+verify_file)
             verify_tab = asc.read(verify_file)
             detection = verify_tab['Detection'].data
 
@@ -94,12 +105,12 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
             ID = verify_tab['bin_ID'].data
             ID_detect = ID[detect_idx]
-            print(ID_detect)
+            log.info(ID_detect)
 
             flux_tab = flux_tab0[detect_idx]
             prop_tab = prop_tab0[detect_idx]
     else:
-        print("Individual sources not supported yet")
+        log.info("Individual sources not supported yet")
         return
 
     flux_cols     = [str0+'_Flux_Gaussian' for str0 in line_name]
@@ -154,9 +165,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         else:
             outfile = join(path, filename_dict['bin_derived_prop_dust' + rev_s])
         if not exists(outfile):
-            print("Writing : ", outfile)
+            log.info("Writing : ", outfile)
         else:
-            print("Overwriting : ", outfile)
+            log.info("Overwriting : ", outfile)
         asc.write(tbl_dict, output=outfile, overwrite=True,
                   format='fixed_width_two_line')
     else:
@@ -183,9 +194,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         # Write revised emission-line fit ASCII table
         new_flux_file = join(path, filename_dict['bin_fit_MC'])
         if exists(new_flux_file):
-            print("Overwriting: "+new_flux_file)
+            log.info("Overwriting: "+new_flux_file)
         else:
-            print("Writing: "+new_flux_file)
+            log.info("Writing: "+new_flux_file)
         asc.write(flux_tab0, new_flux_file, overwrite=True,
                   format='fixed_width_two_line')
 
@@ -244,7 +255,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                              dust[3] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
             EBV_HdHb, EBV_HdHb_peak = compute_EBV(flux_ratios_dict[dust[1]], source=dust[1])
-            print(EBV_HdHb_peak)
+            log.info(EBV_HdHb_peak)
 
             err_prop, peak_prop = compute_onesig_pdf(EBV_HdHb, EBV_HdHb_peak, usepeak=True)
 
@@ -313,9 +324,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         else:
             new_prop_file = join(path, filename_dict['bin_derived_prop_MC_dust' + rev_s])
         if exists(new_prop_file):
-            print("Overwriting: "+new_prop_file)
+            log.info("Overwriting: "+new_prop_file)
         else:
-            print("Writing: "+new_prop_file)
+            log.info("Writing: "+new_prop_file)
 
         '''
         # Order of table:
