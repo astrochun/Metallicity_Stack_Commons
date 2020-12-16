@@ -52,7 +52,7 @@ def temp_calculation(R, EBV=None, log=None):
     arr_shape = R.shape
 
     if EBV is None:
-        log.info("temp_calculation - Not applying dust attenuation correction")
+        log.info("Not applying dust attenuation correction")
         EBV = np.zeros(arr_shape)
 
     R_corr = R * 10 ** (0.4 * EBV * (k_4363 - k_5007))
@@ -88,7 +88,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None, log=
     x2 = np.zeros(arr_shape)
 
     if EBV is None:
-        log.info("metallicity_calculation - Not applying dust attenuation correction")
+        log.info("Not applying dust attenuation correction")
         EBV = np.zeros(arr_shape)
 
     if det3 is None:
