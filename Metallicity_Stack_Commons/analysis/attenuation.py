@@ -1,6 +1,7 @@
 import numpy as np
 
 from .. import k_dict, line_name_short
+from ..logging import log_stdout
 
 from chun_codes import compute_onesig_pdf
 
@@ -18,7 +19,7 @@ k_HGAMMA = k_dict[HG]
 k_HDELTA = k_dict[HD]
 
 
-def compute_EBV(ratio, source='HgHb', zero_neg=True):
+def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
     """
     Purpose:
       Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
@@ -26,14 +27,18 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
     :param ratio: float or numpy array containing Hg/Hb or Hd/Hb
     :param source: str indicate ratio type.  Either 'HgHb' or 'HdHb'. Default: 'HgHb'
     :param zero_neg: boolean to indicate whether to zero out negative reddening. Default: True
+    :param log: LogClass object
 
     :return EBV: float or numpy array containing E(B-V).
                  Note: Not correcting for negative reddening
     :return EBV_peak: float or numpy array return when it is a 2-D distribution
     """
 
+    if log is None:
+        log = log_stdout()
+
     if isinstance(ratio, list):
-        print("!!! Incorrect type for input [ratio].  Cannot be list !!!")
+        log.warning("!!! Incorrect type for input [ratio].  Cannot be list !!!")
         raise TypeError
 
     if 'HgHb' in source:
@@ -50,21 +55,21 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True):
         if isinstance(EBV, float):
             if EBV < 0.0:
                 EBV = 0.0
-                print('zero substituted for negative reddening')
+                log.info('zero substituted for negative reddening')
             return EBV
         else:
             if len(EBV.shape) == 1:
                 neg_idx = np.where(EBV < 0.0)[0]
                 if len(neg_idx) > 0:
                     EBV[neg_idx] = 0.0
-                    print('zero substituted for negative reddening')
+                    log.info('zero substituted for negative reddening')
                 return EBV
             if len(EBV.shape) == 2:
                 EBV_avg = np.average(EBV, axis=0)  # initial guess
                 EBV_err, EBV_peak = compute_onesig_pdf(EBV, EBV_avg, usepeak=True)
                 neg_idx = np.where(EBV_peak < 0.0)[0]
                 if len(neg_idx) > 0:
-                    print('EBV distribution shifted for peak')
+                    log.info('EBV distribution shifted for peak')
                     EBV[neg_idx, :] -= EBV_peak[neg_idx].reshape((len(neg_idx), 1))
                     EBV_peak[neg_idx] = 0.0
                 return EBV, EBV_peak
