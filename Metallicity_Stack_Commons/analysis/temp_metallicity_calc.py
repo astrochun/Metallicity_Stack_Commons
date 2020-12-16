@@ -1,6 +1,7 @@
 import numpy as np
 
 from .. import k_dict, OIII_r
+from ..logging import log_stdout
 
 from ..column_names import temp_metal_names0, remove_from_list
 
@@ -30,7 +31,7 @@ def R_calculation(OIII4363, OIII5007):
     return R_value
 
 
-def temp_calculation(R, EBV=None):
+def temp_calculation(R, EBV=None, log=None):
     """
     Computes electron temperature (T_e) from O++ excitation flux ratio
 
@@ -40,14 +41,18 @@ def temp_calculation(R, EBV=None):
 
     :param R: numpy array of O++ excitation flux ratio (see R_calculation)
     :param EBV: numpy array of E(B-V).  Set to zero if not applying attenuation
+    :param log: LogClass object
 
     :return T_e: numpy array of T_e (Kelvins)
     """
 
+    if log is None:
+        log = log_stdout()
+
     arr_shape = R.shape
 
     if EBV is None:
-        print("temp_calculation - Not applying dust attenuation correction")
+        log.info("temp_calculation - Not applying dust attenuation correction")
         EBV = np.zeros(arr_shape)
 
     R_corr = R * 10 ** (0.4 * EBV * (k_4363 - k_5007))
@@ -57,7 +62,7 @@ def temp_calculation(R, EBV=None):
     return T_e
 
 
-def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
+def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None, log=None):
     """
     Determines 12+log(O/H) from electron temperature and [OII]/Hb and [OIII]/Hb flux ratio
 
@@ -69,8 +74,13 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
                  requirements. Default: None means full array is considered
                  Note: for MC inputs, a 1-D np.array index satisfying det3
                        requirements will suffice
+    :param log: LogClass object
+
     :return metal_dict: dictionary containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
+
+    if log is None:
+        log = log_stdout()
 
     arr_shape = T_e.shape
     t_3 = np.zeros(arr_shape)
@@ -78,7 +88,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
     x2 = np.zeros(arr_shape)
 
     if EBV is None:
-        print("metallicity_calculation - Not applying dust attenuation correction")
+        log.info("metallicity_calculation - Not applying dust attenuation correction")
         EBV = np.zeros(arr_shape)
 
     if det3 is None:
