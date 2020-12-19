@@ -20,12 +20,13 @@ from ..analysis.attenuation import compute_EBV
 
 from .. import scalefact, wavelength_dict
 from ..column_names import filename_dict
+from ..logging import log_stdout
 
 n_rows = 3
 n_cols = 3
 
 
-def extract_fit(astropy_table, line_name, balmer=False):
+def extract_fit(astropy_table, line_name, balmer=False, log=None):
     """
     Purpose:
       Extract best fit from table and fluxes, return a list of
@@ -34,16 +35,19 @@ def extract_fit(astropy_table, line_name, balmer=False):
     :param astropy_table: Astropy table containing fitting result
     :param line_name: line to extract fit results
     :param balmer: boolean to indicate whether line is a Balmer line
+    :param log: LogClass object
 
-    :return:
-    param_list: list containing fit to pass in
+    :return result_dict: dictionary of fitting results
     """
+
+    if log is None:
+        log = log_stdout()
 
     try:
         astropy_table[line_name + '_Center']
     except KeyError:
-        print("Line not present in table")
-        print("Exiting!!!")
+        log.info("Line not present in table")
+        log.info("Exiting!!!")
         return
 
     xbar = astropy_table[line_name + '_Center']
@@ -82,9 +86,9 @@ def fitting_result(wave, y_norm, lambda_cen, line_fit, line_fit_neg,
     :param line_fit_neg: list containing the absorption ("stellar") Balmer fit
     :param flux_gauss: float containing flux from Gaussian model
     :param flux_spec: float containing flux from spectrum (above median)
-    :param use_revised: Optional boolean to indicate whether fluxes have been revised. Default: False
+    :param use_revised: bool to indicate whether fluxes have been revised. Default: False
 
-    :return:
+    :return fit_dict: dict of fitting results
     """
 
     dx = wave[2] - wave[1]
@@ -117,7 +121,7 @@ def fitting_result(wave, y_norm, lambda_cen, line_fit, line_fit_neg,
 
 # noinspection PyUnboundLocalVariable
 def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
-                use_revised=False):
+                use_revised=False, log=None):
     """
     Purpose:
       Generate PDF plots that illustrate H-delta, H-gamma, and H-beta line
@@ -126,9 +130,14 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
     :param fitspath: full path (str)
     :param out_pdf_prefix: Prefix for outpute PDF file (str)
     :param use_revised: Indicate whether to use regular or revised tables (bool)
+    :param log: LogClass object
     """
 
+    if log is None:
+        log = log_stdout()
+
     comp_spec_file = join(fitspath, filename_dict['comp_spec'])
+    log.info(f"Reading: {comp_spec_file}")
     stack2D, header = fits.getdata(comp_spec_file, header=True)
     wave = header['CRVAL1'] + header['CDELT1']*np.arange(header['NAXIS1'])
 
@@ -139,6 +148,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
         astropy_table_file = join(fitspath, filename_dict['bin_fit_MC'])
         out_pdf = join(fitspath, out_pdf_prefix+'.MC.pdf')
 
+    log.info(f"Reading: {astropy_table_file}")
     astropy_table = asc.read(astropy_table_file)
 
     ID = astropy_table['bin_ID'].data
@@ -146,16 +156,16 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
     pdf_pages = PdfPages(out_pdf)
 
     for ii in range(len(ID)):
-   
         if ii % n_rows == 0:
-            fig, ax_arr = plt.subplots(nrows=n_rows, ncols=n_cols, squeeze=False)
+            fig, ax_arr = plt.subplots(nrows=n_rows, ncols=n_cols,
+                                       squeeze=False)
 
         y0 = stack2D[ii]
         y_norm = y0/scalefact
 
-        Hb_dict = extract_fit(astropy_table[ii], 'HBETA', balmer=True)
-        Hg_dict = extract_fit(astropy_table[ii], 'HGAMMA', balmer=True)
-        Hd_dict = extract_fit(astropy_table[ii], 'HDELTA', balmer=True)
+        Hb_dict = extract_fit(astropy_table[ii], 'HBETA', balmer=True, log=log)
+        Hg_dict = extract_fit(astropy_table[ii], 'HGAMMA', balmer=True, log=log)
+        Hd_dict = extract_fit(astropy_table[ii], 'HDELTA', balmer=True, log=log)
 
         wave_beta  = wavelength_dict['HBETA']
         wave_gamma = wavelength_dict['HGAMMA']
@@ -174,8 +184,10 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
                                      use_revised=use_revised)
 
         # Calculate E(B-V)
-        EBV_HgHb = compute_EBV(Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'], source='HgHb')
-        EBV_HdHb = compute_EBV(Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'], source='HdHb')
+        EBV_HgHb = compute_EBV(Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
+                               source='HgHb')
+        EBV_HdHb = compute_EBV(Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
+                               source='HdHb')
 
         row = ii % n_rows
 
@@ -184,42 +196,50 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
                                 xycoords='axes fraction', fontsize='8')
 
         # The below code could be refactored or simplified
-        txt0 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hb_dict['line_fit'][1],
-                                                        Hb_dict['line_fit_neg'][1]) + '\n'
-        txt0 += 'F_G: %.3f F_S: %.3f' % (Hb_fit_dict['flux_gauss'], Hb_fit_dict['flux_spec'])
+        txt0 = fr"+$\sigma$: {Hb_dict['line_fit'][1]:.3f}, " + \
+               fr"-$\sigma$: {Hb_dict['line_fit_neg'][1]:.3f}" + "\n"
+        txt0 += f"F_G: {Hb_fit_dict['flux_gauss']:.3f} " + \
+                f"F_S: {Hb_fit_dict['flux_spec']:.3f}" + "\n"
 
         ax_arr[row][2].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
-        ax_arr[row][2].plot(wave, Hb_fit_dict['gauss'], 'm', linewidth=0.25, label='Beta Fit')
+        ax_arr[row][2].plot(wave, Hb_fit_dict['gauss'], 'm', linewidth=0.25,
+                            label='Beta Fit')
         ax_arr[row][2].set_xlim(4810, 4910)
 
         ax_arr[row][2].annotate(txt0, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
         ax_arr[row][2].plot(wave[Hb_fit_dict['idx_sig']], Hb_fit_dict['residual'],
-                            'r', linestyle='dashed', linewidth=0.2, label='Residuals')
+                            'r', linestyle='dashed', linewidth=0.2,
+                            label='Residuals')
 
-        txt1 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hg_dict['line_fit'][1],
-                                                        Hg_dict['line_fit_neg'][1]) + '\n'
-        txt1 += 'F_G: %.3f F_S: %.3f' % (Hg_fit_dict['flux_gauss'], Hg_fit_dict['flux_spec']) + '\n'
-        txt1 += r'H$\gamma$/H$\beta$: %.2f E(B-V): %.2f' % (Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
-                                                            EBV_HgHb)
+        txt1 = fr"+$\sigma$: {Hg_dict['line_fit'][1]:.3f}, " + \
+               fr"-$\sigma$: {Hg_dict['line_fit_neg'][1]:.3f}" + "\n"
+        txt1 += f"F_G: {Hg_fit_dict['flux_gauss']:.3f} " + \
+                f"F_S: {Hg_fit_dict['flux_spec']:.3f}" + "\n"
+        HgHb = Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss']
+        txt1 += fr"H$\gamma$/H$\beta$: {HgHb:.2f} E(B-V): {EBV_HgHb:.2f}"
 
         ax_arr[row][1].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
-        ax_arr[row][1].plot(wave, Hg_fit_dict['gauss'], 'm', linewidth=0.25, label='Gamma Fit')
+        ax_arr[row][1].plot(wave, Hg_fit_dict['gauss'], 'm', linewidth=0.25,
+                            label='Gamma Fit')
         ax_arr[row][1].set_xlim(4290, 4390)
 
         ax_arr[row][1].annotate(txt1, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
-        ax_arr[row][1].plot(wave[Hg_fit_dict['idx_sig']], Hg_fit_dict['residual'], 'r',
-                            linestyle='dashed', linewidth=0.2, label='Residuals')
+        ax_arr[row][1].plot(wave[Hg_fit_dict['idx_sig']], Hg_fit_dict['residual'],
+                            'r', linestyle='dashed', linewidth=0.2,
+                            label='Residuals')
 
-        txt2 = r'+$\sigma$: %.3f, -$\sigma$: %.3f  ' % (Hd_dict['line_fit'][1],
-                                                        Hd_dict['line_fit_neg'][1]) + '\n'
-        txt2 += 'F_G: %.3f F_S: %.3f' % (Hd_fit_dict['flux_gauss'], Hd_fit_dict['flux_spec']) + '\n'
-        txt2 += r'H$\delta$/H$\beta$: %.2f E(B-V): %.2f' % (Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
-                                                            EBV_HdHb)
+        txt2 = fr"+$\sigma$: {Hd_dict['line_fit'][1]:.3f}, " + \
+               fr"-$\sigma$: {Hd_dict['line_fit_neg'][1]:.3f}" + "\n"
+        txt2 += f"F_G: {Hd_fit_dict['flux_gauss']:.3f} " + \
+                f"F_S: {Hd_fit_dict['flux_spec']:.3f}" + "\n"
+        HdHb = Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss']
+        txt2 += fr"H$\delta/H$\beta$: {HdHb:.2f} E(B-V): {EBV_HdHb:.2f}"
 
         ax_arr[row][0].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
-        ax_arr[row][0].plot(wave, Hd_fit_dict['gauss'], 'm', linewidth=0.25, label='Delta Fit')
+        ax_arr[row][0].plot(wave, Hd_fit_dict['gauss'], 'm', linewidth=0.25,
+                            label='Delta Fit')
         ax_arr[row][0].set_xlim(4050, 4150)
 
         ax_arr[row][0].set_ylim(0, 1.6)
@@ -227,7 +247,8 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
         ax_arr[row][0].annotate(txt2, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
         ax_arr[row][0].plot(wave[Hd_fit_dict['idx_sig']], Hd_fit_dict['residual'],
-                            'r', linestyle='dashed', linewidth=0.2, label='Residuals')
+                            'r', linestyle='dashed', linewidth=0.2,
+                            label='Residuals')
        
         ax_arr[row][0].set_yticklabels([0, 0.5, 1, 1.5])
         ax_arr[row][1].set_yticklabels([])
@@ -239,7 +260,6 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
             ax_arr[row][2].set_xticklabels([])
         else:
             ax_arr[row][0].set_xticklabels([4050, 4075, 4100, 4125])
-            # ax_arr[row][1].set_xticklabels([4325, 4350, 4375, 4400])
 
         for col in range(n_cols):
             ax_arr[row][col].tick_params(direction='in')  # ticks on the inside
@@ -256,4 +276,5 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
                                 hspace=0.05, wspace=0.025)
             fig.savefig(pdf_pages, format='pdf')
 
+    log.info(f"Writing : {out_pdf}")
     pdf_pages.close()
