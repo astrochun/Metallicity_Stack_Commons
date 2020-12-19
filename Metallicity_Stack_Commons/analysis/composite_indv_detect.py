@@ -54,12 +54,14 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     if log is None:
         log = log_stdout()
 
+    log.info("starting ...")
+
     # Define [composite_file]
     t_comp = filename_dict['bin_derived_prop'] if not revised else \
         filename_dict['bin_derived_prop']
     composite_file = join(fitspath, dataset, t_comp)
     if not exists(composite_file):
-        print("ERROR: File not found! "+composite_file)
+        print(f"ERROR: File not found! {composite_file}")
         return
 
     # Read in composite table
@@ -71,14 +73,14 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     # Read in validation table
     valid_file = join(fitspath, dataset, filename_dict['bin_valid'])
     if not exists(valid_file):
-        log.warning("ERROR: File not found! "+valid_file)
+        log.warning(f"ERROR: File not found! {valid_file}")
         return
     valid_table = asc.read(valid_file)
 
     # Define [indv_em_line_file]
     indv_em_line_file = join(fitspath, dataset, filename_dict['indv_prop'])
     if not exists(indv_em_line_file):
-        log.warning("ERROR: File not found! "+indv_em_line_file)
+        log.warning(f"ERROR: File not found! {indv_em_line_file}")
         return
 
     # Read in tables containing line ratios, etc.
@@ -87,7 +89,7 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     # Define [indv_bin_file]
     indv_bin_file = join(fitspath, dataset, filename_dict['indv_bin_info'])
     if not exists(indv_bin_file):
-        log.warning("ERROR: File not found! "+indv_bin_file)
+        log.warning(f"ERROR: File not found! {indv_bin_file}")
         return
 
     # Read in tables containing bin info for individual
@@ -97,7 +99,8 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     adopted_temp = np.zeros(len(indv_em_line_table))
     bin_id_indv = np.zeros(len(indv_em_line_table))
     detect_indv = np.zeros(len(indv_em_line_table))
-    for comp_bin, comp_temp, detect in zip(bin_id, bin_temp, valid_table['Detection']):
+    for comp_bin, comp_temp, detect in zip(bin_id, bin_temp,
+                                           valid_table['Detection']):
         bin_idx = np.where(indv_bin_info_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
         bin_id_indv[bin_idx]  = comp_bin
@@ -139,7 +142,10 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
     if exists(outfile):
-        log.info("File exists! Overwriting : ", outfile)
+        log.info(f"File exists! Overwriting : {outfile}")
     else:
-        log.info("Writing : ", outfile)
-    indv_derived_prop_table.write(outfile, overwrite=True, format='ascii.fixed_width_two_line')
+        log.info(f"Writing : {outfile}")
+    indv_derived_prop_table.write(outfile, overwrite=True,
+                                  format='ascii.fixed_width_two_line')
+
+    log.info("finished ...")
