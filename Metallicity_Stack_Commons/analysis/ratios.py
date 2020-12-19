@@ -23,7 +23,7 @@ def flux_ratios(flux_dict, binned_data=False, get_R=True, log=None):
     if log is None:
         log = log_stdout()
 
-    log.info("starting ...")
+    log.debug("starting ...")
 
     if not binned_data:
         bin_ratios = [ratios0.replace('_composite', '')
@@ -68,6 +68,6 @@ def flux_ratios(flux_dict, binned_data=False, get_R=True, log=None):
         OIII4363 = flux_dict[line_name_short['4363']]  # Retrieve OIII4363
         flux_ratios_dict[R_key] = R_calculation(OIII4363, OIII)
 
-    log.info("finished ...")
+    log.debug("finished ...")
 
     return flux_ratios_dict
