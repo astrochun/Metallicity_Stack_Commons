@@ -54,17 +54,18 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     if log is None:
         log = log_stdout()
 
-    log.info("starting ...")
+    log.debug("starting ...")
 
     # Define [composite_file]
     t_comp = filename_dict['bin_derived_prop'] if not revised else \
         filename_dict['bin_derived_prop']
     composite_file = join(fitspath, dataset, t_comp)
     if not exists(composite_file):
-        print(f"ERROR: File not found! {composite_file}")
+        log.warning(f"ERROR: File not found! {composite_file}")
         return
 
     # Read in composite table
+    log.info(f"Reading: {composite_file}")
     composite_table = asc.read(composite_file)
 
     bin_id = composite_table['bin_ID'].data
@@ -75,6 +76,7 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     if not exists(valid_file):
         log.warning(f"ERROR: File not found! {valid_file}")
         return
+    log.info(f"Reading: {valid_file}")
     valid_table = asc.read(valid_file)
 
     # Define [indv_em_line_file]
@@ -84,6 +86,7 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
         return
 
     # Read in tables containing line ratios, etc.
+    log.info(f"Reading: {indv_em_line_file}")
     indv_em_line_table = asc.read(indv_em_line_file)
 
     # Define [indv_bin_file]
@@ -93,6 +96,7 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
         return
 
     # Read in tables containing bin info for individual
+    log.info(f"Reading: {indv_bin_file}")
     indv_bin_info_table = asc.read(indv_bin_file)
 
     # Populate composite temperature for individual galaxies
@@ -148,4 +152,4 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     indv_derived_prop_table.write(outfile, overwrite=True,
                                   format='ascii.fixed_width_two_line')
 
-    log.info("finished ...")
+    log.debug("finished ...")
