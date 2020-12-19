@@ -109,7 +109,7 @@ def OIII4363_flux_limit(combine_flux_ascii, log=None):
 
     :param combine_flux_ascii: filename of ASCII file containing emission-line
                                flux measurements
-    :param log: LogClass object
+    :param log: LogClass or logging object
 
     :return: numpy array containing 3-sigma flux limit
     """

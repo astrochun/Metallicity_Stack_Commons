@@ -15,7 +15,7 @@ def flux_ratios(flux_dict, binned_data=False, get_R=True, log=None):
     :param flux_dict: dict containing line ratios
     :param get_R: bool to indicate to populate with OIII4363/OIII5007 flux ratio
     :param binned_data: bool for whether to analysis binned data. Default: False
-    :param log: LogClass
+    :param log: LogClass or logging object
 
     :return flux_ratios_dict: dict containing flux ratios
     """

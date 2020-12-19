@@ -23,7 +23,7 @@ def write_npz(path, npz_files, dict_list, log=None):
     :param path: str - prefix for filename output
     :param npz_files: list - contains npz file names
     :param dict_list: list - contains dictionaries for each corresponding npz file
-    :param log: LogClass object
+    :param log: LogClass or logging object
 
     :return: Write npz files
     """
@@ -58,7 +58,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
     :param binned_data: bool for whether to analysis binned data. Default: True
     :param apply_dust: bool for whether to apply dust attenuation. Default: False
     :param revised: bool to indicate if revised validation table is used. Default: True
-    :param log: LogClass object
+    :param log: LogClass or logging object
     """
 
     if log is None:

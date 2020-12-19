@@ -27,7 +27,7 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
     :param ratio: float or numpy array containing Hg/Hb or Hd/Hb
     :param source: str indicate ratio type.  Either 'HgHb' or 'HdHb'. Default: 'HgHb'
     :param zero_neg: boolean to indicate whether to zero out negative reddening. Default: True
-    :param log: LogClass object
+    :param log: LogClass or logging object
 
     :return EBV: float or numpy array containing E(B-V).
                  Note: Not correcting for negative reddening

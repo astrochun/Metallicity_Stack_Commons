@@ -41,7 +41,7 @@ def temp_calculation(R, EBV=None, log=None):
 
     :param R: numpy array of O++ excitation flux ratio (see R_calculation)
     :param EBV: numpy array of E(B-V).  Set to zero if not applying attenuation
-    :param log: LogClass object
+    :param log: LogClass or logging object
 
     :return T_e: numpy array of T_e (Kelvins)
     """
@@ -79,7 +79,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None,
                  requirements. Default: None means full array is considered
                  Note: for MC inputs, a 1-D np.array index satisfying det3
                        requirements will suffice
-    :param log: LogClass object
+    :param log: LogClass or logging object
 
     :return metal_dict: dict containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """

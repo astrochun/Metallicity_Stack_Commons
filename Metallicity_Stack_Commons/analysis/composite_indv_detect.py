@@ -35,7 +35,7 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     :param det3: Bool indicates whether individual galaxy files is limited to
                  those satisfying emission-line det3 requirement
                  Default: True
-    :param log: LogClass object
+    :param log: LogClass or logging object
 
     Files identified by default
     composite_file: str containing filename of composite data
