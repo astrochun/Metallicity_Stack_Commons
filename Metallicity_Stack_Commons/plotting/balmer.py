@@ -35,7 +35,7 @@ def extract_fit(astropy_table, line_name, balmer=False, log=None):
     :param astropy_table: Astropy table containing fitting result
     :param line_name: line to extract fit results
     :param balmer: boolean to indicate whether line is a Balmer line
-    :param log: LogClass object
+    :param log: LogClass or logging object
 
     :return result_dict: dictionary of fitting results
     """
@@ -130,7 +130,7 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
     :param fitspath: full path (str)
     :param out_pdf_prefix: Prefix for outpute PDF file (str)
     :param use_revised: Indicate whether to use regular or revised tables (bool)
-    :param log: LogClass object
+    :param log: LogClass or logging object
     """
 
     if log is None:
