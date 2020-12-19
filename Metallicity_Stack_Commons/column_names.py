@@ -17,9 +17,9 @@ def line_fit_suffix_add(line_name0, line_type0):
     :return: gauss_lines_names: list with str formatted as [LINE]_[SUFFIX]
     """
 
-    gauss_lines_names = ['{}_{}'.format(line_name0, suffix) for suffix in gauss_names0]
+    gauss_lines_names = [f"{line_name0}_{suffix}" for suffix in gauss_names0]
     if line_type0 == 'Balmer':
-        gauss_lines_names += ['{}_{}'.format(line_name0, suffix) for suffix in balmer_names0]
+        gauss_lines_names += [f"{line_name0}_{suffix}" for suffix in balmer_names0]
 
     return gauss_lines_names
 
