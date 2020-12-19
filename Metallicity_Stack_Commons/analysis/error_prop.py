@@ -31,6 +31,8 @@ def write_npz(path, npz_files, dict_list, log=None):
     if log is None:
         log = log_stdout()
 
+    log.debug("starting ...")
+
     for file, dict_input in zip(npz_files, dict_list):
         npz_outfile = join(path, file)
         if exists(npz_outfile):
@@ -38,6 +40,8 @@ def write_npz(path, npz_files, dict_list, log=None):
         else:
             log.info(f"Writing : {npz_outfile}")
         np.savez(npz_outfile, **dict_input)
+
+    log.debug("finished ...")
 
 
 def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
@@ -59,6 +63,8 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
     if log is None:
         log = log_stdout()
+
+    log.debug("starting ...")
 
     # Define files to read in for binned data
     if binned_data:
@@ -372,3 +378,5 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         dict_list = [derived_prop_pdf_dict, derived_prop_error_dict,
                      derived_prop_peak_dict]
         write_npz(path, npz_files, dict_list)
+
+    log.debug("finished ...")
