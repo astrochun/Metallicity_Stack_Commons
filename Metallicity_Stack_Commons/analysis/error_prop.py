@@ -128,15 +128,18 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
             # Fill in dictionary
             flux_dict[line_name[aa]] = flux_tab0[flux].data
 
-        flux_ratios_dict = flux_ratios(flux_dict, binned_data=binned_data)
+        flux_ratios_dict = flux_ratios(flux_dict, binned_data=binned_data,
+                                       log=log)
 
         #
         # Get EBV from Balmer decrement if apply_dust set
         #
 
         if apply_dust:
-            EBV = compute_EBV(flux_ratios_dict[dust[0]], source=dust[0])
-            EBV_HdHb = compute_EBV(flux_ratios_dict[dust[1]], source=dust[1])
+            EBV = compute_EBV(flux_ratios_dict[dust[0]], source=dust[0],
+                              log=log)
+            EBV_HdHb = compute_EBV(flux_ratios_dict[dust[1]], source=dust[1],
+                                   log=log)
         else:
             EBV = None
             EBV_HdHb = None
@@ -144,11 +147,11 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         derived_prop_dict = dict()
 
         # Using Hg/Hb Balmer decrement for dust corrections
-        Te = temp_calculation(flux_ratios_dict[R_name], EBV=EBV)
+        Te = temp_calculation(flux_ratios_dict[R_name], EBV=EBV, log=log)
         derived_prop_dict[temp_metal_names0[0]] = Te
         metal_dict = metallicity_calculation(Te, flux_ratios_dict[two_beta_name],
                                              flux_ratios_dict[three_beta_name],
-                                             EBV=EBV)
+                                             EBV=EBV, log=log)
         derived_prop_dict.update(metal_dict)
 
         if apply_dust:
@@ -212,7 +215,8 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
         # Obtain line ratio distributions: logR23, logO32, two_beta, three_beta, R
         # Also include Balmer decrements
-        flux_ratios_dict = flux_ratios(flux_pdf_dict, binned_data=binned_data)
+        flux_ratios_dict = flux_ratios(flux_pdf_dict, binned_data=binned_data,
+                                       log=log)
 
         flux_ratios_err_dict = dict()
 
@@ -244,7 +248,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                         dust[2] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
             EBV, EBV_peak = compute_EBV(flux_ratios_dict[dust[0]],
-                                        source=dust[0])
+                                        source=dust[0], log=log)
 
             err_prop, peak_prop = compute_onesig_pdf(EBV, EBV_peak,
                                                      usepeak=True)
@@ -260,7 +264,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                              dust[3] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
             EBV_HdHb, EBV_HdHb_peak = compute_EBV(flux_ratios_dict[dust[1]],
-                                                  source=dust[1])
+                                                  source=dust[1], log=log)
             log.info(EBV_HdHb_peak)
 
             err_prop, peak_prop = compute_onesig_pdf(EBV_HdHb, EBV_HdHb_peak,
@@ -285,14 +289,14 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         derived_prop_peak_dict = dict()
 
         # Calculate temperature distribution
-        Te_pdf = temp_calculation(flux_ratios_dict[R_name], EBV=EBV)
+        Te_pdf = temp_calculation(flux_ratios_dict[R_name], EBV=EBV, log=log)
         derived_prop_pdf_dict[temp_metal_names0[0]] = Te_pdf
 
         # Calculate metallicity distribution
         metal_dict = metallicity_calculation(Te_pdf,
                                              flux_ratios_dict[two_beta_name],
                                              flux_ratios_dict[three_beta_name],
-                                             EBV=EBV)
+                                             EBV=EBV, log=log)
         derived_prop_pdf_dict.update(metal_dict)
 
         prop_err_dict = dict()  # Initialize
