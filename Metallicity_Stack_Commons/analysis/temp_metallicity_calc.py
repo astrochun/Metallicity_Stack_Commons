@@ -49,7 +49,7 @@ def temp_calculation(R, EBV=None, log=None):
     if log is None:
         log = log_stdout()
 
-    log.info("starting ...")
+    log.debug("starting ...")
 
     arr_shape = R.shape
 
@@ -61,7 +61,7 @@ def temp_calculation(R, EBV=None, log=None):
 
     T_e = a * (-np.log10(R_corr) - b) ** (-1 * c)
 
-    log.info("finished ...")
+    log.debug("finished ...")
 
     return T_e
 
@@ -87,7 +87,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None,
     if log is None:
         log = log_stdout()
 
-    log.info("starting ...")
+    log.debug("starting ...")
 
     arr_shape = T_e.shape
     t_3 = np.zeros(arr_shape)
@@ -128,6 +128,6 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None,
     key_values = [com_O_log, O_s_ion_log, O_d_ion_log, O_s_ion, O_d_ion]  # Order matters here
     metal_dict = dict(zip(key_dict, key_values))
 
-    log.info("finished ...")
+    log.debug("finished ...")
 
     return metal_dict
