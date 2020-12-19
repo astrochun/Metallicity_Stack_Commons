@@ -37,7 +37,7 @@ def extract_fit(astropy_table, line_name, balmer=False, log=None):
     :param balmer: boolean to indicate whether line is a Balmer line
     :param log: LogClass or logging object
 
-    :return result_dict: dictionary of fitting results
+    :return result_dict: dict of fitting results
     """
 
     if log is None:
