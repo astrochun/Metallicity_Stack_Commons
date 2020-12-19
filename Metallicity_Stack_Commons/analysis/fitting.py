@@ -120,7 +120,7 @@ def OIII4363_flux_limit(combine_flux_ascii, log=None):
     try:
         combine_fits = asc.read(combine_flux_ascii)
     except FileNotFoundError:
-        log.info("File not found! "+combine_flux_ascii)
+        log.info(f"File not found! {combine_flux_ascii}")
         return
 
     Hgamma    = combine_fits['HGAMMA_Flux_Observed'].data
@@ -147,5 +147,6 @@ def movingaverage_box1D(values, width, boundary='fill', fill_value=0.0):
     """
 
     box_kernel = Box1DKernel(width)
-    smooth = convolve(values, box_kernel, boundary=boundary, fill_value=fill_value)
+    smooth = convolve(values, box_kernel, boundary=boundary,
+                      fill_value=fill_value)
     return smooth
