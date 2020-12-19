@@ -37,6 +37,7 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
     if log is None:
         log = log_stdout()
 
+    log.debug("starting ...")
     if isinstance(ratio, list):
         log.warning("!!! Incorrect type for input [ratio].  Cannot be list !!!")
         raise TypeError
@@ -63,6 +64,7 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
                 if len(neg_idx) > 0:
                     EBV[neg_idx] = 0.0
                     log.info('zero substituted for negative reddening')
+                log.debug("finished ...")
                 return EBV
             if len(EBV.shape) == 2:
                 EBV_avg = np.average(EBV, axis=0)  # initial guess
@@ -72,8 +74,10 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
                     log.info('EBV distribution shifted for peak')
                     EBV[neg_idx, :] -= EBV_peak[neg_idx].reshape((len(neg_idx), 1))
                     EBV_peak[neg_idx] = 0.0
+                log.debug("finished ...")
                 return EBV, EBV_peak
     else:
+        log.debug("finished ...")
         return EBV
 
 
