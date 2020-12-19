@@ -66,7 +66,8 @@ def temp_calculation(R, EBV=None, log=None):
     return T_e
 
 
-def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None, log=None):
+def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None,
+                            log=None):
     """
     Determines 12+log(O/H) from electron temperature and [OII]/Hb and [OIII]/Hb flux ratio
 
@@ -80,7 +81,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None, log=
                        requirements will suffice
     :param log: LogClass object
 
-    :return metal_dict: dictionary containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
+    :return metal_dict: dict containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
 
     if log is None:
