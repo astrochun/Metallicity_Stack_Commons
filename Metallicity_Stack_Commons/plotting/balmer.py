@@ -136,6 +136,8 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
     if log is None:
         log = log_stdout()
 
+    log.debug("starting ...")
+
     comp_spec_file = join(fitspath, filename_dict['comp_spec'])
     log.info(f"Reading: {comp_spec_file}")
     stack2D, header = fits.getdata(comp_spec_file, header=True)
@@ -278,3 +280,4 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
     log.info(f"Writing : {out_pdf}")
     pdf_pages.close()
+    log.debug("finished ...")
