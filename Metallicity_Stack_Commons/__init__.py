@@ -5,6 +5,8 @@ import os
 import getpass
 import numpy as np
 
+from .logging import log_stdout
+
 version = "1.2.0"
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
@@ -40,28 +42,32 @@ k_values = cardelli(lambda0 * u.Angstrom)
 k_dict   = dict(zip(line_name, k_values))
 
 
-def exclude_outliers(objno):
+def exclude_outliers(objno, log=None):
     """
     Exclude spectra that are identified as outliers.
 
     Generally this is because the spectra have very high S/N on the continuum.
 
     :param objno: list or numpy array of eight-digit identifier
-
-    :return:
-     flag: numpy array of zeros and ones
+    :param log: LogClass or logging object
+    :return flag: numpy array of zeros and ones
     """
 
+    if log is None:
+        log = log_stdout()
+
+    log.debug("starting ...")
     flag = np.zeros(len(objno), dtype=int)
     bad_data = np.array(['32007727', '32101412', '42006031', '32035286', '14023705'])
     for ii in range(len(bad_data)):
         idx = [xx for xx in range(len(objno)) if bad_data[ii] in str(objno[xx])]
         flag[idx] = 1
 
+    log.debug("finished ...")
     return flag
 
 
-def dir_date(folder_name, path_init='', year=False):
+def dir_date(folder_name, path_init='', year=False, log=None):
     """
     Purpose:
       This function finds and returns the path to a directory named after the
@@ -74,12 +80,18 @@ def dir_date(folder_name, path_init='', year=False):
     :param folder_name: str containing directory for date subdirectory will be in
     :param path_init: root path. Default: empty string
     :param year: Indicate whether to include year in date folder. Default: False
+    :param log: LogClass or logging object
 
     :return: fitspath: Full path to the date directory
 
     Usage:
         fitspath = dir_date(folder_name, path_init='', year=True)
     """
+
+    if log is None:
+        log = log_stdout()
+
+    log.debug("starting ...")
 
     today = date.today()
 
@@ -91,19 +103,27 @@ def dir_date(folder_name, path_init='', year=False):
     try:
         os.mkdir(fitspath)
     except FileExistsError:
-        print("Path already exists : ", fitspath)
+        log.warning(f"Path already exists : {fitspath}")
+
+    log.debug("finished ...")
 
     return fitspath
 
 
-def get_user(username=None):
+def get_user(username=None, log=None):
 
+    if log is None:
+        log = log_stdout()
+
+    log.debug("starting ...")
     if isinstance(username, type(None)):
         username = getpass.getuser()
 
     if username in fitspath_dict.keys():
         fitspath = fitspath_dict[username]
     else:
+        log.warning("Incorrect username input")
         raise ValueError("Incorrect username input")
 
+    log.debug("finished ...")
     return fitspath
