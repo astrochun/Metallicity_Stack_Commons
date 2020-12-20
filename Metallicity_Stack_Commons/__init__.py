@@ -14,11 +14,20 @@ line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
 line_name = ['OII_3727', 'HDELTA', 'HGAMMA', 'OIII_4363', 'HBETA', 'OIII_4958',
              'OIII_5007']
 
-line_name_short = {"OII": line_name[0], "4363": line_name[3],
-                   "HB": line_name[4], "OIII": line_name[-1],
-                   "HG": line_name[2], "HD": line_name[1]}
+line_name_short = {
+    "OII": line_name[0],
+    "4363": line_name[3],
+    "HB": line_name[4],
+    "OIII": line_name[-1],
+    "HG": line_name[2],
+    "HD": line_name[1]
+}
 
-fitting_lines_dict = {"lambda0": lambda0, "line_type": line_type, "line_name": line_name}
+fitting_lines_dict = {
+    "lambda0": lambda0,
+    "line_type": line_type,
+    "line_name": line_name
+}
 
 all_lambda0   = [lambda0[0]] + [3728.91] + lambda0[1:]
 all_line_name = ['OII_3726', 'OII_3729'] + line_name[1:]
@@ -58,9 +67,11 @@ def exclude_outliers(objno, log=None):
 
     log.debug("starting ...")
     flag = np.zeros(len(objno), dtype=int)
-    bad_data = np.array(['32007727', '32101412', '42006031', '32035286', '14023705'])
+    bad_data = np.array(['32007727', '32101412', '42006031',
+                         '32035286', '14023705'])
     for ii in range(len(bad_data)):
-        idx = [xx for xx in range(len(objno)) if bad_data[ii] in str(objno[xx])]
+        idx = [xx for xx in range(len(objno)) if
+               bad_data[ii] in str(objno[xx])]
         flag[idx] = 1
 
     log.debug("finished ...")
@@ -77,15 +88,15 @@ def dir_date(folder_name, path_init='', year=False, log=None):
 
         From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
 
+    Usage:
+        fitspath = dir_date(folder_name, path_init='', year=True)
+
     :param folder_name: str containing directory for date subdirectory will be in
     :param path_init: root path. Default: empty string
     :param year: Indicate whether to include year in date folder. Default: False
     :param log: LogClass or logging object
 
-    :return: fitspath: Full path to the date directory
-
-    Usage:
-        fitspath = dir_date(folder_name, path_init='', year=True)
+    :return fitspath: Full path to the date directory
     """
 
     if log is None:
@@ -95,9 +106,10 @@ def dir_date(folder_name, path_init='', year=False, log=None):
 
     today = date.today()
 
-    list_path = [path_init, folder_name, "%02i%02i" % (today.month, today.day), '']
+    list_path = [path_init, folder_name,
+                 f"{today.month:02d}{today.day:02d}", '']
     if year:
-        list_path[-2] = "%i" % today.year + list_path[-2]
+        list_path[-2] = f"{today.year:d}" + list_path[-2]
 
     fitspath = os.path.join(*list_path)
     try:
@@ -116,6 +128,7 @@ def get_user(username=None, log=None):
         log = log_stdout()
 
     log.debug("starting ...")
+
     if isinstance(username, type(None)):
         username = getpass.getuser()
 
