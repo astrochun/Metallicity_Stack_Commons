@@ -58,8 +58,8 @@ def exclude_outliers(objno, verbose=False, log=None):
     Generally this is because the spectra have very high S/N on the continuum.
 
     :param objno: list or numpy array of eight-digit identifier
-    :param log: LogClass or logging object
     :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
 
     :return flag: numpy array of zeros and ones
     """

@@ -10,7 +10,7 @@ from ..column_names import bin_names0, indv_names0, temp_metal_names0
 from ..column_names import filename_dict
 from .ratios import flux_ratios
 from .. import line_name
-from ..logging import log_stdout
+from ..logging import log_stdout, log_verbose
 
 ID_name = indv_names0[0]
 bin_ID_name = bin_names0[0]
@@ -21,7 +21,7 @@ two_beta_name = indv_names0[5]
 three_beta_name = indv_names0[6]
 
 
-def main(fitspath, dataset, revised=False, det3=True, log=None):
+def main(fitspath, dataset, revised=False, det3=True, verbose=False, log=None):
     """
     Purpose:
       Reads in composite table(s) containing bin information to
@@ -35,6 +35,7 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     :param det3: Bool indicates whether individual galaxy files is limited to
                  those satisfying emission-line det3 requirement
                  Default: True
+    :param verbose: bool to write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
     Files identified by default
@@ -54,7 +55,7 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     if log is None:
         log = log_stdout()
 
-    log.debug("starting ...")
+    log_verbose(log, "starting ...", verbose=verbose)
 
     # Define [composite_file]
     t_comp = filename_dict['bin_derived_prop'] if not revised else \
@@ -152,4 +153,4 @@ def main(fitspath, dataset, revised=False, det3=True, log=None):
     indv_derived_prop_table.write(outfile, overwrite=True,
                                   format='ascii.fixed_width_two_line')
 
-    log.debug("finished ...")
+    log_verbose(log, "finished.", verbose=verbose)
