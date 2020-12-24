@@ -11,8 +11,8 @@ import pytest
 
 
 def test_dir_date():
-    mmdd = dir_date('', '')
-    yyyymmdd = dir_date('', '', year=True)
+    mmdd = dir_date('', '', verbose=True)
+    yyyymmdd = dir_date('', '', year=True, verbose=True)
 
     assert exists(mmdd)
     assert exists(yyyymmdd)
@@ -33,12 +33,12 @@ def test_dir_date():
 def test_get_user():
 
     for username in ['reagenleimbach', 'carol']:
-        assert get_user(username=username) == fitspath_dict[username]
+        assert get_user(username=username, verbose=True) == fitspath_dict[username]
 
     with pytest.raises(ValueError):
-        get_user(username='test')
+        get_user(username='test', verbose=True)
 
-    assert get_user() == fitspath_dict[getpass.getuser()]
+    assert get_user(verbose=True) == fitspath_dict[getpass.getuser()]
 
 
 def test_exclude_outliers():
@@ -47,7 +47,7 @@ def test_exclude_outliers():
               '32007727', '32101412', '42006031', '32035286', '14023705']
 
     for obj in [obj_no, np.array(obj_no)]:
-        flag = exclude_outliers(obj)
+        flag = exclude_outliers(obj, verbose=True)
 
         assert not flag[0]
         assert not flag[1]

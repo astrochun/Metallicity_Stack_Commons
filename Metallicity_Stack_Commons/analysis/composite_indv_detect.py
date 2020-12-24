@@ -10,6 +10,7 @@ from ..column_names import bin_names0, indv_names0, temp_metal_names0
 from ..column_names import filename_dict
 from .ratios import flux_ratios
 from .. import line_name
+from ..logging import log_stdout, log_verbose
 
 ID_name = indv_names0[0]
 bin_ID_name = bin_names0[0]
@@ -20,7 +21,7 @@ two_beta_name = indv_names0[5]
 three_beta_name = indv_names0[6]
 
 
-def main(fitspath, dataset, revised=False, det3=True):
+def main(fitspath, dataset, revised=False, det3=True, verbose=False, log=None):
     """
     Purpose:
       Reads in composite table(s) containing bin information to
@@ -34,6 +35,8 @@ def main(fitspath, dataset, revised=False, det3=True):
     :param det3: Bool indicates whether individual galaxy files is limited to
                  those satisfying emission-line det3 requirement
                  Default: True
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
 
     Files identified by default
     composite_file: str containing filename of composite data
@@ -49,15 +52,21 @@ def main(fitspath, dataset, revised=False, det3=True):
       e.g., '[dataset]/individual_derived_properties.tbl'
     """
 
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
+
     # Define [composite_file]
     t_comp = filename_dict['bin_derived_prop'] if not revised else \
         filename_dict['bin_derived_prop']
     composite_file = join(fitspath, dataset, t_comp)
     if not exists(composite_file):
-        print("ERROR: File not found! "+composite_file)
+        log.warning(f"ERROR: File not found! {composite_file}")
         return
 
     # Read in composite table
+    log.info(f"Reading: {composite_file}")
     composite_table = asc.read(composite_file)
 
     bin_id = composite_table['bin_ID'].data
@@ -66,33 +75,37 @@ def main(fitspath, dataset, revised=False, det3=True):
     # Read in validation table
     valid_file = join(fitspath, dataset, filename_dict['bin_valid'])
     if not exists(valid_file):
-        print("ERROR: File not found! "+valid_file)
+        log.warning(f"ERROR: File not found! {valid_file}")
         return
+    log.info(f"Reading: {valid_file}")
     valid_table = asc.read(valid_file)
 
     # Define [indv_em_line_file]
     indv_em_line_file = join(fitspath, dataset, filename_dict['indv_prop'])
     if not exists(indv_em_line_file):
-        print("ERROR: File not found! "+indv_em_line_file)
+        log.warning(f"ERROR: File not found! {indv_em_line_file}")
         return
 
     # Read in tables containing line ratios, etc.
+    log.info(f"Reading: {indv_em_line_file}")
     indv_em_line_table = asc.read(indv_em_line_file)
 
     # Define [indv_bin_file]
     indv_bin_file = join(fitspath, dataset, filename_dict['indv_bin_info'])
     if not exists(indv_bin_file):
-        print("ERROR: File not found! "+indv_bin_file)
+        log.warning(f"ERROR: File not found! {indv_bin_file}")
         return
 
     # Read in tables containing bin info for individual
+    log.info(f"Reading: {indv_bin_file}")
     indv_bin_info_table = asc.read(indv_bin_file)
 
     # Populate composite temperature for individual galaxies
     adopted_temp = np.zeros(len(indv_em_line_table))
     bin_id_indv = np.zeros(len(indv_em_line_table))
     detect_indv = np.zeros(len(indv_em_line_table))
-    for comp_bin, comp_temp, detect in zip(bin_id, bin_temp, valid_table['Detection']):
+    for comp_bin, comp_temp, detect in zip(bin_id, bin_temp,
+                                           valid_table['Detection']):
         bin_idx = np.where(indv_bin_info_table['bin_ID'].data == comp_bin)[0]
         adopted_temp[bin_idx] = comp_temp
         bin_id_indv[bin_idx]  = comp_bin
@@ -102,7 +115,8 @@ def main(fitspath, dataset, revised=False, det3=True):
     for line in line_name:
         flux_dict[line] = indv_em_line_table[line+'_Flux_Gaussian'].data
 
-    flux_ratios_dict = flux_ratios(flux_dict, get_R=False)
+    flux_ratios_dict = flux_ratios(flux_dict, get_R=False, verbose=verbose,
+                                   log=log)
 
     two_beta = flux_ratios_dict[two_beta_name]
     three_beta = flux_ratios_dict[three_beta_name]
@@ -111,12 +125,13 @@ def main(fitspath, dataset, revised=False, det3=True):
 
     if not det3:
         metal_dict = \
-            metallicity_calculation(adopted_temp, two_beta, three_beta)
+            metallicity_calculation(adopted_temp, two_beta, three_beta,
+                                    verbose=verbose, log=log)
     else:
         det3_idx = np.where((detect_indv == 1.0) | (detect_indv == 0.5))[0]
         metal_dict = \
             metallicity_calculation(adopted_temp, two_beta, three_beta,
-                                    det3=det3_idx)
+                                    det3=det3_idx, verbose=verbose, log=log)
 
     # Define [indv_derived_prop_table] to include ID, bin_ID, composite T_e,
     # and 12+log(O/H)
@@ -134,7 +149,10 @@ def main(fitspath, dataset, revised=False, det3=True):
 
     # Write Astropy ASCII table containing composite T_e and derived metallicity
     if exists(outfile):
-        print("File exists! Overwriting : ", outfile)
+        log.info(f"File exists! Overwriting : {outfile}")
     else:
-        print("Writing : ", outfile)
-    indv_derived_prop_table.write(outfile, overwrite=True, format='ascii.fixed_width_two_line')
+        log.info(f"Writing : {outfile}")
+    indv_derived_prop_table.write(outfile, overwrite=True,
+                                  format='ascii.fixed_width_two_line')
+
+    log_verbose(log, "finished.", verbose=verbose)
