@@ -35,3 +35,10 @@ def test_LogClass():
     log.debug("DEBUG MESSAGE")
 
     remove(join(log_dir, logfile))
+
+
+def test_log_verbose():
+
+    logging.log_verbose(logging.log_stdout(), 'starting ...', verbose=False)
+
+    logging.log_verbose(logging.log_stdout(), 'finished.', verbose=False)
