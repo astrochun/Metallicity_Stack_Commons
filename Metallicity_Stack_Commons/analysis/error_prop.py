@@ -1,8 +1,6 @@
 from os.path import join, exists
 
 from chun_codes import random_pdf, compute_onesig_pdf
-from .. import line_name
-from ..logging import log_stdout
 
 from astropy.io import ascii as asc
 from astropy.table import Table, hstack
@@ -13,9 +11,11 @@ from ..column_names import filename_dict, temp_metal_names0, npz_filename_dict, 
 from .ratios import flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 from .attenuation import compute_EBV
+from .. import line_name
+from ..logging import log_stdout
 
 
-def write_npz(path, npz_files, dict_list, log=None):
+def write_npz(path, npz_files, dict_list, verbose=False, log=None):
     """
     Purpose:
       Write numpy files with provided dictionaries
@@ -24,14 +24,17 @@ def write_npz(path, npz_files, dict_list, log=None):
     :param npz_files: list - contains npz file names
     :param dict_list: list - contains dictionaries for each corresponding npz file
     :param log: LogClass or logging object
-
+    :param verbose: bool to write verbose message to stdout. Default: file only
     :return: Write npz files
     """
 
     if log is None:
         log = log_stdout()
 
-    log.debug("starting ...")
+    if verbose:
+        log.info("starting ...")
+    else:
+        log.debug("starting ...")
 
     for file, dict_input in zip(npz_files, dict_list):
         npz_outfile = join(path, file)
@@ -41,11 +44,14 @@ def write_npz(path, npz_files, dict_list, log=None):
             log.info(f"Writing : {npz_outfile}")
         np.savez(npz_outfile, **dict_input)
 
-    log.debug("finished ...")
+    if verbose:
+        log.info("finished.")
+    else:
+        log.debug("finished.")
 
 
 def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
-                        revised=True, log=None):
+                        revised=True, verbose=False, log=None):
     """
     Purpose:
       Use measurements and their uncertainties to perform a randomization
@@ -58,13 +64,17 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
     :param binned_data: bool for whether to analysis binned data. Default: True
     :param apply_dust: bool for whether to apply dust attenuation. Default: False
     :param revised: bool to indicate if revised validation table is used. Default: True
+    :param verbose: bool to write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
     """
 
     if log is None:
         log = log_stdout()
 
-    log.debug("starting ...")
+    if verbose:
+        log.info("starting ...")
+    else:
+        log.debug("starting ...")
 
     # Define files to read in for binned data
     if binned_data:
@@ -217,7 +227,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                      npz_filename_dict['flux_errors' + rev_s],
                      npz_filename_dict['flux_peak' + rev_s]]
         dict_list = [flux_pdf_dict, flux_error_dict, flux_peak_dict]
-        write_npz(path, npz_files, dict_list)
+        write_npz(path, npz_files, dict_list, verbose=verbose, log=log)
 
         # Obtain line ratio distributions: logR23, logO32, two_beta, three_beta, R
         # Also include Balmer decrements
@@ -377,6 +387,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
         dict_list = [derived_prop_pdf_dict, derived_prop_error_dict,
                      derived_prop_peak_dict]
-        write_npz(path, npz_files, dict_list)
+        write_npz(path, npz_files, dict_list, verbose=verbose, log=log)
 
-    log.debug("finished ...")
+    if verbose:
+        log.info("finished.")
+    else:
+        log.debug("finished.")
