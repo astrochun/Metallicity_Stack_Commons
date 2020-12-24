@@ -42,11 +42,15 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, verbose=False, log=None):
 
     if isinstance(ratio, list):
         log.warning("!!! Incorrect type for input [ratio].  Cannot be list !!!")
-        raise TypeError
+        raise TypeError("!!! Incorrect type for input [ratio].  Cannot be list !!!")
 
-    if 'HgHb' in source:
-        ratio0 = HgHb_CaseB
-        k1 = k_HGAMMA
+    if source not in ['HgHb', 'HdHb']:
+        log.warning("!!! Incorrect [source]")
+        raise KeyError("!!! Incorrect [source]")
+
+    # For HgHb (default)
+    ratio0 = HgHb_CaseB
+    k1 = k_HGAMMA
 
     if 'HdHb' in source:
         ratio0 = HdHb_CaseB
