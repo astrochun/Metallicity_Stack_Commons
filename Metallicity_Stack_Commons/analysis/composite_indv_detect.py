@@ -115,7 +115,8 @@ def main(fitspath, dataset, revised=False, det3=True, verbose=False, log=None):
     for line in line_name:
         flux_dict[line] = indv_em_line_table[line+'_Flux_Gaussian'].data
 
-    flux_ratios_dict = flux_ratios(flux_dict, get_R=False)
+    flux_ratios_dict = flux_ratios(flux_dict, get_R=False, verbose=verbose,
+                                   log=log)
 
     two_beta = flux_ratios_dict[two_beta_name]
     three_beta = flux_ratios_dict[three_beta_name]
@@ -124,12 +125,13 @@ def main(fitspath, dataset, revised=False, det3=True, verbose=False, log=None):
 
     if not det3:
         metal_dict = \
-            metallicity_calculation(adopted_temp, two_beta, three_beta)
+            metallicity_calculation(adopted_temp, two_beta, three_beta,
+                                    verbose=verbose, log=log)
     else:
         det3_idx = np.where((detect_indv == 1.0) | (detect_indv == 0.5))[0]
         metal_dict = \
             metallicity_calculation(adopted_temp, two_beta, three_beta,
-                                    det3=det3_idx)
+                                    det3=det3_idx, verbose=verbose, log=log)
 
     # Define [indv_derived_prop_table] to include ID, bin_ID, composite T_e,
     # and 12+log(O/H)

@@ -68,7 +68,8 @@ def flux_ratios(flux_dict, binned_data=False, get_R=True, verbose=False,
 
     if get_R:
         OIII4363 = flux_dict[line_name_short['4363']]  # Retrieve OIII4363
-        flux_ratios_dict[R_key] = R_calculation(OIII4363, OIII)
+        flux_ratios_dict[R_key] = R_calculation(OIII4363, OIII, verbose=verbose,
+                                                log=log)
 
     log_verbose(log, "finished.", verbose=verbose)
 

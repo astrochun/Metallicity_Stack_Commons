@@ -25,6 +25,7 @@ def write_npz(path, npz_files, dict_list, verbose=False, log=None):
     :param dict_list: list - contains dictionaries for each corresponding npz file
     :param verbose: bool to write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
+
     :return: Write npz files
     """
 
@@ -136,7 +137,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
             flux_dict[line_name[aa]] = flux_tab0[flux].data
 
         flux_ratios_dict = flux_ratios(flux_dict, binned_data=binned_data,
-                                       log=log)
+                                       verbose=verbose, log=log)
 
         #
         # Get EBV from Balmer decrement if apply_dust set
@@ -224,7 +225,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         # Obtain line ratio distributions: logR23, logO32, two_beta, three_beta, R
         # Also include Balmer decrements
         flux_ratios_dict = flux_ratios(flux_pdf_dict, binned_data=binned_data,
-                                       log=log)
+                                       verbose=verbose, log=log)
 
         flux_ratios_err_dict = dict()
 
