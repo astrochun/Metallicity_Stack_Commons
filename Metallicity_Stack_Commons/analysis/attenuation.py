@@ -114,7 +114,8 @@ def compute_A(EBV, verbose=False, log=None):
     return A_dict
 
 
-def line_ratio_atten(ratio, EBV, wave_top, wave_bottom, verbose=False, log=None):
+def line_ratio_atten(ratio, EBV, wave_top, wave_bottom, verbose=False,
+                     log=None):
 
     if log is None:
         log = log_stdout()
