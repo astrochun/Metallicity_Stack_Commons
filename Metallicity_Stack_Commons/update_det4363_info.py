@@ -1,9 +1,10 @@
 from chun_codes import match_nosort
 
-from .logging import log_stdout
+from .logging import log_stdout, log_verbose
 
 
-def get_index(det4363_table, input_table, column_name, log=None):
+def get_index(det4363_table, input_table, column_name, verbose=False,
+              log=None):
     """
     Purpose:
       Uses either OBJNO or AP/SLIT info to get index for an existing table
@@ -11,6 +12,7 @@ def get_index(det4363_table, input_table, column_name, log=None):
     :param det4363_table: astropy table containing DEEP2 [OIII]4363-detected sample
     :param input_table: astropy table containing the entire sample to be updated
     :param column_name: str containing column for cross-matching
+    :param verbose: bool to write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
     :return det4363_idx: Numpy index arrays containing for det4363_table and input_table
@@ -20,7 +22,7 @@ def get_index(det4363_table, input_table, column_name, log=None):
     if log is None:
         log = log_stdout()
 
-    log.debug("starting ...")
+    log_verbose(log, "starting ...", verbose=verbose)
 
     if column_name != 'OBJNO' or column_name != 'SLIT' or column_name != 'AP':
         log.warning("column_name not understood")
@@ -32,5 +34,5 @@ def get_index(det4363_table, input_table, column_name, log=None):
 
     det4363_idx, input_idx = match_nosort(det4363_id, input_id)
 
-    log.debug("finished ...")
+    log_verbose(log, "finished.", verbose=verbose)
     return det4363_idx, input_idx
