@@ -12,7 +12,7 @@ from .ratios import flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 from .attenuation import compute_EBV
 from .. import line_name
-from ..logging import log_stdout
+from ..logging import log_stdout, log_verbose
 
 
 def write_npz(path, npz_files, dict_list, verbose=False, log=None):
@@ -31,10 +31,7 @@ def write_npz(path, npz_files, dict_list, verbose=False, log=None):
     if log is None:
         log = log_stdout()
 
-    if verbose:
-        log.info("starting ...")
-    else:
-        log.debug("starting ...")
+    log_verbose(log, "starting ...", verbose=verbose)
 
     for file, dict_input in zip(npz_files, dict_list):
         npz_outfile = join(path, file)
@@ -44,10 +41,7 @@ def write_npz(path, npz_files, dict_list, verbose=False, log=None):
             log.info(f"Writing : {npz_outfile}")
         np.savez(npz_outfile, **dict_input)
 
-    if verbose:
-        log.info("finished.")
-    else:
-        log.debug("finished.")
+    log_verbose(log, "finished.", verbose=verbose)
 
 
 def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
@@ -71,10 +65,7 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
     if log is None:
         log = log_stdout()
 
-    if verbose:
-        log.info("starting ...")
-    else:
-        log.debug("starting ...")
+    log_verbose(log, "starting ...", verbose=verbose)
 
     # Define files to read in for binned data
     if binned_data:
@@ -153,9 +144,9 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
 
         if apply_dust:
             EBV = compute_EBV(flux_ratios_dict[dust[0]], source=dust[0],
-                              log=log)
+                              verbose=verbose, log=log)
             EBV_HdHb = compute_EBV(flux_ratios_dict[dust[1]], source=dust[1],
-                                   log=log)
+                                   verbose=verbose, log=log)
         else:
             EBV = None
             EBV_HdHb = None
@@ -264,7 +255,8 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                         dust[2] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
             EBV, EBV_peak = compute_EBV(flux_ratios_dict[dust[0]],
-                                        source=dust[0], log=log)
+                                        source=dust[0], verbose=verbose,
+                                        log=log)
 
             err_prop, peak_prop = compute_onesig_pdf(EBV, EBV_peak,
                                                      usepeak=True)
@@ -280,7 +272,8 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                              dust[3] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
             EBV_HdHb, EBV_HdHb_peak = compute_EBV(flux_ratios_dict[dust[1]],
-                                                  source=dust[1], log=log)
+                                                  source=dust[1],
+                                                  verbose=verbose, log=log)
             log.info(EBV_HdHb_peak)
 
             err_prop, peak_prop = compute_onesig_pdf(EBV_HdHb, EBV_HdHb_peak,
@@ -389,7 +382,4 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                      derived_prop_peak_dict]
         write_npz(path, npz_files, dict_list, verbose=verbose, log=log)
 
-    if verbose:
-        log.info("finished.")
-    else:
-        log.debug("finished.")
+    log_verbose(log, "finished.", verbose=verbose)
