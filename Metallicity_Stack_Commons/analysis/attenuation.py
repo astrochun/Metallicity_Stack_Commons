@@ -1,7 +1,7 @@
 import numpy as np
 
 from .. import k_dict, line_name_short
-from ..logging import log_stdout
+from ..logging import log_stdout, log_verbose
 
 from chun_codes import compute_onesig_pdf
 
@@ -19,7 +19,7 @@ k_HGAMMA = k_dict[HG]
 k_HDELTA = k_dict[HD]
 
 
-def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
+def compute_EBV(ratio, source='HgHb', zero_neg=True, verbose=False, log=None):
     """
     Purpose:
       Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
@@ -27,6 +27,7 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
     :param ratio: float or numpy array containing Hg/Hb or Hd/Hb
     :param source: str indicate ratio type.  Either 'HgHb' or 'HdHb'. Default: 'HgHb'
     :param zero_neg: boolean to indicate whether to zero out negative reddening. Default: True
+    :param verbose: bool to write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
     :return EBV: float or numpy array containing E(B-V).
@@ -37,7 +38,8 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
     if log is None:
         log = log_stdout()
 
-    log.debug("starting ...")
+    log_verbose(log, "starting ...", verbose=verbose)
+
     if isinstance(ratio, list):
         log.warning("!!! Incorrect type for input [ratio].  Cannot be list !!!")
         raise TypeError
@@ -64,7 +66,7 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
                 if len(neg_idx) > 0:
                     EBV[neg_idx] = 0.0
                     log.info('zero substituted for negative reddening')
-                log.debug("finished ...")
+                log_verbose(log, "finished.", verbose=verbose)
                 return EBV
             if len(EBV.shape) == 2:
                 EBV_avg = np.average(EBV, axis=0)  # initial guess
@@ -74,43 +76,57 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, log=None):
                     log.info('EBV distribution shifted for peak')
                     EBV[neg_idx, :] -= EBV_peak[neg_idx].reshape((len(neg_idx), 1))
                     EBV_peak[neg_idx] = 0.0
-                log.debug("finished ...")
+                log_verbose(log, "finished.", verbose=verbose)
                 return EBV, EBV_peak
     else:
-        log.debug("finished ...")
+        log_verbose(log, "finished.", verbose=verbose)
         return EBV
 
 
-def compute_A(EBV):
+def compute_A(EBV, verbose=False, log=None):
     """
     Purpose:
       Compute A(Lambda) for all possible emission lines
 
     :param EBV: float value of E(B-V)
       Has not been configured to handle a large array.  Some array handling would be needed
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
 
     :return A_dict: dict containing A(lambda) with keys identical to k_dict
     """
+
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
 
     k_arr  = np.array(list(k_dict.values()))
 
     A_arr  = k_arr * EBV
     A_dict = dict(zip(list(k_dict.keys()), A_arr))
 
+    log_verbose(log, "finished.", verbose=verbose)
     return A_dict
 
 
-def line_ratio_atten(ratio, EBV, wave_top, wave_bottom):
+def line_ratio_atten(ratio, EBV, wave_top, wave_bottom, verbose=False, log=None):
+
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
 
     k_top    = k_dict[wave_top]
     k_bottom = k_dict[wave_bottom]
 
     ratio_atten = ratio * 10**(0.4*EBV*(k_top - k_bottom))
 
+    log_verbose(log, "finished.", verbose=verbose)
     return ratio_atten
 
 
-def Hb_SFR(log_LHb, EBV):
+def Hb_SFR(log_LHb, EBV, verbose=False, log=None):
     """
     Purpose:
       Determine dust-corrected SFR using the H-beta luminosity and a
@@ -122,11 +138,19 @@ def Hb_SFR(log_LHb, EBV):
     :param log_LHb: numpy array or float containing logarithm of H-beta
            luminosity in units of erg/s
     :param EBV: numpy array or float providing E(B-V)
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
 
     :return logSFR: numpy array or float containing the SFR in
             logarithmic units of M_sun/yr
     """
 
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
+
     logSFR = np.log10(4.4e-42 * HaHb_CaseB) + 0.4*EBV*k_HBETA + log_LHb
 
+    log_verbose(log, "finished.", verbose=verbose)
     return logSFR
