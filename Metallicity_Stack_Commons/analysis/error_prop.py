@@ -154,11 +154,12 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         derived_prop_dict = dict()
 
         # Using Hg/Hb Balmer decrement for dust corrections
-        Te = temp_calculation(flux_ratios_dict[R_name], EBV=EBV, log=log)
+        Te = temp_calculation(flux_ratios_dict[R_name], EBV=EBV,
+                              verbose=verbose, log=log)
         derived_prop_dict[temp_metal_names0[0]] = Te
         metal_dict = metallicity_calculation(Te, flux_ratios_dict[two_beta_name],
                                              flux_ratios_dict[three_beta_name],
-                                             EBV=EBV, log=log)
+                                             EBV=EBV, verbose=verbose, log=log)
         derived_prop_dict.update(metal_dict)
 
         if apply_dust:
@@ -298,14 +299,15 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         derived_prop_peak_dict = dict()
 
         # Calculate temperature distribution
-        Te_pdf = temp_calculation(flux_ratios_dict[R_name], EBV=EBV, log=log)
+        Te_pdf = temp_calculation(flux_ratios_dict[R_name], EBV=EBV,
+                                  verbose=verbose, log=log)
         derived_prop_pdf_dict[temp_metal_names0[0]] = Te_pdf
 
         # Calculate metallicity distribution
         metal_dict = metallicity_calculation(Te_pdf,
                                              flux_ratios_dict[two_beta_name],
                                              flux_ratios_dict[three_beta_name],
-                                             EBV=EBV, log=log)
+                                             EBV=EBV, verbose=verbose, log=log)
         derived_prop_pdf_dict.update(metal_dict)
 
         prop_err_dict = dict()  # Initialize
