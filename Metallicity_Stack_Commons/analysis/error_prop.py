@@ -23,8 +23,8 @@ def write_npz(path, npz_files, dict_list, verbose=False, log=None):
     :param path: str - prefix for filename output
     :param npz_files: list - contains npz file names
     :param dict_list: list - contains dictionaries for each corresponding npz file
-    :param log: LogClass or logging object
     :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
     :return: Write npz files
     """
 

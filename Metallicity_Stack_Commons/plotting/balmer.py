@@ -20,13 +20,14 @@ from ..analysis.attenuation import compute_EBV
 
 from .. import scalefact, wavelength_dict
 from ..column_names import filename_dict
-from ..logging import log_stdout
+from ..logging import log_stdout, log_verbose
 
 n_rows = 3
 n_cols = 3
 
 
-def extract_fit(astropy_table, line_name, balmer=False, log=None):
+def extract_fit(astropy_table, line_name, balmer=False, verbose=False,
+                log=None):
     """
     Purpose:
       Extract best fit from table and fluxes, return a list of
@@ -35,6 +36,7 @@ def extract_fit(astropy_table, line_name, balmer=False, log=None):
     :param astropy_table: Astropy table containing fitting result
     :param line_name: line to extract fit results
     :param balmer: boolean to indicate whether line is a Balmer line
+    :param verbose: bool to write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
     :return result_dict: dict of fitting results
@@ -43,11 +45,13 @@ def extract_fit(astropy_table, line_name, balmer=False, log=None):
     if log is None:
         log = log_stdout()
 
+    log_verbose(log, "starting ...", verbose=verbose)
+
     try:
         astropy_table[line_name + '_Center']
     except KeyError:
-        log.info("Line not present in table")
-        log.info("Exiting!!!")
+        log.warning("Line not present in table")
+        log.warning("Exiting!!!")
         return
 
     xbar = astropy_table[line_name + '_Center']
@@ -70,6 +74,7 @@ def extract_fit(astropy_table, line_name, balmer=False, log=None):
 
         result_dict['line_fit_neg'] = [xbar, sn, an, con]
 
+    log_verbose(log, "finished.", verbose=verbose)
     return result_dict
 
 
@@ -121,7 +126,7 @@ def fitting_result(wave, y_norm, lambda_cen, line_fit, line_fit_neg,
 
 # noinspection PyUnboundLocalVariable
 def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
-                use_revised=False, log=None):
+                use_revised=False, verbose=False, log=None):
     """
     Purpose:
       Generate PDF plots that illustrate H-delta, H-gamma, and H-beta line
@@ -130,13 +135,14 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
     :param fitspath: full path (str)
     :param out_pdf_prefix: Prefix for outpute PDF file (str)
     :param use_revised: Indicate whether to use regular or revised tables (bool)
+    :param verbose: bool to write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
     """
 
     if log is None:
         log = log_stdout()
 
-    log.debug("starting ...")
+    log_verbose(log, "starting ...", verbose=verbose)
 
     comp_spec_file = join(fitspath, filename_dict['comp_spec'])
     log.info(f"Reading: {comp_spec_file}")
@@ -165,9 +171,12 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
         y0 = stack2D[ii]
         y_norm = y0/scalefact
 
-        Hb_dict = extract_fit(astropy_table[ii], 'HBETA', balmer=True, log=log)
-        Hg_dict = extract_fit(astropy_table[ii], 'HGAMMA', balmer=True, log=log)
-        Hd_dict = extract_fit(astropy_table[ii], 'HDELTA', balmer=True, log=log)
+        Hb_dict = extract_fit(astropy_table[ii], 'HBETA', balmer=True,
+                              verbose=False, log=log)
+        Hg_dict = extract_fit(astropy_table[ii], 'HGAMMA', balmer=True,
+                              verbose=False, log=log)
+        Hd_dict = extract_fit(astropy_table[ii], 'HDELTA', balmer=True,
+                              verbose=False, log=log)
 
         wave_beta  = wavelength_dict['HBETA']
         wave_gamma = wavelength_dict['HGAMMA']
@@ -280,4 +289,5 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
     log.info(f"Writing : {out_pdf}")
     pdf_pages.close()
-    log.debug("finished ...")
+
+    log_verbose(log, "finished.", verbose=verbose)
