@@ -5,7 +5,7 @@ import os
 import getpass
 import numpy as np
 
-from .logging import log_stdout
+from .logging import log_stdout, log_verbose
 
 version = "1.2.0"
 
@@ -51,7 +51,7 @@ k_values = cardelli(lambda0 * u.Angstrom)
 k_dict   = dict(zip(line_name, k_values))
 
 
-def exclude_outliers(objno, log=None):
+def exclude_outliers(objno, verbose=False, log=None):
     """
     Exclude spectra that are identified as outliers.
 
@@ -59,13 +59,16 @@ def exclude_outliers(objno, log=None):
 
     :param objno: list or numpy array of eight-digit identifier
     :param log: LogClass or logging object
+    :param verbose: bool to write verbose message to stdout. Default: file only
+
     :return flag: numpy array of zeros and ones
     """
 
     if log is None:
         log = log_stdout()
 
-    log.debug("starting ...")
+    log_verbose(log, "starting ...", verbose=verbose)
+
     flag = np.zeros(len(objno), dtype=int)
     bad_data = np.array(['32007727', '32101412', '42006031',
                          '32035286', '14023705'])
@@ -74,11 +77,11 @@ def exclude_outliers(objno, log=None):
                bad_data[ii] in str(objno[xx])]
         flag[idx] = 1
 
-    log.debug("finished ...")
+    log_verbose(log, "finished.", verbose=verbose)
     return flag
 
 
-def dir_date(folder_name, path_init='', year=False, log=None):
+def dir_date(folder_name, path_init='', year=False, verbose=False, log=None):
     """
     Purpose:
       This function finds and returns the path to a directory named after the
@@ -86,7 +89,7 @@ def dir_date(folder_name, path_init='', year=False, log=None):
       a new directory named after the current date in the provided folder_name
       directory.
 
-        From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
+      From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
 
     Usage:
         fitspath = dir_date(folder_name, path_init='', year=True)
@@ -94,6 +97,7 @@ def dir_date(folder_name, path_init='', year=False, log=None):
     :param folder_name: str containing directory for date subdirectory will be in
     :param path_init: root path. Default: empty string
     :param year: Indicate whether to include year in date folder. Default: False
+    :param verbose: bool to write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
     :return fitspath: Full path to the date directory
@@ -102,7 +106,7 @@ def dir_date(folder_name, path_init='', year=False, log=None):
     if log is None:
         log = log_stdout()
 
-    log.debug("starting ...")
+    log_verbose(log, "starting ...", verbose=verbose)
 
     today = date.today()
 
@@ -117,19 +121,18 @@ def dir_date(folder_name, path_init='', year=False, log=None):
     except FileExistsError:
         log.warning(f"Path already exists : {fitspath}")
 
-    log.debug("finished ...")
-
+    log_verbose(log, "finished.", verbose=verbose)
     return fitspath
 
 
-def get_user(username=None, log=None):
+def get_user(username=None, verbose=False, log=None):
 
     if log is None:
         log = log_stdout()
 
-    log.debug("starting ...")
+    log_verbose(log, "starting ...", verbose=verbose)
 
-    if isinstance(username, type(None)):
+    if username is None:
         username = getpass.getuser()
 
     if username in fitspath_dict.keys():
@@ -138,5 +141,5 @@ def get_user(username=None, log=None):
         log.warning("Incorrect username input")
         raise ValueError("Incorrect username input")
 
-    log.debug("finished ...")
+    log_verbose(log, "finished.", verbose=verbose)
     return fitspath
