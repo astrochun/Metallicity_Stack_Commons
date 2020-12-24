@@ -7,10 +7,11 @@ from socket import gethostname
 from requests import get
 
 import logging
-formatter = logging.Formatter('%(asctime)s - %(levelname)8s: %(message)s', "%H:%M:%S")
 
-file_formatter = logging.Formatter('%(asctime)s %(levelname)8s - %(module)20s %(funcName)30s : %(message)s',
-                                   "%H:%M:%S")
+
+log_format = '%(asctime)s %(levelname)7s - %(module)21s %(funcName)23s : %(message)s'
+formatter = logging.Formatter(log_format, "%H:%M:%S")
+file_formatter = logging.Formatter(log_format, "%H:%M:%S")
 
 
 class LogClass:
