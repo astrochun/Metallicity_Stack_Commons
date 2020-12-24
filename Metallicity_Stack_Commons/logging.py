@@ -85,3 +85,18 @@ def get_user_hostname():
     sys_info['os'] = f"{os_name[0]} {os_name[2]} {os_name[3]}"
 
     return sys_info
+
+
+def log_verbose(log, message, verbose=False):
+    """
+    Purpose:
+      Log message depending on verbosity
+
+    :param log: LogClass or logging object
+    :param message: str
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    """
+    if verbose:
+        log.info(message)   # Write to stdout
+    else:
+        log.debug(message)  # Write only to file via debug level
