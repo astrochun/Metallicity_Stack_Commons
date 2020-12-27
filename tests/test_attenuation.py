@@ -21,7 +21,8 @@ def test_compute_EBV():
             for offset in offsets:
                 # Test float input
                 Balmer = value + offset
-                EBV = attenuation.compute_EBV(Balmer, source=source, zero_neg=zero)
+                EBV = attenuation.compute_EBV(Balmer, source=source,
+                                              zero_neg=zero, verbose=True)
 
                 assert isinstance(EBV, float)
                 if offset == 0:
@@ -37,7 +38,8 @@ def test_compute_EBV():
 
                 # Test numpy array with single record
                 EBV = attenuation.compute_EBV(np.array([Balmer]),
-                                              source=source, zero_neg=zero)
+                                              source=source, zero_neg=zero,
+                                              verbose=True)
 
                 assert isinstance(EBV, (np.ndarray, np.generic))
                 if offset == 0:
@@ -53,14 +55,16 @@ def test_compute_EBV():
 
             # Test EBV distribution case
             values = [value, value - dx, value + dx]
-            Balmer_dist = random_pdf(values, [dx] * len(values), seed_i=1, n_iter=5000)
+            Balmer_dist = random_pdf(values, [dx] * len(values), seed_i=1,
+                                     n_iter=5000)
             if not zero:
                 EBV_dist = attenuation.compute_EBV(Balmer_dist, source=source,
-                                                   zero_neg=zero)
+                                                   zero_neg=zero, verbose=True)
             else:
                 EBV_dist, EBV_peak = attenuation.compute_EBV(Balmer_dist,
                                                              source=source,
-                                                             zero_neg=zero)
+                                                             zero_neg=zero,
+                                                             verbose=True)
 
             '''
             # For writing initial file
@@ -80,7 +84,7 @@ def test_compute_EBV():
 def test_compute_A():
 
     for EBV in [0.0, 0.25]:
-        A_dict = attenuation.compute_A(EBV)
+        A_dict = attenuation.compute_A(EBV, verbose=True)
         assert isinstance(A_dict, dict)
         for key in A_dict.keys():
             if EBV == 0:
@@ -97,7 +101,8 @@ def test_line_ratio_atten():
         # [OII]/H-beta
         ratio_atten = attenuation.line_ratio_atten(ratio, EBV,
                                                    line_name_short['OII'],
-                                                   line_name_short['HB'])
+                                                   line_name_short['HB'],
+                                                   verbose=True)
         assert isinstance(ratio_atten, float)
         if EBV == 0:
             assert ratio_atten == ratio
@@ -107,7 +112,8 @@ def test_line_ratio_atten():
         # [OIII]/[OII]
         ratio_atten = attenuation.line_ratio_atten(ratio, EBV,
                                                    line_name_short['OIII'],
-                                                   line_name_short['OII'])
+                                                   line_name_short['OII'],
+                                                   verbose=True)
         assert isinstance(ratio_atten, float)
         if EBV == 0:
             assert ratio_atten == ratio
@@ -117,5 +123,5 @@ def test_line_ratio_atten():
 
 def test_Hb_SFR():
 
-    logSFR = attenuation.Hb_SFR(41.0, 0.25)
+    logSFR = attenuation.Hb_SFR(41.0, 0.25, verbose=True)
     assert isinstance(logSFR, float)
