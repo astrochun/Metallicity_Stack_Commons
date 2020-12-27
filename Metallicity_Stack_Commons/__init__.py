@@ -5,6 +5,8 @@ import os
 import getpass
 import numpy as np
 
+from .logging import log_stdout, log_verbose
+
 version = "1.2.0"
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
@@ -12,21 +14,32 @@ line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
 line_name = ['OII_3727', 'HDELTA', 'HGAMMA', 'OIII_4363', 'HBETA', 'OIII_4958',
              'OIII_5007']
 
-line_name_short = {"OII": line_name[0], "4363": line_name[3],
-                   "HB": line_name[4], "OIII": line_name[-1],
-                   "HG": line_name[2], "HD": line_name[1]}
+line_name_short = {
+    "OII": line_name[0],
+    "4363": line_name[3],
+    "HB": line_name[4],
+    "OIII": line_name[-1],
+    "HG": line_name[2],
+    "HD": line_name[1]
+}
 
-fitting_lines_dict = {"lambda0": lambda0, "line_type": line_type, "line_name": line_name}
+fitting_lines_dict = {
+    "lambda0": lambda0,
+    "line_type": line_type,
+    "line_name": line_name
+}
 
 all_lambda0   = [lambda0[0]] + [3728.91] + lambda0[1:]
 all_line_name = ['OII_3726', 'OII_3729'] + line_name[1:]
 wavelength_dict = dict(zip(all_line_name, all_lambda0))
 
-fitspath_reagen = '/Users/reagenleimbach/Desktop/Zcalbase_gal/'
-
-fitspath_caroline = 'C:/Users/carol/Google Drive/'
-
-fitspath_chun = '/Users/cly/GoogleDrive/Research/'
+fitspath_dict = {
+    'reagenleimbach': '/Users/reagenleimbach/GoogleDrive/Research/',
+    'carol': 'C:/Users/carol/Google Drive/',
+    'cly': '/Users/cly/GoogleDrive/Research/',
+    'travis': '/home/travis/',
+    'runner': '/home/runner/'
+}
 
 scalefact = 1e-17
 
@@ -38,78 +51,95 @@ k_values = cardelli(lambda0 * u.Angstrom)
 k_dict   = dict(zip(line_name, k_values))
 
 
-def exclude_outliers(objno):
+def exclude_outliers(objno, verbose=False, log=None):
     """
     Exclude spectra that are identified as outliers.
 
     Generally this is because the spectra have very high S/N on the continuum.
 
     :param objno: list or numpy array of eight-digit identifier
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
 
-    :return:
-     flag: numpy array of zeros and ones
+    :return flag: numpy array of zeros and ones
     """
 
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
+
     flag = np.zeros(len(objno), dtype=int)
-    bad_data = np.array(['32007727', '32101412', '42006031', '32035286', '14023705'])
+    bad_data = np.array(['32007727', '32101412', '42006031',
+                         '32035286', '14023705'])
     for ii in range(len(bad_data)):
-        idx = [xx for xx in range(len(objno)) if bad_data[ii] in str(objno[xx])]
+        idx = [xx for xx in range(len(objno)) if
+               bad_data[ii] in str(objno[xx])]
         flag[idx] = 1
 
+    log_verbose(log, "finished.", verbose=verbose)
     return flag
 
 
-def dir_date(org_name, path_init='', year=False):
+def dir_date(folder_name, path_init='', year=False, verbose=False, log=None):
     """
     Purpose:
-        This function finds and returns the path to a directory named after the
-        current date (MMDDYYYY). If the directory doesn't exist yet, it creates
-        a new directory named after the current date in the provided org_name
-        directory.
+      This function finds and returns the path to a directory named after the
+      current date (MMDDYYYY). If the directory doesn't exist yet, it creates
+      a new directory named after the current date in the provided folder_name
+      directory.
 
-        From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
+      From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
+
     Usage:
-        fitspath = dir_date(org_name, path_init='', year=True)
+        fitspath = dir_date(folder_name, path_init='', year=True)
 
-    Params:
-        org_name --> a string of the directory that the date subdirectory will be in.
+    :param folder_name: str containing directory for date subdirectory will be in
+    :param path_init: root path. Default: empty string
+    :param year: Indicate whether to include year in date folder. Default: False
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
 
-    Returns:
-        fitspath --> the path to the date directory.
-
-    Outputs:
-        "Path already exists" --> prints this message if the current date directory already exists.
-        fitspath --> prints the path to the directory.
-
+    :return fitspath: Full path to the date directory
     """
+
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
 
     today = date.today()
 
-    list_path = [path_init, org_name, "%02i%02i" % (today.month, today.day), '']
+    list_path = [path_init, folder_name,
+                 f"{today.month:02d}{today.day:02d}", '']
     if year:
-        list_path[-2] += "%02i" % today.year
+        list_path[-2] = f"{today.year:d}" + list_path[-2]
 
     fitspath = os.path.join(*list_path)
     try:
         os.mkdir(fitspath)
     except FileExistsError:
-        print("Path already exists : ", fitspath)
+        log.warning(f"Path already exists : {fitspath}")
 
+    log_verbose(log, "finished.", verbose=verbose)
     return fitspath
 
 
-def get_user(username=None):
+def get_user(username=None, verbose=False, log=None):
 
-    if isinstance(username, type(None)):
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
+
+    if username is None:
         username = getpass.getuser()
 
-    if username == 'reagenleimbach':
-        fitspath = fitspath_reagen
+    if username in fitspath_dict.keys():
+        fitspath = fitspath_dict[username]
+    else:
+        log.warning("Incorrect username input")
+        raise ValueError("Incorrect username input")
 
-    if username == 'carol':
-        fitspath = fitspath_caroline
-
-    if username == 'cly':
-        fitspath = fitspath_chun
-
+    log_verbose(log, "finished.", verbose=verbose)
     return fitspath

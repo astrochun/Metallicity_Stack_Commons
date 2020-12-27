@@ -3,14 +3,16 @@ from astropy.convolution import Box1DKernel, convolve
 from astropy.io import ascii as asc
 
 from .. import scalefact, wavelength_dict
+from ..logging import log_stdout, log_verbose
 
-con1 = wavelength_dict['OII_3729'] / wavelength_dict['OII_3726'] # Ratio of OII doublet line
+# Ratio of OII doublet line
+con1 = wavelength_dict['OII_3729'] / wavelength_dict['OII_3726']
 
 
 def gauss(x, xbar, s, a, c):
-    '''
-
-    Function providing Gaussian profile for curve_fit
+    """
+    Purpose:
+      Function providing Gaussian profile for curve_fit
 
     :param x: wavelength array
     :param xbar: central wavelength of Gaussian fit
@@ -20,16 +22,15 @@ def gauss(x, xbar, s, a, c):
 
     :return:
         Gaussian fit
-
-    '''
+    """
     return a * np.exp(-(x - xbar) ** 2 / (2 * s ** 2)) + c
 
 
 def double_gauss(x, xbar, s1, a1, c, s2, a2):
-    '''
-
-    Function providing double Gaussian profile (emission and absorption)
-    for curve_fit
+    """
+    Purpose:
+      Function providing double Gaussian profile (emission and absorption)
+      for curve_fit
 
     :param x: wavelength array
     :param xbar: central wavelength of Gaussian fit
@@ -40,19 +41,17 @@ def double_gauss(x, xbar, s1, a1, c, s2, a2):
     :param s2: sigma (width) of second Gaussian fit
     :param a2: amplitude of second Gaussian fit
 
-    :return:
-        Double Gaussian fit
-    '''
+    :return: Double Gaussian fit
+    """
 
     return a1 * np.exp(-(x - xbar) ** 2 / (2 * s1 ** 2)) + c + \
            a2 * np.exp(-(x - xbar) ** 2 / (2 * s2 ** 2))
 
 
 def oxy2_gauss(x, xbar, s1, a1, c, s2, a2):
-    '''
-
-    Function providing [OII] doublet Gaussian profile for curve_fit
-
+    """
+    Purpose:
+      Function providing [OII] doublet Gaussian profile for curve_fit
 
     :param x:  wavelength array
     :param xbar: central wavelength of [OII]3726 Gaussian fit
@@ -62,32 +61,37 @@ def oxy2_gauss(x, xbar, s1, a1, c, s2, a2):
     :param s2: sigma (width) of [OII]3728 Gaussian fit
     :param a2: amplitude of [OII]3728 Gaussian fit
 
-    :return:
-            [OII] doublet Gaussian fit
+    :return: [OII] doublet Gaussian fit
 
-    '''
+    """
 
     return a1 * np.exp(-(x - xbar) ** 2 / (2 * s1 ** 2)) + c + \
            a2 * np.exp(-(x - (xbar * con1)) ** 2 / (2 * s2 ** 2))
 
 
-def rms_func(wave, dispersion, lambda_in, y0, sigma_array, mask_flag):
-    '''
-
+def rms_func(wave, dispersion, lambda_in, y0, sigma_array, mask_flag,
+             verbose=False, log=None):
+    """
     Purpose:
-        Compute rms in the spectra
+      Compute rms in the spectra
 
     :param wave: numpy array containing rest wavelengths
     :param dispersion: spectral dispersion in AA/pix
     :param lambda_in: central wavelength of fit
     :param y0: numpy array containing spectra in units of erg/s/cm2/AA
     :param sigma_array: Gaussian sigma
-    :param scalefact: Spectra normalization factor
     :param mask_flag: numpy array indicating spectra that are masked for OH
            skyline contamintion
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
 
     :return:
-    '''
+    """
+
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
 
     x_idx = np.where((np.abs(wave - lambda_in) <= 100) & (mask_flag == 0))[0]
 
@@ -95,6 +99,8 @@ def rms_func(wave, dispersion, lambda_in, y0, sigma_array, mask_flag):
 
     if sigma_array == 0:
         RMS = sigma/scalefact
+
+        log_verbose(log, "finished.", verbose=verbose)
         return RMS
     else:
         pix = 5 * sigma_array / dispersion
@@ -102,40 +108,47 @@ def rms_func(wave, dispersion, lambda_in, y0, sigma_array, mask_flag):
         ini_sig = s_pix * sigma * dispersion
         RMS_pix = sigma * dispersion / scalefact
 
+        log_verbose(log, "finished.", verbose=verbose)
         return ini_sig / scalefact, RMS_pix
 
 
-def OIII4363_flux_limit(combine_flux_ascii):
-    '''
-
+def OIII4363_flux_limit(combine_flux_ascii, verbose=False, log=None):
+    """
     Purpose:
-        Determine 3-sigma limit on [OIII]4363 based on H-gamma measurements
+      Determine 3-sigma limit on [OIII]4363 based on H-gamma measurements
 
     :param combine_flux_ascii: filename of ASCII file containing emission-line
                                flux measurements
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
 
     :return: numpy array containing 3-sigma flux limit
-    '''
+    """
+
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
 
     try:
         combine_fits = asc.read(combine_flux_ascii)
     except FileNotFoundError:
-        print("File not found! "+combine_flux_ascii)
+        log.warning(f"File not found! {combine_flux_ascii}")
         return
 
     Hgamma    = combine_fits['HGAMMA_Flux_Observed'].data
     Hgamma_SN = combine_fits['HGAMMA_S/N'].data
 
-    OIII4363_flux_limit = (Hgamma / Hgamma_SN) * 3
+    flux_limit = (Hgamma / Hgamma_SN) * 3
 
-    return OIII4363_flux_limit
+    log_verbose(log, "finished.", verbose=verbose)
+    return flux_limit
 
 
 def movingaverage_box1D(values, width, boundary='fill', fill_value=0.0):
-    '''
-
+    """
     Purpose:
-        Applies as boxcar kernel to smooth spectra
+      Applies as boxcar kernel to smooth spectra
 
     :param values: numpy array containing the spectrum
     :param width: float containing width for smoothing
@@ -145,9 +158,9 @@ def movingaverage_box1D(values, width, boundary='fill', fill_value=0.0):
     :param fill_value: float to indicate fill value for default boundary='fill'
 
     :return smooth: numpy array contained the smoothed/convolved spectrum
-
-    '''
+    """
 
     box_kernel = Box1DKernel(width)
-    smooth = convolve(values, box_kernel, boundary=boundary, fill_value=fill_value)
+    smooth = convolve(values, box_kernel, boundary=boundary,
+                      fill_value=fill_value)
     return smooth

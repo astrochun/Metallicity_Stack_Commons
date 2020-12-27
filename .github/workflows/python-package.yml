@@ -1,0 +1,41 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8']
+
+    steps:
+    - name: Checkout MSC
+      uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Checkout chun_codes
+      uses: actions/checkout@v2
+      with:
+        repository: astrochun/chun_codes
+        path: chun_codes
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install pytest pytest-cov
+    - name: Install MSC
+      run: |
+        python setup.py install
+    - name: Install chun_codes
+      run: |
+        python setup.py install
+      working-directory: chun_codes
+    - name: Test with pytest
+      run: |
+        pytest --cov-report term-missing --cov=Metallicity_Stack_Commons tests

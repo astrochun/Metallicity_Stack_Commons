@@ -1,6 +1,7 @@
 import numpy as np
 
 from .. import k_dict, OIII_r
+from ..logging import log_stdout, log_verbose
 
 from ..column_names import temp_metal_names0, remove_from_list
 
@@ -15,22 +16,31 @@ b = 0.92506
 c = 0.98062
 
 
-def R_calculation(OIII4363, OIII5007):
+def R_calculation(OIII4363, OIII5007, verbose=False, log=None):
     """
     Computes the excitation flux ratio of [OIII]4363 to [OIII]5007.
     Adopts a 3.1-to-1 ratio for 5007/4959
 
     :param OIII4363: numpy array of OIII4363 fluxes
     :param OIII5007: numpy array of OIII5007 fluxes
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
+
     :return R_value: O++ excitation flux ratio
     """
 
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
+
     R_value = OIII4363 / (OIII5007 * (1 + 1/OIII_r))
 
+    log_verbose(log, "finished.", verbose=verbose)
     return R_value
 
 
-def temp_calculation(R, EBV=None):
+def temp_calculation(R, EBV=None, verbose=False, log=None):
     """
     Computes electron temperature (T_e) from O++ excitation flux ratio
 
@@ -40,24 +50,33 @@ def temp_calculation(R, EBV=None):
 
     :param R: numpy array of O++ excitation flux ratio (see R_calculation)
     :param EBV: numpy array of E(B-V).  Set to zero if not applying attenuation
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
 
     :return T_e: numpy array of T_e (Kelvins)
     """
 
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
+
     arr_shape = R.shape
 
     if EBV is None:
-        print("temp_calculation - Not applying dust attenuation correction")
+        log.info("Not applying dust attenuation correction")
         EBV = np.zeros(arr_shape)
 
     R_corr = R * 10 ** (0.4 * EBV * (k_4363 - k_5007))
 
     T_e = a * (-np.log10(R_corr) - b) ** (-1 * c)
 
+    log_verbose(log, "finished.", verbose=verbose)
     return T_e
 
 
-def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
+def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None,
+                            verbose=False, log=None):
     """
     Determines 12+log(O/H) from electron temperature and [OII]/Hb and [OIII]/Hb flux ratio
 
@@ -69,8 +88,16 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
                  requirements. Default: None means full array is considered
                  Note: for MC inputs, a 1-D np.array index satisfying det3
                        requirements will suffice
-    :return metal_dict: dictionary containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
+
+    :return metal_dict: dict containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
+
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
 
     arr_shape = T_e.shape
     t_3 = np.zeros(arr_shape)
@@ -78,7 +105,7 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
     x2 = np.zeros(arr_shape)
 
     if EBV is None:
-        print("metallicity_calculation - Not applying dust attenuation correction")
+        log.info("Not applying dust attenuation correction")
         EBV = np.zeros(arr_shape)
 
     if det3 is None:
@@ -111,4 +138,5 @@ def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None):
     key_values = [com_O_log, O_s_ion_log, O_d_ion_log, O_s_ion, O_d_ion]  # Order matters here
     metal_dict = dict(zip(key_dict, key_values))
 
+    log_verbose(log, "finished.", verbose=verbose)
     return metal_dict

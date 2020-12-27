@@ -1,18 +1,21 @@
 from Metallicity_Stack_Commons import column_names, dir_date, exclude_outliers
-from Metallicity_Stack_Commons import get_user, fitspath_reagen, fitspath_caroline
+from Metallicity_Stack_Commons import get_user, fitspath_dict
 
 from os.path import exists
 from os import rmdir
 
 import numpy as np
+import getpass
+
+import pytest
 
 
 def test_dir_date():
-    mmdd = dir_date('', '')
-    mmddyyyy = dir_date('', '', year=True)
+    mmdd = dir_date('', '', verbose=True)
+    yyyymmdd = dir_date('', '', year=True, verbose=True)
 
     assert exists(mmdd)
-    assert exists(mmddyyyy)
+    assert exists(yyyymmdd)
 
     # Check path existence
     mmdd = dir_date('', '')
@@ -20,17 +23,22 @@ def test_dir_date():
     if exists(mmdd):
         rmdir(mmdd)
 
-    if exists(mmddyyyy):
-        rmdir(mmddyyyy)
+    if exists(yyyymmdd):
+        rmdir(yyyymmdd)
 
     assert len(mmdd) == 5
-    assert len(mmddyyyy) == 9
+    assert len(yyyymmdd) == 9
 
 
 def test_get_user():
 
-    assert get_user('reagenleimbach') == fitspath_reagen
-    assert get_user('carol') == fitspath_caroline
+    for username in ['reagenleimbach', 'carol']:
+        assert get_user(username=username, verbose=True) == fitspath_dict[username]
+
+    with pytest.raises(ValueError):
+        get_user(username='test', verbose=True)
+
+    assert get_user(verbose=True) == fitspath_dict[getpass.getuser()]
 
 
 def test_exclude_outliers():
@@ -39,7 +47,7 @@ def test_exclude_outliers():
               '32007727', '32101412', '42006031', '32035286', '14023705']
 
     for obj in [obj_no, np.array(obj_no)]:
-        flag = exclude_outliers(obj)
+        flag = exclude_outliers(obj, verbose=True)
 
         assert not flag[0]
         assert not flag[1]

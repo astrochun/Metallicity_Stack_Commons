@@ -3,22 +3,33 @@ import numpy as np
 from .. import line_name_short, OIII_r
 from .temp_metallicity_calc import R_calculation
 from ..column_names import bin_ratios0, dust0
+from ..logging import log_stdout, log_verbose
 
 
-def flux_ratios(flux_dict, binned_data=False, get_R=True):
+def flux_ratios(flux_dict, binned_data=False, get_R=True, verbose=False,
+                log=None):
     """
     Purpose:
       Primary code to determine a variety of line ratios based on a dictionary
       containing emission-line fluxes
 
-    :param flux_dict: dictionary containing line ratios
-    :param get_R: Boolean to indicate whether to get OIII4363/OIII5007 flux ratio for temp calculation
+    :param flux_dict: dict containing line ratios
+    :param get_R: bool to indicate to populate with OIII4363/OIII5007 flux ratio
     :param binned_data: bool for whether to analysis binned data. Default: False
-    :return flux_ratios_dict: dictionary containing flux ratios
+    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param log: LogClass or logging object
+
+    :return flux_ratios_dict: dict containing flux ratios
     """
 
+    if log is None:
+        log = log_stdout()
+
+    log_verbose(log, "starting ...", verbose=verbose)
+
     if not binned_data:
-        bin_ratios = [ratios0.replace('_composite', '') for ratios0 in bin_ratios0]
+        bin_ratios = [ratios0.replace('_composite', '')
+                      for ratios0 in bin_ratios0]
         dust = [t_dust.replace('_composite', '') for t_dust in dust0]
     else:
         bin_ratios = bin_ratios0
@@ -57,6 +68,9 @@ def flux_ratios(flux_dict, binned_data=False, get_R=True):
 
     if get_R:
         OIII4363 = flux_dict[line_name_short['4363']]  # Retrieve OIII4363
-        flux_ratios_dict[R_key] = R_calculation(OIII4363, OIII)
+        flux_ratios_dict[R_key] = R_calculation(OIII4363, OIII, verbose=verbose,
+                                                log=log)
+
+    log_verbose(log, "finished.", verbose=verbose)
 
     return flux_ratios_dict
