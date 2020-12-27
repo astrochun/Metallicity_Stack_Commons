@@ -196,9 +196,9 @@ def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
 
         # Calculate E(B-V)
         EBV_HgHb = compute_EBV(Hg_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
-                               source='HgHb')
+                               source='HgHb', verbose=verbose, log=log)
         EBV_HdHb = compute_EBV(Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss'],
-                               source='HdHb')
+                               source='HdHb', verbose=verbose, log=log)
 
         row = ii % n_rows
 
