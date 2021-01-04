@@ -48,7 +48,8 @@ def main(infile: str, log=None):
         reformatted_tab[gauss_cols[ii]] = flux
         reformatted_tab[obs_cols[ii]] = orig_tab[orig_obs_cols[ii]]
         reformatted_tab[flux_rms_cols[ii]] = rms
-        reformatted_tab[sigma_cols[ii]] = gauss_sig
+        if 'OIII_4363' in sigma_cols[ii]:
+            reformatted_tab[sigma_cols[ii]] = gauss_sig
         reformatted_tab[snr_cols[ii]] = orig_tab[orig_snr_cols[ii]]
 
     out_dir = "tests_data/DEEP2_Ly2015"
