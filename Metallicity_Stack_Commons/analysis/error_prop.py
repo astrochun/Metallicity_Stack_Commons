@@ -144,10 +144,14 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
         #
 
         if apply_dust:
-            EBV = compute_EBV(flux_ratios_dict[dust[0]], source=dust[0],
-                              verbose=verbose, log=log)
-            EBV_HdHb = compute_EBV(flux_ratios_dict[dust[1]], source=dust[1],
-                                   verbose=verbose, log=log)
+            EBV = compute_EBV(flux_ratios_dict[dust[0]],
+                              source=dust[0].replace('_composite', ''),
+                              verbose=verbose,
+                              log=log)
+            EBV_HdHb = compute_EBV(flux_ratios_dict[dust[1]],
+                                   source=dust[1].replace('_composite', ''),
+                                   verbose=verbose,
+                                   log=log)
         else:
             EBV = None
             EBV_HdHb = None
@@ -256,9 +260,11 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                         dust[2] + '_low_err': np.repeat(np.nan, len(prop_tab0)),
                         dust[2] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
-            EBV, EBV_peak = compute_EBV(flux_ratios_dict[dust[0]],
-                                        source=dust[0], verbose=verbose,
-                                        log=log)
+            EBV, \
+                EBV_peak = compute_EBV(flux_ratios_dict[dust[0]],
+                                       source=dust[0].replace('_composite', ''),
+                                       verbose=verbose,
+                                       log=log)
 
             err_prop, peak_prop = compute_onesig_pdf(EBV, EBV_peak,
                                                      usepeak=True)
@@ -273,9 +279,10 @@ def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
                              dust[3] + '_low_err': np.repeat(np.nan, len(prop_tab0)),
                              dust[3] + '_high_err': np.repeat(np.nan, len(prop_tab0))}
 
-            EBV_HdHb, EBV_HdHb_peak = compute_EBV(flux_ratios_dict[dust[1]],
-                                                  source=dust[1],
-                                                  verbose=verbose, log=log)
+            EBV_HdHb, \
+                EBV_HdHb_peak = compute_EBV(flux_ratios_dict[dust[1]],
+                                            source=dust[1].replace('_composite', ''),
+                                            verbose=verbose, log=log)
             log.info(EBV_HdHb_peak)
 
             err_prop, peak_prop = compute_onesig_pdf(EBV_HdHb, EBV_HdHb_peak,
