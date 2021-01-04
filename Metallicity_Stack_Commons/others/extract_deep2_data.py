@@ -64,3 +64,12 @@ def main(infile: str, log=None):
         log.info(f"Symlink created to : {output_table}")
     else:
         log.info(f"Symlink exists: {symlink_file}")
+
+    # Write bin_info file to use with valid_table module
+    info_tab = Table()
+    info_tab['bin_ID'] = 1 + np.arange(len(orig_tab))
+    info_tab['N_stack'] = np.repeat(1, len(orig_tab))
+    info_file = join(out_dir, filename_dict['bin_info'])
+    log.info(f"Writing: {info_file}")
+    info_tab.write(info_file, format='ascii.fixed_width_two_line',
+                   overwrite=True)
