@@ -5,8 +5,18 @@ from Metallicity_Stack_Commons.analysis import attenuation
 from Metallicity_Stack_Commons import line_name_short
 from chun_codes import random_pdf
 
+import pytest
+
 
 def test_compute_EBV():
+
+    # Test Error handling when list is provided
+    with pytest.raises(TypeError):
+        attenuation.compute_EBV([0.45, 0.38], verbose=True)
+
+    # Test Error handling when source is incorrect
+    with pytest.raises(KeyError):
+        attenuation.compute_EBV(0.45, source='test', verbose=True)
 
     dx = 0.05  # This is for randomization
 
