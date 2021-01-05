@@ -1,5 +1,7 @@
 # from os.path import exists
 import numpy as np
+from os.path import join, exists
+
 from astropy.io import ascii as asc
 from astropy.table import Table, Column
 
@@ -36,8 +38,8 @@ def make_validation_table(fitspath):
                                         OIII4363_S/N
     """
 
-    bin_table = asc.read(fitspath + filename_dict['bin_info'])
-    em_table = asc.read(fitspath + filename_dict['bin_fit']) 
+    bin_table = asc.read(join(fitspath, filename_dict['bin_info']))
+    em_table = asc.read(join(fitspath, filename_dict['bin_fit']))
 
     bin_ID = em_table['bin_ID'].data
     raw_OIII4363 = em_table['OIII_4363_Flux_Observed'].data
@@ -115,64 +117,19 @@ def compare_to_by_eye(fitspath, dataset):
                                         Notes
 
     """
-    ver_table = fitspath + filename_dict['bin_valid']
-    ver_tab = asc.read(ver_table)
-    indicate = ver_tab['Detection']
-    ID = ver_tab['bin_ID']
 
-    # Detections By Eye
-    if dataset == 'Voronoi20':
-        det_4363 = np.where((ID == 0) | (ID == 2) | (ID == 3) | (ID == 5) | (ID == 6))[0]
-    if dataset == 'Voronoi14':
-        det_4363 = np.where((ID == 0) | (ID == 7) | (ID == 10) | (ID == 11) | (ID == 12))[0]
-    if dataset == 'Voronoi10':
-        det_4363 = np.where((ID == 1) | (ID == 9) | (ID == 18) | (ID == 21))[0]
-    if dataset == 'Grid':
-        det_4363 = np.where((ID == 11) | (ID == 13) | (ID == 19) | (ID == 20) | (ID == 21))[0]
-    if dataset == 'R23_Grid':
-        det_4363 = np.where((ID == 0) | (ID == 4) | (ID == 5) | (ID == 6))[0]
-    if dataset == 'O32_Grid':
-        det_4363 = np.where((ID == 6))[0]
-    if dataset == 'Double_Bin':
-        det_4363 = np.where((ID == 0) | (ID == 1) | (ID == 2) | (ID == 7) | (ID == 9) |
-                            (ID == 10) | (ID == 11) | (ID == 13))[0]
-    if dataset == 'n_Bins':
-        det_4363 = np.where((ID == 10) | (ID == 11) | (ID == 14) | (ID == 15) | (ID == 20) |
-                            (ID == 23) | (ID == 26))[0]
-        rlimit = np.where((ID == 5) | (ID == 7) | (ID == 8) | (ID == 13) | (ID == 16) |
-                          (ID == 17) | (ID == 19) | (ID == 22))[0]
+    valid_rev_file = join(fitspath, filename_dict['bin_valid_rev'])
+    if exists(valid_rev_file):
+        print("!!! Revised validation table exists. Not overwriting! : ", valid_rev_file)
+        raise FileExistsError
+    else:
+        valid_file = join(fitspath, filename_dict['bin_valid'])
+        valid_tab = asc.read(valid_file)
+        indicate = valid_tab['Detection']
+        ID = valid_tab['bin_ID']
 
-    # Caroline: Add you conditions here
+        # Will need to provide a config file that contains the manual inspections
 
-    check_ID = np.zeros(len(ID))
-  
-    check_ID[det_4363] = 1
-    if dataset == 'n_Bins':
-        check_ID[rlimit] = 0.5
+        # Will need to modify table Detection Column
 
-    for ii in range(len(ID)):
-        if check_ID[ii] == indicate[ii]:
-            print(ID[ii], 'matches with by eye validation')
-        else:
-            print('*****', ID[ii], 'does not match calculated values. Please check!')
-
-    # This is where I need to add the column for notes
-    if dataset == 'n_Bins':
-        notes = ['N/A', 'N/A', 'N/A', 'N/A', 'N/A',
-                 'N/A', 'N/A', 'Broad features, but reliable OIII5007 and HGAMMA',
-                 'Bad fit, but good OIII5007', 'N/A',
-                 'N/A', 'N/A', 'N/A', 'N/A', 'N/A',
-                 'High Temperature', 'not fit well, but reliable OIII5007 and HGAMMA',
-                 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A']
-        note_add = Column(name='Notes', data=notes)
-        ver_tab.add_column(note_add, 5)
-
-    # Caroline: Add your notes column here and copy the note_add and ver_tab.add_column lines to your if statement
-
-    ver_tab.remove_column('Detection')
-    
-    detect_add = Column(name='Detection', data=check_ID)
-    ver_tab.add_column(detect_add, 2)
-
-    asc.write(ver_tab, fitspath + filename_dict['bin_valid_rev'], format='fixed_width_two_line')
-    asc.write(ver_tab, fitspath + 'bin_validation_revised.csv', format='csv')
+        asc.write(valid_tab, valid_rev_file, format='fixed_width_two_line')
