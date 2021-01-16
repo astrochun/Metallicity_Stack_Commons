@@ -117,8 +117,8 @@ def dir_date(folder_name, path_init='', year=False, verbose=False, log=None):
 
     fitspath = os.path.join(*list_path)
     try:
-        os.mkdir(fitspath)
-    except FileExistsError:
+        os.makedirs(fitspath)
+    except OSError:
         log.warning(f"Path already exists : {fitspath}")
 
     log_verbose(log, "finished.", verbose=verbose)
