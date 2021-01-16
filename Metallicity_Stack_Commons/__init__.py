@@ -7,7 +7,7 @@ import numpy as np
 
 from .logging import log_stdout, log_verbose
 
-version = "1.2.0"
+version = "1.3.1"
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
 line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
@@ -117,8 +117,8 @@ def dir_date(folder_name, path_init='', year=False, verbose=False, log=None):
 
     fitspath = os.path.join(*list_path)
     try:
-        os.mkdir(fitspath)
-    except FileExistsError:
+        os.makedirs(fitspath)
+    except OSError:
         log.warning(f"Path already exists : {fitspath}")
 
     log_verbose(log, "finished.", verbose=verbose)
