@@ -11,6 +11,7 @@ Welcome to metallicity-stack-commons's documentation!
    :caption: Contents:
 
    intro.rst
+   modules.rst
 
 Indices and tables
 ==================
