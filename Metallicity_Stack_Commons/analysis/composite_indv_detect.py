@@ -32,13 +32,12 @@ def main(fitspath: str, dataset: str, revised: bool = False,
     :param fitspath: Folder full path
     :param dataset: Sub-folder path (specific to stacking approach)
     :param revised: Indicates whether to use revised bin properties
-                    (e.g., *.revised.tbl files). Default: False
+                    (e.g., revised.tbl files). Default: False
     :param det3: Indicates whether individual galaxy files is limited to
                  those satisfying emission-line det3 requirement
                  Default: True
     :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
-
 
     Files identified by default:
 
