@@ -49,15 +49,15 @@ def temp_calculation(R: np.ndarray, EBV: Union[None, np.ndarray] = None,
     Computes electron temperature (T_e) from O++ excitation flux ratio
 
     Formula is:
-        T_e = a(-log(R)-b)^(-c)
-    where a = 13025, b=0.92506, and c=0.98062 (Nicholls et al. 2014)
+      T_e = a(-log(R)-b)^(-c)
+      where a = 13025, b=0.92506, and c=0.98062 (Nicholls et al. 2014)
 
     :param R: Array of O++ excitation flux ratio (see R_calculation)
     :param EBV: Array of E(B-V). Set to zero if not applying attenuation
     :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return T_e: Array of T_e (Kelvins)
+    :return: Array of T_e (Kelvins)
     """
 
     log_verbose(log, "starting ...", verbose=verbose)
