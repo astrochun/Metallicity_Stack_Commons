@@ -21,39 +21,41 @@ two_beta_name = indv_names0[5]
 three_beta_name = indv_names0[6]
 
 
-def main(fitspath, dataset, revised=False, det3=True, verbose=False, log=None):
+def main(fitspath: str, dataset: str, revised: bool = False,
+         det3: bool = True, verbose: bool = False,
+         log: type(log_stdout) = log_stdout()):
     """
-    Purpose:
-      Reads in composite table(s) containing bin information to
-      determine temperature-based metallicity from composite average
-      T_e and individual line ratios ([OII]/H-beta, [OIII]/H-beta)
+    Reads in composite table(s) containing bin information to
+    determine temperature-based metallicity from composite average
+    T_e and individual line ratios ([OII]/H-beta, [OIII]/H-beta)
 
-    :param fitspath: str containing folder path
-    :param dataset: str containing sub-folder (specific to stacking approach)
-    :param revised: Bool indicates whether to use revised bin properties
-                    (e.g., *.revised.tbl files)
-    :param det3: Bool indicates whether individual galaxy files is limited to
+    :param fitspath: Folder full path
+    :param dataset: Sub-folder path (specific to stacking approach)
+    :param revised: Indicates whether to use revised bin properties
+                    (e.g., *.revised.tbl files). Default: False
+    :param det3: Indicates whether individual galaxy files is limited to
                  those satisfying emission-line det3 requirement
                  Default: True
-    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    Files identified by default
-    composite_file: str containing filename of composite data
-      e.g., '[dataset]/bin_derived_properties.tbl' or
-            '[dataset]/bin_derived_properties.revised.tbl'
-    indv_em_line_file: str containing filename that contains
-                     emission-line information for each galaxy
+
+    Files identified by default:
+
+    composite_file: Filename of composite data
+      e.g., '[dataset]/bin_derived_properties.tbl',
+      '[dataset]/bin_derived_properties.revised.tbl'
+
+    indv_em_line_file: Filename that contains emission-line information
+      for each galaxy
       e.g., 'individual_properties.tbl'
-    indv_bin_file: str containing filename tha contains bin information
-                   for each galaxy
+
+    indv_bin_file: Filename that contains bin information for each galaxy
       e.g., '[dataset]/individual_bin_info.tbl'
-    outfile: str containing filename of output file
+
+    outfile: Filename of output file
       e.g., '[dataset]/individual_derived_properties.tbl'
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
