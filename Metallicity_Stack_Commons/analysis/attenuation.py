@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Tuple
 
 import numpy as np
 
@@ -23,7 +23,8 @@ k_HDELTA = k_dict[HD]
 
 def compute_EBV(ratio: Union[float, np.ndarray], source: str = 'HgHb',
                 zero_neg: bool = True, verbose: bool = False,
-                log: type(log_stdout) = log_stdout()):
+                log: type(log_stdout) = log_stdout()) -> \
+        Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
     """
     Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
 
@@ -35,11 +36,11 @@ def compute_EBV(ratio: Union[float, np.ndarray], source: str = 'HgHb',
     :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return EBV: E(B-V) values
-            Note: Not correcting for negative reddening
-    :rtype: float|np.ndarray
-    :return EBV_peak: E(B-V) peak values
-    :rtype: float|np.ndarray
+    :return: E(B-V) values, E(B-V) peak values
+
+    Note:
+      When only E(B-V) values is returned, correction does not account
+      for negative reddening
     """
 
     log_verbose(log, "starting ...", verbose=verbose)
