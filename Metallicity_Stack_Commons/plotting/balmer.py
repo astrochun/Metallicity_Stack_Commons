@@ -1,11 +1,11 @@
 """
-    balmer
-    ------
+balmer
+------
 
-    Generates plots illustrating Balmer recombination lines
+Generates plots illustrating Balmer recombination lines
 
-    This code was created from:
-      https://github.com/astrochun/Zcalbase_gal/blob/master/Analysis/DEEP2_R23_O32/balmer_plots.py
+This code was created from:
+  https://github.com/astrochun/Zcalbase_gal/blob/master/Analysis/DEEP2_R23_O32/balmer_plots.py
 """
 
 from os.path import join
