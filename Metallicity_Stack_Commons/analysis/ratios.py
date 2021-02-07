@@ -19,7 +19,7 @@ def flux_ratios(flux_dict: dict, binned_data: bool = False,
     :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return flux_ratios_dict: Contains emission-line flux ratios
+    :return: Emission-line flux ratios
     """
 
     log_verbose(log, "starting ...", verbose=verbose)
