@@ -1,0 +1,19 @@
+name: "Sphinx Docs Check"
+on:
+  push:
+    paths:
+    - 'docs/**'
+    - 'Metallicity_Stack_Commons/**'
+  pull_request:
+    paths:
+    - 'docs/**'
+    - 'Metallicity_Stack_Commons/**'
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ammaraskar/sphinx-action@master
+      with:
+        docs-folder: "docs/"
