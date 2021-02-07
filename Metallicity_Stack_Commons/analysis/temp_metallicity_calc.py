@@ -31,7 +31,7 @@ def R_calculation(OIII4363: Union[float, np.ndarray],
     :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return R_value: O++ excitation flux ratio
+    :return: O++ excitation flux ratio
     """
 
     log_verbose(log, "starting ...", verbose=verbose)
@@ -98,7 +98,7 @@ def metallicity_calculation(T_e: np.ndarray, TWO_BETA: np.ndarray,
     :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return metal_dict: Contains 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
+    :return: Contains 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
 
     if log is None:
