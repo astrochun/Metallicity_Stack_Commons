@@ -9,10 +9,13 @@
 """
 
 from os.path import join
+from typing import Union
+
 import numpy as np
 import matplotlib.pyplot as plt
 from astropy.io import fits
 from astropy.io import ascii as asc
+from astropy.table import Table
 from matplotlib.backends.backend_pdf import PdfPages
 
 from ..analysis.fitting import gauss, double_gauss
@@ -26,24 +29,21 @@ n_rows = 3
 n_cols = 3
 
 
-def extract_fit(astropy_table, line_name, balmer=False, verbose=False,
-                log=None):
+def extract_fit(astropy_table: Table, line_name: str, balmer: bool = False,
+                verbose: bool = False, log: type(log_stdout) = log_stdout()) \
+        -> Union[None, dict]:
     """
-    Purpose:
-      Extract best fit from table and fluxes, return a list of
-      fitting parameters and fluxes
+    Extract best fit from table and fluxes, return a list of
+    fitting parameters and fluxes
 
     :param astropy_table: Astropy table containing fitting result
-    :param line_name: line to extract fit results
-    :param balmer: boolean to indicate whether line is a Balmer line
-    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param line_name: Name of Line to extract fit results
+    :param balmer: Indicate whether line is a Balmer line
+    :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return result_dict: dict of fitting results
+    :return: Fitting results
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
@@ -78,22 +78,23 @@ def extract_fit(astropy_table, line_name, balmer=False, verbose=False,
     return result_dict
 
 
-def fitting_result(wave, y_norm, lambda_cen, line_fit, line_fit_neg,
-                   flux_gauss, flux_spec, use_revised=False):
+def fitting_result(wave: np.ndarray, y_norm: np.ndarray, lambda_cen: float,
+                   line_fit: list, line_fit_neg: list, flux_gauss: float,
+                   flux_spec: float, use_revised: bool = False) -> dict:
     """
-    Purpose:
-      Returns fitting results based on inputs of best fit
+    Returns fitting results based on inputs of best fit
 
-    :param wave: numpy array of rest-frame wavelength
+    :param wave: Array of rest-frame wavelengths
     :param y_norm: Normalize 1-D spectra in units of 10^-17 erg/s/cm2/AA
     :param lambda_cen: Central wavelength in Angstroms
-    :param line_fit: list containing Balmer emission fits
-    :param line_fit_neg: list containing the absorption ("stellar") Balmer fit
-    :param flux_gauss: float containing flux from Gaussian model
-    :param flux_spec: float containing flux from spectrum (above median)
-    :param use_revised: bool to indicate whether fluxes have been revised. Default: False
+    :param line_fit: List containing Balmer emission fits
+    :param line_fit_neg: List containing the absorption ("stellar") Balmer fit
+    :param flux_gauss: Flux from Gaussian model
+    :param flux_spec: Flux from spectrum (above median)
+    :param use_revised: Indicate whether fluxes have been revised.
+                        Default: False
 
-    :return fit_dict: dict of fitting results
+    :return: Dictionary of fitting results
     """
 
     dx = wave[2] - wave[1]
@@ -125,22 +126,19 @@ def fitting_result(wave, y_norm, lambda_cen, line_fit, line_fit_neg,
 
 
 # noinspection PyUnboundLocalVariable
-def HbHgHd_fits(fitspath, out_pdf_prefix='HbHgHd_fits',
-                use_revised=False, verbose=False, log=None):
+def HbHgHd_fits(fitspath: str, out_pdf_prefix: str ='HbHgHd_fits',
+                use_revised: bool = False, verbose: bool = False,
+                log: type(log_stdout) = log_stdout()):
     """
-    Purpose:
-      Generate PDF plots that illustrate H-delta, H-gamma, and H-beta line
-      profiles and best fit
+    Generate PDF plots that illustrate H-delta, H-gamma, and H-beta line
+    profiles and best fit
 
-    :param fitspath: full path (str)
-    :param out_pdf_prefix: Prefix for outpute PDF file (str)
-    :param use_revised: Indicate whether to use regular or revised tables (bool)
-    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param fitspath: Full path
+    :param out_pdf_prefix: Prefix for output PDF file
+    :param use_revised: Indicate whether to use regular or revised tables
+    :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 

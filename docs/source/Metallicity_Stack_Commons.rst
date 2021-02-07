@@ -9,7 +9,7 @@ Subpackages
 
    Metallicity_Stack_Commons.analysis
    Metallicity_Stack_Commons.others
-
+   Metallicity_Stack_Commons.plotting
 
 Submodules
 ----------
