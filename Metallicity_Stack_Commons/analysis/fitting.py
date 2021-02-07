@@ -117,7 +117,7 @@ def OIII4363_flux_limit(combine_flux_file: str, verbose: bool = False,
     :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return flux_limit: Array containing 3-sigma flux limit
+    :return: Array containing 3-sigma flux limit
     """
 
     log_verbose(log, "starting ...", verbose=verbose)
@@ -150,7 +150,7 @@ def movingaverage_box1D(values: np.ndarray, width: float,
                      See astropy.convolution.convolve for more information
     :param fill_value: Indicate fill value for default boundary='fill'
 
-    :return smooth: Array contained the smoothed/convolved spectrum
+    :return: Array contained the smoothed/convolved spectrum
     """
 
     box_kernel = Box1DKernel(width)
