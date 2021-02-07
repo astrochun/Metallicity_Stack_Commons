@@ -1,3 +1,4 @@
+from typing import Union
 import numpy as np
 
 from .. import k_dict, OIII_r
@@ -16,21 +17,22 @@ b = 0.92506
 c = 0.98062
 
 
-def R_calculation(OIII4363, OIII5007, verbose=False, log=None):
+def R_calculation(OIII4363: Union[float, np.ndarray],
+                  OIII5007: Union[float, np.ndarray],
+                  verbose: bool = False,
+                  log: type(log_stdout) = log_stdout()) \
+        -> Union[float, np.ndarray]:
     """
     Computes the excitation flux ratio of [OIII]4363 to [OIII]5007.
     Adopts a 3.1-to-1 ratio for 5007/4959
 
-    :param OIII4363: numpy array of OIII4363 fluxes
-    :param OIII5007: numpy array of OIII5007 fluxes
-    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param OIII4363: OIII4363 fluxes
+    :param OIII5007: OIII5007 fluxes
+    :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
     :return R_value: O++ excitation flux ratio
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
@@ -40,7 +42,9 @@ def R_calculation(OIII4363, OIII5007, verbose=False, log=None):
     return R_value
 
 
-def temp_calculation(R, EBV=None, verbose=False, log=None):
+def temp_calculation(R: np.ndarray, EBV: Union[None, np.ndarray] = None,
+                     verbose: bool = False,
+                     log: type(log_stdout) = log_stdout()) -> np.ndarray:
     """
     Computes electron temperature (T_e) from O++ excitation flux ratio
 
@@ -48,16 +52,13 @@ def temp_calculation(R, EBV=None, verbose=False, log=None):
         T_e = a(-log(R)-b)^(-c)
     where a = 13025, b=0.92506, and c=0.98062 (Nicholls et al. 2014)
 
-    :param R: numpy array of O++ excitation flux ratio (see R_calculation)
-    :param EBV: numpy array of E(B-V).  Set to zero if not applying attenuation
-    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param R: Array of O++ excitation flux ratio (see R_calculation)
+    :param EBV: Array of E(B-V). Set to zero if not applying attenuation
+    :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return T_e: numpy array of T_e (Kelvins)
+    :return T_e: Array of T_e (Kelvins)
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
@@ -75,23 +76,29 @@ def temp_calculation(R, EBV=None, verbose=False, log=None):
     return T_e
 
 
-def metallicity_calculation(T_e, TWO_BETA, THREE_BETA, EBV=None, det3=None,
-                            verbose=False, log=None):
+def metallicity_calculation(T_e: np.ndarray, TWO_BETA: np.ndarray,
+                            THREE_BETA: np.ndarray,
+                            EBV: Union[None, np.ndarray] = None,
+                            det3: Union[None, np.ndarray] = None,
+                            verbose: bool = False,
+                            log: type(log_stdout) = log_stdout()) -> dict:
     """
-    Determines 12+log(O/H) from electron temperature and [OII]/Hb and [OIII]/Hb flux ratio
+    Determines 12+log(O/H) from electron temperature and [OII]/Hb and
+    [OIII]/Hb flux ratio
 
-    :param T_e: numpy array of temperature (see temp_calculation)
-    :param TWO_BETA: numpy array of [OII]/Hb flux ratio
-    :param THREE_BETA: numpy array of [OIII]/Hb flux ratio
-    :param EBV: Optional array input containing EBV distribution
+    :param T_e: Array of electron temperatures (see ``temp_calculation``)
+    :param TWO_BETA: Array of [OII]/Hb flux ratios
+    :param THREE_BETA: Array of [OIII]/Hb flux ratios
+    :param EBV: Optional array containing EBV distribution
     :param det3: Optional array to pass in to identify those satisfying det3
                  requirements. Default: None means full array is considered
-                 Note: for MC inputs, a 1-D np.array index satisfying det3
-                       requirements will suffice
-    :param verbose: bool to write verbose message to stdout. Default: file only
+
+                 Note: for Monte Carlo inputs, a 1-D np.array index satisfying
+                       det3 requirements will suffice
+    :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return metal_dict: dict containing 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
+    :return metal_dict: Contains 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
 
     if log is None:
