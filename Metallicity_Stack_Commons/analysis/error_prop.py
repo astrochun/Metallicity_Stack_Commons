@@ -15,22 +15,17 @@ from .. import line_name
 from ..logging import log_stdout, log_verbose
 
 
-def write_npz(path, npz_files, dict_list, verbose=False, log=None):
+def write_npz(path: str, npz_files: list, dict_list: list,
+              verbose: bool = False, log: type(log_stdout) = log_stdout()):
     """
-    Purpose:
-      Write numpy files with provided dictionaries
+    Write numpy files with provided dictionaries
 
-    :param path: str - prefix for filename output
-    :param npz_files: list - contains npz file names
-    :param dict_list: list - contains dictionaries for each corresponding npz file
-    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param path: Prefix for filename output
+    :param npz_files: NPZ file names
+    :param dict_list: List of dict for each corresponding npz file
+    :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
-
-    :return: Write npz files
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
@@ -45,26 +40,24 @@ def write_npz(path, npz_files, dict_list, verbose=False, log=None):
     log_verbose(log, "finished.", verbose=verbose)
 
 
-def fluxes_derived_prop(path, raw=False, binned_data=True, apply_dust=False,
-                        revised=True, verbose=False, log=None):
+def fluxes_derived_prop(path: str, raw: bool = False,
+                        binned_data: bool = True, apply_dust: bool = False,
+                        revised: bool = True, verbose: bool = False,
+                        log: type(log_stdout) = log_stdout()):
     """
-    Purpose:
-      Use measurements and their uncertainties to perform a randomization
-      approach. The randomization is performed on individual emission lines.
-      It carries that information to derived flux ratios and then
-      determines electron temperature and metallicity
+    Use measurements and their uncertainties to perform a randomization
+    approach. The randomization is performed on individual emission lines.
+    It carries that information to derived flux ratios and then
+    determines electron temperature and metallicity
 
-    :param path: str of full path
-    :param raw: bool to do a simple calculation, no randomization. Default: False
-    :param binned_data: bool for whether to analysis binned data. Default: True
-    :param apply_dust: bool for whether to apply dust attenuation. Default: False
-    :param revised: bool to indicate if revised validation table is used. Default: True
-    :param verbose: bool to write verbose message to stdout. Default: file only
+    :param path: Full path
+    :param raw: Do a simple calculation, no randomization. Default: False
+    :param binned_data: Whether to analyze binned data. Default: True
+    :param apply_dust: Whether to apply dust attenuation. Default: False
+    :param revised: Indicate if revised validation table is used. Default: True
+    :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
