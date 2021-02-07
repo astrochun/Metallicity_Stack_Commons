@@ -120,7 +120,7 @@ def merge_column_names(*args: list) -> list:
 
     :param args: An undefined number of lists
 
-    :return merge_list: Merged list
+    :return: Merged list
     """
 
     merge_list = list()
@@ -140,6 +140,8 @@ def remove_from_list(list0: list, remove_entries: list) -> list:
 
     :param list0: List of column names
     :param remove_entries: List of column names to remove
+
+    :return: List of column names after removal
     """
 
     if py_vers == 3:
