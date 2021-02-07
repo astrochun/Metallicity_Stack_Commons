@@ -124,7 +124,8 @@ def dir_date(folder_name: str, path_init: str = '', year: bool = False,
 
 
 def get_user(username: Union[None, str] = None,
-             verbose: bool = False, log=None) -> str:
+             verbose: bool = False,
+             log: type(log_stdout) = log_stdout()) -> str:
     """
     Get the corresponding path for a given ``username``
 
