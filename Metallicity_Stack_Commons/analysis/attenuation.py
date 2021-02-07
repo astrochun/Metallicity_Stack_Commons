@@ -104,14 +104,14 @@ def compute_A(EBV: float, verbose: bool = False,
            Default: file only
     :param log: LogClass or logging object
 
-    :return A_dict: Contains A(lambda) with keys identical to ``k_dict``
+    :return: A(lambda) with keys identical to ``k_dict``
     """
 
     log_verbose(log, "starting ...", verbose=verbose)
 
-    k_arr  = np.array(list(k_dict.values()))
+    k_arr = np.array(list(k_dict.values()))
 
-    A_arr  = k_arr * EBV
+    A_arr = k_arr * EBV
     A_dict = dict(zip(list(k_dict.keys()), A_arr))
 
     log_verbose(log, "finished.", verbose=verbose)
@@ -123,7 +123,7 @@ def line_ratio_atten(ratio: Union[float, np.ndarray],
                      wave_top: str, wave_bottom: str,
                      verbose: bool = False,
                      log: type(log_stdout) = log_stdout()) -> \
-    Union[float, np.ndarray]:
+        Union[float, np.ndarray]:
     """
     Determine dust-corrected emission-line ratios
 
@@ -135,12 +135,12 @@ def line_ratio_atten(ratio: Union[float, np.ndarray],
            Default: file only
     :param log: LogClass or logging object
 
-    :return ratio_atten: Float or array of dust-corrected flux ratios
+    :return: Float or array of dust-corrected flux ratios
     """
 
     log_verbose(log, "starting ...", verbose=verbose)
 
-    k_top    = k_dict[wave_top]
+    k_top = k_dict[wave_top]
     k_bottom = k_dict[wave_bottom]
 
     ratio_atten = ratio * 10**(0.4*EBV*(k_top - k_bottom))
@@ -166,7 +166,7 @@ def Hb_SFR(log_LHb: Union[float, np.ndarray],
     :param verbose: Write verbose message to stdout. Default: file only
     :param log: LogClass or logging object
 
-    :return logSFR: SFRs in logarithmic units of M_sun/yr
+    :return: SFRs in logarithmic units of M_sun/yr
     """
 
     log_verbose(log, "starting ...", verbose=verbose)
