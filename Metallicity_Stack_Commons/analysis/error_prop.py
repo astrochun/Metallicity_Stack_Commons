@@ -44,7 +44,7 @@ def write_npz(path: str, npz_files: list, dict_list: list,
 def fluxes_derived_prop(path: str, raw: bool = False,
                         binned_data: bool = True, apply_dust: bool = False,
                         revised: bool = True, verbose: bool = False,
-                        log: type(log_stdout) = log_stdout()):
+                        log: Logger = log_stdout()):
     """
     Use measurements and their uncertainties to perform a randomization
     approach. The randomization is performed on individual emission lines.
