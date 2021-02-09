@@ -13,7 +13,16 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: ammaraskar/sphinx-action@master
+    - name: Checkout chun_codes
+      uses: actions/checkout@v2
+      with:
+        repository: astrochun/chun_codes
+        path: chun_codes
+    - name: Install chun_codes
+      run: |
+        python setup.py install
+      working-directory: chun_codes
+    - name: Sphinx build
+      uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
