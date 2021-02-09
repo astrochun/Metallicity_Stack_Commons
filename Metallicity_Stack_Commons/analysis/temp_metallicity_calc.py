@@ -101,9 +101,6 @@ def metallicity_calculation(T_e: np.ndarray, TWO_BETA: np.ndarray,
     :return: Contains 12+log(O/H), O+/H, O++/H, log(O+/H), log(O++/H)
     """
 
-    if log is None:
-        log = log_stdout()
-
     log_verbose(log, "starting ...", verbose=verbose)
 
     arr_shape = T_e.shape
