@@ -20,7 +20,7 @@ jobs:
         path: chun_codes
     - name: Install chun_codes
       run: |
-        python setup.py install
+        python3 setup.py develop
       working-directory: chun_codes
     - name: Sphinx build
       uses: ammaraskar/sphinx-action@master
