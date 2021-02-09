@@ -1,3 +1,4 @@
+from logging import Logger
 from os.path import exists, join
 from os import symlink
 import numpy as np
@@ -10,16 +11,14 @@ from .. import line_name
 from ..column_names import filename_dict
 
 
-def main(infile: str, log=None):
+def main(infile: str, log: Logger = log_stdout()):
     """
     Import previous DEEP2 Ly et al. (2015) dataset and export
     an astropy Table called bin_fit.tbl
 
     :param infile: Input filename
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
     """
-    if log is None:
-        log = log_stdout()
 
     log.info(f"Reading : {infile}")
     orig_tab = fits.getdata(infile)
