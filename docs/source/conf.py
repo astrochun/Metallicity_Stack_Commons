@@ -24,7 +24,7 @@ copyright = '2021, Chun Ly, Reagen Leimbach, and Caroline McCormick'
 author = 'Chun Ly, Reagen Leimbach, and Caroline McCormick'
 
 # The full version, including alpha/beta/rc tags
-release = '1.4.0'
+release = '1.3.1'
 
 
 # -- General configuration ---------------------------------------------------
