@@ -12,7 +12,15 @@ on:
 jobs:
   docs:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8']
+
     steps:
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
     - name: Checkout chun_codes
       uses: actions/checkout@v2
       with:
@@ -20,7 +28,7 @@ jobs:
         path: chun_codes
     - name: Install chun_codes
       run: |
-        python3 setup.py develop
+        python setup.py install
       working-directory: chun_codes
     - name: Sphinx build
       uses: ammaraskar/sphinx-action@master
