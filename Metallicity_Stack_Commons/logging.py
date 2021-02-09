@@ -30,7 +30,7 @@ class LogClass:
     def __init__(self, log_dir: str, logfile: str):
         self.LOG_FILENAME = join(log_dir, logfile)
 
-    def get_logger(self):
+    def get_logger(self) -> logging.Logger:
         file_log_level = logging.DEBUG  # This is for file logging
         log = logging.getLogger("main_logger")
         if not log.handlers:
