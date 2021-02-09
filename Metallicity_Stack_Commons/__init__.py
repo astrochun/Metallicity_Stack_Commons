@@ -1,3 +1,4 @@
+from logging import Logger
 from typing import Union
 
 from chun_codes.cardelli import cardelli
@@ -54,7 +55,7 @@ k_dict   = dict(zip(line_name, k_values))
 
 
 def exclude_outliers(objno: Union[list, np.ndarray], verbose: bool = False,
-                     log: type(log_stdout) = log_stdout()) -> np.ndarray:
+                     log: Logger = log_stdout()) -> np.ndarray:
     """
     Exclude spectra that are identified as outliers.
 
@@ -82,7 +83,7 @@ def exclude_outliers(objno: Union[list, np.ndarray], verbose: bool = False,
 
 
 def dir_date(folder_name: str, path_init: str = '', year: bool = False,
-             verbose: bool = False, log: type(log_stdout) = log_stdout()) \
+             verbose: bool = False, log: Logger = log_stdout()) \
         -> str:
     """
     This function finds and returns the path to a directory named after the
@@ -124,8 +125,7 @@ def dir_date(folder_name: str, path_init: str = '', year: bool = False,
 
 
 def get_user(username: Union[None, str] = None,
-             verbose: bool = False,
-             log: type(log_stdout) = log_stdout()) -> str:
+             verbose: bool = False, log: Logger = log_stdout()) -> str:
     """
     Get the corresponding path for a given ``username``
 
