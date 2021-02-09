@@ -8,6 +8,7 @@ This code was created from:
   https://github.com/astrochun/Zcalbase_gal/blob/master/Analysis/DEEP2_R23_O32/balmer_plots.py
 """
 
+from logging import Logger
 from os.path import join
 from typing import Union
 
@@ -30,7 +31,7 @@ n_cols = 3
 
 
 def extract_fit(astropy_table: Table, line_name: str, balmer: bool = False,
-                verbose: bool = False, log: type(log_stdout) = log_stdout()) \
+                verbose: bool = False, log: Logger = log_stdout()) \
         -> Union[None, dict]:
     """
     Extract best fit from table and fluxes, return a list of
@@ -40,7 +41,7 @@ def extract_fit(astropy_table: Table, line_name: str, balmer: bool = False,
     :param line_name: Name of Line to extract fit results
     :param balmer: Indicate whether line is a Balmer line
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: Fitting results
     """
@@ -128,7 +129,7 @@ def fitting_result(wave: np.ndarray, y_norm: np.ndarray, lambda_cen: float,
 # noinspection PyUnboundLocalVariable
 def HbHgHd_fits(fitspath: str, out_pdf_prefix: str ='HbHgHd_fits',
                 use_revised: bool = False, verbose: bool = False,
-                log: type(log_stdout) = log_stdout()):
+                log: Logger = log_stdout()):
     """
     Generate PDF plots that illustrate H-delta, H-gamma, and H-beta line
     profiles and best fit
@@ -137,7 +138,7 @@ def HbHgHd_fits(fitspath: str, out_pdf_prefix: str ='HbHgHd_fits',
     :param out_pdf_prefix: Prefix for output PDF file
     :param use_revised: Indicate whether to use regular or revised tables
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
     """
 
     log_verbose(log, "starting ...", verbose=verbose)

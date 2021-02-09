@@ -1,3 +1,4 @@
+from logging import Logger
 from typing import Union
 import numpy as np
 from astropy.convolution import Box1DKernel, convolve
@@ -69,7 +70,7 @@ def oxy2_gauss(x: np.ndarray, xbar: float, s1: float, a1: float, c: float,
 
 def rms_func(wave: np.ndarray, dispersion: float, lambda_in: float,
              y0: np.ndarray, sigma_array: float, mask_flag: np.ndarray,
-             verbose: bool = False, log: type(log_stdout) = log_stdout()):
+             verbose: bool = False, log: Logger = log_stdout()):
     """
     Compute rms in the spectra
 
@@ -80,7 +81,7 @@ def rms_func(wave: np.ndarray, dispersion: float, lambda_in: float,
     :param sigma_array: Gaussian sigma (AA)
     :param mask_flag: Indicates spectra are masked for OH skyline contamination
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return:
     """
@@ -107,7 +108,7 @@ def rms_func(wave: np.ndarray, dispersion: float, lambda_in: float,
 
 
 def OIII4363_flux_limit(combine_flux_file: str, verbose: bool = False,
-                        log: type(log_stdout) = log_stdout()) -> \
+                        log: Logger = log_stdout()) -> \
         Union[None, np.ndarray]:
     """
     Determine 3-sigma limit on [OIII]4363 based on H-gamma measurements
@@ -115,7 +116,7 @@ def OIII4363_flux_limit(combine_flux_file: str, verbose: bool = False,
     :param combine_flux_file: Filename of ASCII file containing emission-line
                               flux measurements
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: Array containing 3-sigma flux limit
     """

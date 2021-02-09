@@ -1,14 +1,12 @@
 import sys
 from os.path import join
 from os import uname
-from typing import Union
 
 from getpass import getuser
 from socket import gethostname
 from requests import get
 
 import logging
-
 
 log_format = '%(asctime)s %(levelname)7s - %(module)21s %(funcName)23s : %(message)s'
 formatter = logging.Formatter(log_format, "%H:%M:%S")
@@ -53,7 +51,7 @@ class LogClass:
         return log
 
 
-def log_stdout() -> type(logging.getLogger()):
+def log_stdout() -> logging.Logger:
     """
     Returns stdout logging object
     """
@@ -89,12 +87,12 @@ def get_user_hostname() -> dict:
     return sys_info
 
 
-def log_verbose(log: Union[type(logging.getLogger()), logging.Logger],
+def log_verbose(log: logging.Logger,
                 message: str, verbose: bool = False):
     """
     Log message depending on verbosity
 
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
     :param message: Message
     :param verbose: Write verbose message to stdout. Default: file only
     """

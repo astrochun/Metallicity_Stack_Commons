@@ -1,3 +1,4 @@
+from logging import Logger
 from typing import Tuple
 import numpy as np
 
@@ -9,7 +10,7 @@ from .logging import log_stdout, log_verbose
 
 
 def get_index(det4363_table: Table, input_table: Table, column_name: str,
-              verbose: bool = False, log: type(log_stdout) = log_stdout()) -> \
+              verbose: bool = False, log: Logger = log_stdout()) -> \
         Tuple[np.ndarray, np.ndarray]:
     """
     Uses either OBJNO or AP/SLIT info to get index for an existing table
@@ -18,7 +19,7 @@ def get_index(det4363_table: Table, input_table: Table, column_name: str,
     :param input_table: Astropy table containing the entire sample to be updated
     :param column_name: Column name for cross-matching
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: Index arrays for ``det4363_table``, ``input_table``
     """

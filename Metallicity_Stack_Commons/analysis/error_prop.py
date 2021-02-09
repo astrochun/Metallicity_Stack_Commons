@@ -1,3 +1,4 @@
+from logging import Logger
 from os.path import join, exists
 
 from chun_codes import random_pdf, compute_onesig_pdf
@@ -16,7 +17,7 @@ from ..logging import log_stdout, log_verbose
 
 
 def write_npz(path: str, npz_files: list, dict_list: list,
-              verbose: bool = False, log: type(log_stdout) = log_stdout()):
+              verbose: bool = False, log: Logger = log_stdout()):
     """
     Write numpy files with provided dictionaries
 
@@ -24,7 +25,7 @@ def write_npz(path: str, npz_files: list, dict_list: list,
     :param npz_files: NPZ file names
     :param dict_list: List of dict for each corresponding npz file
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
     """
 
     log_verbose(log, "starting ...", verbose=verbose)
@@ -56,7 +57,7 @@ def fluxes_derived_prop(path: str, raw: bool = False,
     :param apply_dust: Whether to apply dust attenuation. Default: False
     :param revised: Indicate if revised validation table is used. Default: True
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
     """
 
     log_verbose(log, "starting ...", verbose=verbose)

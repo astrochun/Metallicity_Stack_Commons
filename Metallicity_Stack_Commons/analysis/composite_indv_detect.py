@@ -1,3 +1,5 @@
+from logging import Logger
+
 from os.path import join
 from os.path import exists
 
@@ -23,7 +25,7 @@ three_beta_name = indv_names0[6]
 
 def main(fitspath: str, dataset: str, revised: bool = False,
          det3: bool = True, verbose: bool = False,
-         log: type(log_stdout) = log_stdout()):
+         log: Logger = log_stdout()):
     """
     Reads in composite table(s) containing bin information to
     determine temperature-based metallicity from composite average
@@ -37,7 +39,7 @@ def main(fitspath: str, dataset: str, revised: bool = False,
                  those satisfying emission-line det3 requirement
                  Default: True
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     Files identified by default:
 

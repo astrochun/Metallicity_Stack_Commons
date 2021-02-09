@@ -1,3 +1,4 @@
+from logging import Logger
 from typing import Union, Tuple
 
 import numpy as np
@@ -23,7 +24,7 @@ k_HDELTA = k_dict[HD]
 
 def compute_EBV(ratio: Union[float, np.ndarray], source: str = 'HgHb',
                 zero_neg: bool = True, verbose: bool = False,
-                log: type(log_stdout) = log_stdout()) -> \
+                log: Logger = log_stdout()) -> \
         Union[float, np.ndarray, Tuple[np.ndarray, np.ndarray]]:
     """
     Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
@@ -34,7 +35,7 @@ def compute_EBV(ratio: Union[float, np.ndarray], source: str = 'HgHb',
     :param zero_neg: Indicate whether to zero out negative reddening.
                      Default: True
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: E(B-V) values, E(B-V) peak values
 
@@ -93,7 +94,7 @@ def compute_EBV(ratio: Union[float, np.ndarray], source: str = 'HgHb',
 
 
 def compute_A(EBV: float, verbose: bool = False,
-              log: type(log_stdout) = log_stdout()) -> dict:
+              log: Logger = log_stdout()) -> dict:
     """
     Compute A(Lambda) for all possible emission lines
 
@@ -103,7 +104,7 @@ def compute_A(EBV: float, verbose: bool = False,
 
     :param verbose: Write verbose message to stdout.
            Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: A(lambda) with keys identical to ``k_dict``
     """
@@ -123,7 +124,7 @@ def line_ratio_atten(ratio: Union[float, np.ndarray],
                      EBV: Union[float, np.ndarray],
                      wave_top: str, wave_bottom: str,
                      verbose: bool = False,
-                     log: type(log_stdout) = log_stdout()) -> \
+                     log: Logger = log_stdout()) -> \
         Union[float, np.ndarray]:
     """
     Determine dust-corrected emission-line ratios
@@ -134,7 +135,7 @@ def line_ratio_atten(ratio: Union[float, np.ndarray],
     :param wave_bottom: Emission-line name for flux ratio denominator
     :param verbose: Write verbose message to stdout.
            Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: Float or array of dust-corrected flux ratios
     """
@@ -153,7 +154,7 @@ def line_ratio_atten(ratio: Union[float, np.ndarray],
 def Hb_SFR(log_LHb: Union[float, np.ndarray],
            EBV: Union[float, np.ndarray],
            verbose: bool = False,
-           log: type(log_stdout) = log_stdout()) -> \
+           log: Logger = log_stdout()) -> \
         Union[float, np.ndarray]:
     """
     Determine dust-corrected SFR using the H-beta luminosity and a
@@ -165,7 +166,7 @@ def Hb_SFR(log_LHb: Union[float, np.ndarray],
     :param log_LHb: Logarithm of H-beta luminosity in units of erg/s
     :param EBV: E(B-V) value(s)
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: SFRs in logarithmic units of M_sun/yr
     """

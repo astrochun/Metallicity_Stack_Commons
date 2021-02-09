@@ -62,7 +62,7 @@ def exclude_outliers(objno: Union[list, np.ndarray], verbose: bool = False,
 
     :param objno: Array of eight-digit identifier
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: Array of zeros (not flagged) and ones (flagged
     """
@@ -99,7 +99,7 @@ def dir_date(folder_name: str, path_init: str = '', year: bool = False,
     :param path_init: root path. Default: empty string
     :param year: Indicate whether to include year in date folder. Default: False
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: Full path to the date directory
     """
@@ -131,7 +131,7 @@ def get_user(username: Union[None, str] = None,
 
     :param username: Optional input for username
     :param verbose: Write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log: logging.Logger object
 
     :return: Full path to the date directory
     """
