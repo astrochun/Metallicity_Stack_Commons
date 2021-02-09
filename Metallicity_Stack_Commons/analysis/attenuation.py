@@ -24,7 +24,7 @@ k_HDELTA = k_dict[HD]
 def compute_EBV(ratio: Union[float, np.ndarray], source: str = 'HgHb',
                 zero_neg: bool = True, verbose: bool = False,
                 log: type(log_stdout) = log_stdout()) -> \
-        Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
+        Union[float, np.ndarray, Tuple[np.ndarray, np.ndarray]]:
     """
     Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
 
