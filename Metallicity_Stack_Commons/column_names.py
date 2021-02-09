@@ -6,15 +6,15 @@ py_vers = sys.version_info.major
 
 
 # Need to define here
-def line_fit_suffix_add(line_name0, line_type0):
+def line_fit_suffix_add(line_name0: str, line_type0: str) -> list:
     """
-    Purpose:
-      Simple list comprehension combining emission line fit suffixes with
-      the emission line.  This works for individual lines
+    Simple list comprehension combining emission line fit suffixes with
+    the emission line.  This works for individual lines
 
-    :param line_name0: str containing the line name
-    :param line_type0: str containing the emisison-line type (e.g., 'Balmer')
-    :return: gauss_lines_names: list with str formatted as [LINE]_[SUFFIX]
+    :param line_name0: Line name
+    :param line_type0: Emission-line type (e.g., 'Balmer')
+
+    :return: List of strings formatted as [LINE]_[SUFFIX]
     """
 
     gauss_lines_names = [f"{line_name0}_{suffix}" for suffix in gauss_names0]
@@ -111,16 +111,16 @@ for key in t_keys:
                                                                       '.valid1.dustcorr.npz')
 
 
-def merge_column_names(*args):
+def merge_column_names(*args: list) -> list:
     """
-    Purpose:
-      Merges multiple lists containing column names.
+    Merges multiple lists containing column names.
 
     Usage:
       column_names = merge_column_names(bin_names0, indv_names0)
 
     :param args: An undefined number of lists
-    :return merge_list:
+
+    :return: Merged list
     """
 
     merge_list = list()
@@ -133,13 +133,15 @@ def merge_column_names(*args):
     return merge_list
 
 
-def remove_from_list(list0, remove_entries):
+def remove_from_list(list0: list, remove_entries: list) -> list:
     """
     Purpose:
-      Remove entries from list
+      Remove entries from list of column names
 
-    :param list0: list of column names
-    :param remove_entries: list of column names to remove
+    :param list0: List of column names
+    :param remove_entries: List of column names to remove
+
+    :return: List of column names after removal
     """
 
     if py_vers == 3:
@@ -153,23 +155,23 @@ def remove_from_list(list0, remove_entries):
     return dup_list0
 
 
-def indv_R23_O32():
+def indv_R23_O32() -> list:
     """
-    Purpose:
-      Use remove_from_list() to provide simplified list that contains ID, logR23 and logO32
+    Use remove_from_list() to provide simplified list that contains
+    ID, logR23 and logO32
 
-    :return: list containing just ID, logR23, logO32
+    :return: List containing just ID, logR23, logO32
     """
 
     return remove_from_list(indv_names0, ['logM', 'logLHb'])
 
 
-def indv_M_LHb():
+def indv_M_LHb() -> list:
     """
-    Purpose:
-      Use remove_from_list() to provide simplified list that contains ID, logM and logLHb
+    Use remove_from_list() to provide simplified list that contains
+    ID, logM and logLHb
 
-    :return: list containing just ID, logM, logLHb
+    :return: List containing just ID, logM, logLHb
     """
 
     return remove_from_list(indv_names0, ['logR23', 'logO32'])

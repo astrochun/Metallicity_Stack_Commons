@@ -1,26 +1,28 @@
+from logging import Logger
+from typing import Tuple
+import numpy as np
+
 from chun_codes import match_nosort
+
+from astropy.table import Table
 
 from .logging import log_stdout, log_verbose
 
 
-def get_index(det4363_table, input_table, column_name, verbose=False,
-              log=None):
+def get_index(det4363_table: Table, input_table: Table, column_name: str,
+              verbose: bool = False, log: Logger = log_stdout()) -> \
+        Tuple[np.ndarray, np.ndarray]:
     """
-    Purpose:
-      Uses either OBJNO or AP/SLIT info to get index for an existing table
+    Uses either OBJNO or AP/SLIT info to get index for an existing table
 
-    :param det4363_table: astropy table containing DEEP2 [OIII]4363-detected sample
-    :param input_table: astropy table containing the entire sample to be updated
-    :param column_name: str containing column for cross-matching
-    :param verbose: bool to write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param det4363_table: Astropy table containing DEEP2 [OIII]4363-detected sample
+    :param input_table: Astropy table containing the entire sample to be updated
+    :param column_name: Column name for cross-matching
+    :param verbose: Write verbose message to stdout. Default: file only
+    :param log: logging.Logger object
 
-    :return det4363_idx: Numpy index arrays containing for det4363_table and input_table
-    :return input_idx: numpy index array for input
+    :return: Index arrays for ``det4363_table``, ``input_table``
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 

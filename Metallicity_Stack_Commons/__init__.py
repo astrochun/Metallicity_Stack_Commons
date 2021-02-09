@@ -1,3 +1,6 @@
+from logging import Logger
+from typing import Union
+
 from chun_codes.cardelli import cardelli
 import astropy.units as u
 from datetime import date
@@ -7,7 +10,7 @@ import numpy as np
 
 from .logging import log_stdout, log_verbose
 
-version = "1.3.1"
+version = "1.4.0"
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
 line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
@@ -51,21 +54,19 @@ k_values = cardelli(lambda0 * u.Angstrom)
 k_dict   = dict(zip(line_name, k_values))
 
 
-def exclude_outliers(objno, verbose=False, log=None):
+def exclude_outliers(objno: Union[list, np.ndarray], verbose: bool = False,
+                     log: Logger = log_stdout()) -> np.ndarray:
     """
     Exclude spectra that are identified as outliers.
 
     Generally this is because the spectra have very high S/N on the continuum.
 
-    :param objno: list or numpy array of eight-digit identifier
-    :param verbose: bool to write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param objno: Array of eight-digit identifier
+    :param verbose: Write verbose message to stdout. Default: file only
+    :param log: logging.Logger object
 
-    :return flag: numpy array of zeros and ones
+    :return: Array of zeros (not flagged) and ones (flagged
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
@@ -81,30 +82,28 @@ def exclude_outliers(objno, verbose=False, log=None):
     return flag
 
 
-def dir_date(folder_name, path_init='', year=False, verbose=False, log=None):
+def dir_date(folder_name: str, path_init: str = '', year: bool = False,
+             verbose: bool = False, log: Logger = log_stdout()) \
+        -> str:
     """
-    Purpose:
-      This function finds and returns the path to a directory named after the
-      current date (MMDDYYYY). If the directory doesn't exist yet, it creates
-      a new directory named after the current date in the provided folder_name
-      directory.
+    This function finds and returns the path to a directory named after the
+    current date (MMDDYYYY). If the directory doesn't exist yet, it creates
+    a new directory named after the current date in the provided
+    ``folder_name`` directory.
 
-      From https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
+    Originally from https://github.com/rafia37/Evolution-of-Galaxies/blob/master/general.py
 
     Usage:
-        fitspath = dir_date(folder_name, path_init='', year=True)
+        fitspath = dir_date(folder_name, year=True)
 
-    :param folder_name: str containing directory for date subdirectory will be in
+    :param folder_name: Directory for date subdirectory will be in
     :param path_init: root path. Default: empty string
     :param year: Indicate whether to include year in date folder. Default: False
-    :param verbose: bool to write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param verbose: Write verbose message to stdout. Default: file only
+    :param log: logging.Logger object
 
-    :return fitspath: Full path to the date directory
+    :return: Full path to the date directory
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
@@ -125,10 +124,17 @@ def dir_date(folder_name, path_init='', year=False, verbose=False, log=None):
     return fitspath
 
 
-def get_user(username=None, verbose=False, log=None):
+def get_user(username: Union[None, str] = None,
+             verbose: bool = False, log: Logger = log_stdout()) -> str:
+    """
+    Get the corresponding path for a given ``username``
 
-    if log is None:
-        log = log_stdout()
+    :param username: Optional input for username
+    :param verbose: Write verbose message to stdout. Default: file only
+    :param log: logging.Logger object
+
+    :return: Full path to the date directory
+    """
 
     log_verbose(log, "starting ...", verbose=verbose)
 

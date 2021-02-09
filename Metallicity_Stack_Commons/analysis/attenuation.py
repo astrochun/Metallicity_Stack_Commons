@@ -1,3 +1,6 @@
+from logging import Logger
+from typing import Union, Tuple
+
 import numpy as np
 
 from .. import k_dict, line_name_short
@@ -19,24 +22,27 @@ k_HGAMMA = k_dict[HG]
 k_HDELTA = k_dict[HD]
 
 
-def compute_EBV(ratio, source='HgHb', zero_neg=True, verbose=False, log=None):
+def compute_EBV(ratio: Union[float, np.ndarray], source: str = 'HgHb',
+                zero_neg: bool = True, verbose: bool = False,
+                log: Logger = log_stdout()) -> \
+        Union[float, np.ndarray, Tuple[np.ndarray, np.ndarray]]:
     """
-    Purpose:
-      Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
+    Determines E(B-V) from Hg/Hb or Hd/Hb flux ratios using Case B assumptions
 
-    :param ratio: float or numpy array containing Hg/Hb or Hd/Hb
-    :param source: str indicate ratio type.  Either 'HgHb' or 'HdHb'. Default: 'HgHb'
-    :param zero_neg: boolean to indicate whether to zero out negative reddening. Default: True
-    :param verbose: bool to write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param ratio: Float or array containing Hg/Hb or Hd/Hb values
+    :param source: Indicate ratio type. Either 'HgHb' or 'HdHb'.
+                   Default: 'HgHb'
+    :param zero_neg: Indicate whether to zero out negative reddening.
+                     Default: True
+    :param verbose: Write verbose message to stdout. Default: file only
+    :param log: logging.Logger object
 
-    :return EBV: float or numpy array containing E(B-V).
-                 Note: Not correcting for negative reddening
-    :return EBV_peak: float or numpy array return when it is a 2-D distribution
+    :return: E(B-V) values, E(B-V) peak values
+
+    Note:
+      When only E(B-V) values is returned, correction does not account
+      for negative reddening
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
@@ -87,42 +93,56 @@ def compute_EBV(ratio, source='HgHb', zero_neg=True, verbose=False, log=None):
         return EBV
 
 
-def compute_A(EBV, verbose=False, log=None):
+def compute_A(EBV: float, verbose: bool = False,
+              log: Logger = log_stdout()) -> dict:
     """
-    Purpose:
-      Compute A(Lambda) for all possible emission lines
+    Compute A(Lambda) for all possible emission lines
 
-    :param EBV: float value of E(B-V)
-      Has not been configured to handle a large array.  Some array handling would be needed
-    :param verbose: bool to write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param EBV: E(B-V) value
+      Has not been configured to handle a large array.
+      Some array handling would be needed
 
-    :return A_dict: dict containing A(lambda) with keys identical to k_dict
+    :param verbose: Write verbose message to stdout.
+           Default: file only
+    :param log: logging.Logger object
+
+    :return: A(lambda) with keys identical to ``k_dict``
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
-    k_arr  = np.array(list(k_dict.values()))
+    k_arr = np.array(list(k_dict.values()))
 
-    A_arr  = k_arr * EBV
+    A_arr = k_arr * EBV
     A_dict = dict(zip(list(k_dict.keys()), A_arr))
 
     log_verbose(log, "finished.", verbose=verbose)
     return A_dict
 
 
-def line_ratio_atten(ratio, EBV, wave_top, wave_bottom, verbose=False,
-                     log=None):
+def line_ratio_atten(ratio: Union[float, np.ndarray],
+                     EBV: Union[float, np.ndarray],
+                     wave_top: str, wave_bottom: str,
+                     verbose: bool = False,
+                     log: Logger = log_stdout()) -> \
+        Union[float, np.ndarray]:
+    """
+    Determine dust-corrected emission-line ratios
 
-    if log is None:
-        log = log_stdout()
+    :param ratio: Float or array of observed flux ratios
+    :param EBV: E(B-V) value(s)
+    :param wave_top: Emission-line name for flux ratio numerator
+    :param wave_bottom: Emission-line name for flux ratio denominator
+    :param verbose: Write verbose message to stdout.
+           Default: file only
+    :param log: logging.Logger object
+
+    :return: Float or array of dust-corrected flux ratios
+    """
 
     log_verbose(log, "starting ...", verbose=verbose)
 
-    k_top    = k_dict[wave_top]
+    k_top = k_dict[wave_top]
     k_bottom = k_dict[wave_bottom]
 
     ratio_atten = ratio * 10**(0.4*EBV*(k_top - k_bottom))
@@ -131,27 +151,25 @@ def line_ratio_atten(ratio, EBV, wave_top, wave_bottom, verbose=False,
     return ratio_atten
 
 
-def Hb_SFR(log_LHb, EBV, verbose=False, log=None):
+def Hb_SFR(log_LHb: Union[float, np.ndarray],
+           EBV: Union[float, np.ndarray],
+           verbose: bool = False,
+           log: Logger = log_stdout()) -> \
+        Union[float, np.ndarray]:
     """
-    Purpose:
-      Determine dust-corrected SFR using the H-beta luminosity and a
-      measurement for nebular attenuation
+    Determine dust-corrected SFR using the H-beta luminosity and a
+    measurement for nebular attenuation
 
     Equation below is based on Eq. 2 in Ly et al. (2015), ApJ, 805, 45
       DOI: https://doi.org/10.1088/0004-637X/805/1/45
 
-    :param log_LHb: numpy array or float containing logarithm of H-beta
-           luminosity in units of erg/s
-    :param EBV: numpy array or float providing E(B-V)
-    :param verbose: bool to write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param log_LHb: Logarithm of H-beta luminosity in units of erg/s
+    :param EBV: E(B-V) value(s)
+    :param verbose: Write verbose message to stdout. Default: file only
+    :param log: logging.Logger object
 
-    :return logSFR: numpy array or float containing the SFR in
-            logarithmic units of M_sun/yr
+    :return: SFRs in logarithmic units of M_sun/yr
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 

@@ -1,3 +1,4 @@
+from logging import Logger
 import numpy as np
 
 from .. import line_name_short, OIII_r
@@ -6,24 +7,21 @@ from ..column_names import bin_ratios0, dust0
 from ..logging import log_stdout, log_verbose
 
 
-def flux_ratios(flux_dict, binned_data=False, get_R=True, verbose=False,
-                log=None):
+def flux_ratios(flux_dict: dict, binned_data: bool = False,
+                get_R: bool = True, verbose: bool = False,
+                log: Logger = log_stdout()) -> dict:
     """
-    Purpose:
-      Primary code to determine a variety of line ratios based on a dictionary
-      containing emission-line fluxes
+    Primary code to determine a variety of line ratios based on a dict
+    containing emission-line fluxes
 
-    :param flux_dict: dict containing line ratios
-    :param get_R: bool to indicate to populate with OIII4363/OIII5007 flux ratio
-    :param binned_data: bool for whether to analysis binned data. Default: False
-    :param verbose: bool to write verbose message to stdout. Default: file only
-    :param log: LogClass or logging object
+    :param flux_dict: Contains emission-line fluxes
+    :param get_R: Indicates populating OIII4363/OIII5007 flux ratio
+    :param binned_data: Whether to analyze binned data. Default: False
+    :param verbose: Write verbose message to stdout. Default: file only
+    :param log: logging.Logger object
 
-    :return flux_ratios_dict: dict containing flux ratios
+    :return: Emission-line flux ratios
     """
-
-    if log is None:
-        log = log_stdout()
 
     log_verbose(log, "starting ...", verbose=verbose)
 
