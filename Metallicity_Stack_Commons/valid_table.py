@@ -6,34 +6,26 @@ from astropy.table import Table, Column
 from .column_names import filename_dict, valid_table_names0  # , bin_names0, remove_from_list
 
 
-def make_validation_table(fitspath):
+def make_validation_table(fitspath: str):
     """
-    Purpose:
-        This function creates a validation table for a given binning set. The validation table
-        contains a OIII4363 detection column where 1.0 means detection, 0.5 means non-detection with
-        reliable OIII5007, and 0.0 means unreliable non-detection.
-        This function will be run every time the analysis is completed and will create a validation
-        table for every analysis.
+    This function creates a validation table for a given binning set.
+    The validation table contains a OIII4363 detection column where 1.0
+    means detection, 0.5 means non-detection with reliable OIII5007, and
+    0.0 means unreliable non-detection. This function will be run every
+    time the analysis is completed and will create a validation table
+    for every analysis.
 
     Usage:
         valid_table.make_validation_table(fitspath, bin_type_str)
 
-    Params:
-        fitspath --> a string of the file path where the input file is and where the output file
-            will be placed.
-        not in use:
-        bin_type_str --> a string describing the binning type. (e.g. 'massLHbetabin' or 'massbin')
-                     --> This is dataset for Zcalbase_gal analysis
-
-    Returns:
-        None
+    :param fitspath: Full file path where the input file is and where the
+                     output file will be placed.
 
     Outputs:
-        fitspath + 'bin_validation.tbl' --> a validation table containing bin IDs;
-                                        number of galaxies in each bin; and
-                                        column indicating  OIII4363 detection/non-detection
-                                        OIII4363_Flux_Observed
-                                        OIII4363_S/N
+      fitspath + 'bin_validation.tbl'
+        Validation table containing bin IDs; number of galaxies in each bin;
+        and column indicating OIII4363 detection/non-detection,
+        OIII4363_Flux_Observed, OIII4363_S/N
     """
 
     bin_table = asc.read(fitspath + filename_dict['bin_info'])
@@ -88,33 +80,27 @@ def make_validation_table(fitspath):
     '''
 
 
-def compare_to_by_eye(fitspath, dataset):
+def compare_to_by_eye(fitspath: str, dataset: str):
     """
-    Purpose -> This function takes the automated validation table and checks it against
-               inputted measurement that are determined by eye. These inputted measurements
-               are in the np.where statements. It outputs a revised validation table based
-               on the inputted measurements.
+    This function takes the automated validation table and checks it against
+    inputted measurement that are determined by eye. These inputted
+    measurements are in the np.where statements. It outputs a revised
+    validation table based on the inputted measurements.
 
-    Usage -> valid_table.make_validation_table(fitspath, dataset)
+    Usage:
+      valid_table.make_validation_table(fitspath, dataset)
 
-    Params:
-        fitspath --> a string of the file path where the input file is and where the output file
-            will be placed
-        dataset  --> a string that is used to determine which eye measurements to use
-
-    Returns:
-        None
+    :param fitspath: Full file path where the input file is and where the
+                     output file will be placed.
+    :param dataset: Determine which eye measurements to use
 
     Outputs:
-        fitspath + 'bin_validation_revised.tbl' and '.csv' -->
-                                        a validation table containing bin IDs;
-                                        number of galaxies in each bin; and
-                                        column indicating  OIII4363 detection/non-detection
-                                        OIII4363_Flux_Observed
-                                        OIII4363_S/N
-                                        Notes
-
+      fitspath + 'bin_validation_revised.tbl' and '.csv'
+        Validation table containing bin IDs; number of galaxies in each bin;
+        and column indicating OIII4363 detection/non-detection,
+        OIII4363_Flux_Observed, OIII4363_S/N, Notes
     """
+
     ver_table = fitspath + filename_dict['bin_valid']
     ver_tab = asc.read(ver_table)
     indicate = ver_tab['Detection']

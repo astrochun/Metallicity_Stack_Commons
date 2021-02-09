@@ -1,0 +1,38 @@
+name: "Sphinx Docs Check"
+on:
+  push:
+    paths:
+    - 'docs/**'
+    - 'Metallicity_Stack_Commons/**'
+  pull_request:
+    paths:
+    - 'docs/**'
+    - 'Metallicity_Stack_Commons/**'
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8']
+
+    steps:
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Checkout MSC
+      uses: actions/checkout@v2
+    - name: Checkout chun_codes
+      uses: actions/checkout@v2
+      with:
+        repository: astrochun/chun_codes
+        path: chun_codes
+    - name: Install chun_codes
+      run: |
+        python setup.py install
+      working-directory: chun_codes
+    - name: Sphinx build
+      uses: ammaraskar/sphinx-action@master
+      with:
+        docs-folder: "docs/"
