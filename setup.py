@@ -14,5 +14,6 @@ setup(
     description='Set of common codes used in metallicity studies that use stacking techniques',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=['numpy', 'astropy', 'matplotlib', 'scipy', 'requests', 'pytest']
+    install_requires=['numpy', 'astropy', 'matplotlib', 'scipy', 'requests',
+                      'pytest', 'chun-codes']
 )
