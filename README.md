@@ -8,3 +8,6 @@ Set of common codes used in metallicity studies that use the stacking techniques
 ![GitHub top language](https://img.shields.io/github/languages/top/astrochun/Metallicity_Stack_Commons)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/astrochun/Metallicity_Stack_Commons)
 ![GitHub](https://img.shields.io/github/license/astrochun/Metallicity_Stack_Commons?color=blue)
+
+Documentation for this code is available on
+[Read the Docs](https://metallicity-stack-commons.readthedocs.io/en/latest/).
