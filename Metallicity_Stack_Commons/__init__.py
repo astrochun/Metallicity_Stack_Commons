@@ -10,7 +10,7 @@ import numpy as np
 
 from .logging import log_stdout, log_verbose
 
-version = "1.4.1"
+version = "1.4.2"
 
 lambda0   = [3726.18, 4101.73, 4340.46, 4363.21, 4861.32, 4958.91, 5006.84]
 line_type = ['Oxy2', 'Balmer', 'Balmer', 'Single', 'Balmer', 'Single', 'Single']
