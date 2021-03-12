@@ -1,12 +1,12 @@
-from setuptools import setup
+from setuptools import setup, find_namespace_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name='Metallicity_Stack_Commons',
-    version='1.2.0',
-    packages=['Metallicity_Stack_Commons'],
+    name='msc-astro',
+    version='1.4.4',
+    packages=find_namespace_packages(),
     url='https://github.com/astrochun/Metallicity_Stack_Commons',
     license='MIT License',
     author='Chun Ly',
