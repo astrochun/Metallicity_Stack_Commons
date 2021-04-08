@@ -108,25 +108,36 @@ def compare_to_by_eye(fitspath: str, dataset: str):
 
     # Detections By Eye
     if dataset == 'Voronoi20':
-        det_4363 = np.where((ID == 0) | (ID == 2) | (ID == 3) | (ID == 5) | (ID == 6))[0]
+        det_4363 = \
+            np.where(
+                (ID == 0) | (ID == 2) | (ID == 3) | (ID == 5) | (ID == 6))[0]
     if dataset == 'Voronoi14':
-        det_4363 = np.where((ID == 0) | (ID == 7) | (ID == 10) | (ID == 11) | (ID == 12))[0]
+        det_4363 = \
+            np.where(
+                (ID == 0) | (ID == 7) | (ID == 10) | (ID == 11) | (ID == 12))[
+                0]
     if dataset == 'Voronoi10':
         det_4363 = np.where((ID == 1) | (ID == 9) | (ID == 18) | (ID == 21))[0]
     if dataset == 'Grid':
-        det_4363 = np.where((ID == 11) | (ID == 13) | (ID == 19) | (ID == 20) | (ID == 21))[0]
+        det_4363 = np.where(
+            (ID == 11) | (ID == 13) | (ID == 19) | (ID == 20) | (ID == 21))[0]
     if dataset == 'R23_Grid':
         det_4363 = np.where((ID == 0) | (ID == 4) | (ID == 5) | (ID == 6))[0]
     if dataset == 'O32_Grid':
         det_4363 = np.where((ID == 6))[0]
     if dataset == 'Double_Bin':
-        det_4363 = np.where((ID == 0) | (ID == 1) | (ID == 2) | (ID == 7) | (ID == 9) |
-                            (ID == 10) | (ID == 11) | (ID == 13))[0]
+        det_4363 = \
+            np.where(
+                (ID == 0) | (ID == 1) | (ID == 2) | (ID == 7) | (ID == 9) |
+                (ID == 10) | (ID == 11) | (ID == 13))[0]
     if dataset == 'n_Bins':
-        det_4363 = np.where((ID == 10) | (ID == 11) | (ID == 14) | (ID == 15) | (ID == 20) |
-                            (ID == 23) | (ID == 26))[0]
-        rlimit = np.where((ID == 5) | (ID == 7) | (ID == 8) | (ID == 13) | (ID == 16) |
-                          (ID == 17) | (ID == 19) | (ID == 22))[0]
+        det_4363 = np.where(
+            (ID == 10) | (ID == 14) | (ID == 15) | (ID == 20) |
+            (ID == 23) | (ID == 26))[0]
+        rlimit = \
+            np.where(
+                (ID == 5) | (ID == 7) | (ID == 8) | (ID == 11) | (ID == 13)
+                | (ID == 16) | (ID == 17) | (ID == 19) | (ID == 22))[0]
 
     # Caroline: Add you conditions here
 
@@ -140,16 +151,19 @@ def compare_to_by_eye(fitspath: str, dataset: str):
         if check_ID[ii] == indicate[ii]:
             print(ID[ii], 'matches with by eye validation')
         else:
-            print('*****', ID[ii], 'does not match calculated values. Please check!')
+            print('*****', ID[ii],
+                  'does not match calculated values. Please check!')
 
     # This is where I need to add the column for notes
     if dataset == 'n_Bins':
-        notes = ['N/A', 'N/A', 'N/A', 'N/A', 'N/A',
-                 'N/A', 'N/A', 'Broad features, but reliable OIII5007 and HGAMMA',
+        notes = ['N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A',
+                 'Broad features, but reliable OIII5007 and HGAMMA',
                  'Bad fit, but good OIII5007', 'N/A',
-                 'N/A', 'N/A', 'N/A', 'N/A', 'N/A',
-                 'High Temperature', 'not fit well, but reliable OIII5007 and HGAMMA',
-                 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A']
+                 'Changed to robust limit 3/22/21', 'N/A', 'N/A', 'N/A', 'N/A',
+                 'High Temperature',
+                 'not fit well, but reliable OIII5007 and HGAMMA',
+                 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A',
+                 'N/A']
         note_add = Column(name='Notes', data=notes)
         ver_tab.add_column(note_add, 5)
 
@@ -160,5 +174,6 @@ def compare_to_by_eye(fitspath: str, dataset: str):
     detect_add = Column(name='Detection', data=check_ID)
     ver_tab.add_column(detect_add, 2)
 
-    asc.write(ver_tab, fitspath + filename_dict['bin_valid_rev'], format='fixed_width_two_line')
+    asc.write(ver_tab, fitspath + filename_dict['bin_valid_rev'],
+              format='fixed_width_two_line')
     asc.write(ver_tab, fitspath + 'bin_validation_revised.csv', format='csv')
