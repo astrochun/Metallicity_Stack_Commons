@@ -46,7 +46,7 @@ def make_validation_table(fitspath: str):
     up_limit = (Hgamma/Hgamma_SN) * 3
 
     valid_stacks_idx = np.where((O_4363_SN >= 3) & (O_5007_SN > 100) & (O_4363_sigma < 1.6))[0] 
-    reliable_5007_stacks = np.where((O_4363_SN < 3) & (O_5007_SN > 100))[0]
+    reliable_5007_stacks = np.where((O_4363_SN < 3) & (O_5007_SN > 120))[0]
     wide_lines_valid = np.where((O_4363_SN >= 3) & (O_5007_SN > 100) & (O_4363_sigma >= 1.6))[0]
     detection[valid_stacks_idx] = 1
     detection[reliable_5007_stacks] = 0.5
@@ -135,9 +135,8 @@ def compare_to_by_eye(fitspath: str, dataset: str):
             (ID == 10) | (ID == 14) | (ID == 15) | (ID == 20) |
             (ID == 23) | (ID == 26))[0]
         rlimit = \
-            np.where(
-                (ID == 5) | (ID == 7) | (ID == 8) | (ID == 11) | (ID == 13)
-                | (ID == 16) | (ID == 17) | (ID == 19) | (ID == 22))[0]
+            np.where((ID == 8) | (ID == 11) | (ID == 13)| (ID == 16)
+                      | (ID == 17) | (ID == 19) | (ID == 22))[0]
 
     # Caroline: Add you conditions here
 
