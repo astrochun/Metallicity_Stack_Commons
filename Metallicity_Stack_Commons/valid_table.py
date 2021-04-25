@@ -3,10 +3,11 @@ import numpy as np
 from astropy.io import ascii as asc
 from astropy.table import Table, Column
 
-from .column_names import filename_dict, valid_table_names0  # , bin_names0, remove_from_list
+from .column_names import filename_dict, valid_table_names0
 
 
-def make_validation_table(fitspath: str):
+def make_validation_table(fitspath: str, vmin_4363SN, vmin_5007SN,
+                          vmax_4363sig, rlmax_4363sig, rlmin_5007SN):
     """
     This function creates a validation table for a given binning set.
     The validation table contains a OIII4363 detection column where 1.0
@@ -20,6 +21,11 @@ def make_validation_table(fitspath: str):
 
     :param fitspath: Full file path where the input file is and where the
                      output file will be placed.
+    :param vmin_4363SN: int. minimum OIII4363 S/N for valid detection
+    :param vmin_5007SN: int. minimum OIII5007 S/N for valid detection
+    :param vmax_4363sig: int. maximum OIII4363 sigma for valid detection
+    :param rlmax_4363sig: int. maximum OIII4363 sigma for robust limit
+    :param rlmin_5007SN: int. minimum OIII5007 S/N for robust limit 
 
     Outputs:
       fitspath + 'bin_validation.tbl'
@@ -45,12 +51,13 @@ def make_validation_table(fitspath: str):
     OIII4363 = np.zeros(len(bin_ID))
     up_limit = (Hgamma/Hgamma_SN) * 3
 
-    valid_stacks_idx = np.where((O_4363_SN >= 3) & (O_5007_SN > 100) & (O_4363_sigma < 1.6))[0] 
-    reliable_5007_stacks = np.where((O_4363_SN < 3) & (O_5007_SN > 120))[0]
-    wide_lines_valid = np.where((O_4363_SN >= 3) & (O_5007_SN > 100) & (O_4363_sigma >= 1.6))[0]
-    detection[valid_stacks_idx] = 1
+    valid_stacks_idx = np.where((O_4363_SN >= vmin_4363SN) &
+                                (O_5007_SN > vmin_5007SN) &
+                                (O_4363_sigma < vmax_4363sig))[0]
+    reliable_5007_stacks = np.where((O_4363_sigma < rlmax_4363sig) &
+                                    (O_5007_SN > rlmin_5007SN))[0]
     detection[reliable_5007_stacks] = 0.5
-    detection[wide_lines_valid] = 0.5
+    detection[valid_stacks_idx] = 1
     print(detection)
 
     for ii in range(len(OIII4363)):
@@ -62,22 +69,9 @@ def make_validation_table(fitspath: str):
             OIII4363[ii] = up_limit[ii]
 
     ver_tab = fitspath + filename_dict['bin_valid']
-    tab1 = Table([bin_ID, N_stack, detection, OIII4363, O_4363_SN], names=valid_table_names0)
+    tab1 = Table([bin_ID, N_stack, detection, OIII4363, O_4363_SN],
+                 names=valid_table_names0)
     asc.write(tab1, ver_tab, format='fixed_width_two_line')
-    '''
-    # Write revised file for human editing
-    ver_tab_revised = fitspath + filename_dict['bin_valid_rev']
-    if not exists(ver_tab_revised):
-        asc.write(tab1, ver_tab_revised, format='fixed_width_two_line')
-        print("   ")
-        print("URGENT!!! HUMAN EDITING OF FILE NEEDED : "+ver_tab_revised)
-        print("   ")
-    else:
-        print("   ")
-        print("ERROR!!! FILE EXISTS!!!  WILL NOT OVERWRITE !!!")
-        print("ERROR!!! PLEASE RENAME/DELETE FILE TO REGENERATE !!!")
-        print("   ")
-    '''
 
 
 def compare_to_by_eye(fitspath: str, dataset: str):
