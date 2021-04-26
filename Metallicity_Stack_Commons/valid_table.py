@@ -7,7 +7,8 @@ from .column_names import filename_dict, valid_table_names0
 
 
 def make_validation_table(fitspath: str, vmin_4363SN, vmin_5007SN,
-                          vmax_4363sig, rlmax_4363sig, rlmin_5007SN):
+                          vmax_4363sig, rlmin_4363SN,
+                          rlmax_4363sig, rlmin_5007SN):
     """
     This function creates a validation table for a given binning set.
     The validation table contains a OIII4363 detection column where 1.0
@@ -24,8 +25,9 @@ def make_validation_table(fitspath: str, vmin_4363SN, vmin_5007SN,
     :param vmin_4363SN: int. minimum OIII4363 S/N for valid detection
     :param vmin_5007SN: int. minimum OIII5007 S/N for valid detection
     :param vmax_4363sig: int. maximum OIII4363 sigma for valid detection
+    :param rlmin_4363SN: int. minimum OIII4363 S/N for robust limit
     :param rlmax_4363sig: int. maximum OIII4363 sigma for robust limit
-    :param rlmin_5007SN: int. minimum OIII5007 S/N for robust limit 
+    :param rlmin_5007SN: int. minimum OIII5007 S/N for robust limit
 
     Outputs:
       fitspath + 'bin_validation.tbl'
@@ -55,7 +57,8 @@ def make_validation_table(fitspath: str, vmin_4363SN, vmin_5007SN,
                                 (O_5007_SN > vmin_5007SN) &
                                 (O_4363_sigma < vmax_4363sig))[0]
     reliable_5007_stacks = np.where((O_4363_sigma < rlmax_4363sig) &
-                                    (O_5007_SN > rlmin_5007SN))[0]
+                                    (O_5007_SN > rlmin_5007SN) &
+                                    (O_4363_SN >= rlmin_4363SN))[0]
     detection[reliable_5007_stacks] = 0.5
     detection[valid_stacks_idx] = 1
     print(detection)
