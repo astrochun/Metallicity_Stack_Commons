@@ -79,6 +79,8 @@ def make_validation_table(fitspath: str, vmin_4363SN=3, vmin_5007SN=100,
                  names=valid_table_names0)
     asc.write(tab1, ver_tab, format='fixed_width_two_line')
 
+'''
+The function above now addresses what compare_to_by_eye() does 
 
 def compare_to_by_eye(fitspath: str, dataset: str):
     """
@@ -176,3 +178,4 @@ def compare_to_by_eye(fitspath: str, dataset: str):
     asc.write(ver_tab, fitspath + filename_dict['bin_valid_rev'],
               format='fixed_width_two_line')
     asc.write(ver_tab, fitspath + 'bin_validation_revised.csv', format='csv')
+'''
