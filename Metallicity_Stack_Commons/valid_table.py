@@ -6,9 +6,9 @@ from astropy.table import Table, Column
 from .column_names import filename_dict, valid_table_names0
 
 
-def make_validation_table(fitspath: str, vmin_4363SN, vmin_5007SN,
-                          vmax_4363sig, rlmin_4363SN,
-                          rlmax_4363sig, rlmin_5007SN):
+def make_validation_table(fitspath: str, vmin_4363SN=3, vmin_5007SN=100,
+                          vmax_4363sig=1.6, rlmin_4363SN=3,
+                          rlmax_4363sig=1.6, rlmin_5007SN=100):
     """
     This function creates a validation table for a given binning set.
     The validation table contains a OIII4363 detection column where 1.0
