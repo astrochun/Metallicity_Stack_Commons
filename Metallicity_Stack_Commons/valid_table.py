@@ -79,8 +79,6 @@ def make_validation_table(fitspath: str, vmin_4363SN=3, vmin_5007SN=100,
                  names=valid_table_names0)
     asc.write(tab1, ver_tab, format='fixed_width_two_line')
 
-'''
-The function above now addresses what compare_to_by_eye() does 
 
 def compare_to_by_eye(fitspath: str, dataset: str):
     """
@@ -132,13 +130,14 @@ def compare_to_by_eye(fitspath: str, dataset: str):
             np.where(
                 (ID == 0) | (ID == 1) | (ID == 2) | (ID == 7) | (ID == 9) |
                 (ID == 10) | (ID == 11) | (ID == 13))[0]
-    if dataset == 'n_Bins':
+    # make_validation_table will now produce correct detection values
+    '''if dataset == 'n_Bins':
         det_4363 = np.where(
             (ID == 10) | (ID == 14) | (ID == 15) | (ID == 20) |
             (ID == 23) | (ID == 26))[0]
         rlimit = \
             np.where((ID == 8) | (ID == 11) | (ID == 13)| (ID == 16)
-                      | (ID == 17) | (ID == 19) | (ID == 22))[0]
+                      | (ID == 17) | (ID == 19) | (ID == 22))[0]'''
 
     # Caroline: Add you conditions here
 
@@ -178,4 +177,3 @@ def compare_to_by_eye(fitspath: str, dataset: str):
     asc.write(ver_tab, fitspath + filename_dict['bin_valid_rev'],
               format='fixed_width_two_line')
     asc.write(ver_tab, fitspath + 'bin_validation_revised.csv', format='csv')
-'''
