@@ -57,9 +57,12 @@ def make_validation_table(fitspath: str, vmin_4363SN, vmin_5007SN,
                                 (O_5007_SN > vmin_5007SN) &
                                 (O_4363_sigma < vmax_4363sig))[0]
     reliable_5007_stacks = np.where((O_4363_sigma < rlmax_4363sig) &
-                                    (O_5007_SN > rlmin_5007SN) &
-                                    (O_4363_SN >= rlmin_4363SN))[0]
+                                    (O_5007_SN > rlmin_5007SN))[0]
+    wide_line_valid = np.where((O_4363_SN >= rlmin_4363SN) &
+                               (O_5007_SN > rlmin_5007SN) &
+                               (O_4363_sigma >= rlmax_4363sig))[0]
     detection[reliable_5007_stacks] = 0.5
+    detection[wide_line_valid] = 0.5
     detection[valid_stacks_idx] = 1
     print(detection)
 
