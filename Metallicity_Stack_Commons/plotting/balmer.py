@@ -252,8 +252,9 @@ def HbHgHd_fits(fitspath: str, out_pdf_prefix: str ='HbHgHd_fits',
                             label='Delta Fit')
         ax_arr[row][0].set_xlim(4050, 4150)
 
-        ax_arr[row][0].set_ylim(0, 1.6)
-        
+        for p in [0, 1, 2]:
+            ax_arr[row][p].set_ylim(0, 1.6)
+
         ax_arr[row][0].annotate(txt2, [0.95, 0.95], xycoords='axes fraction',
                                 va='top', ha='right', fontsize='5')
         ax_arr[row][0].plot(wave[Hd_fit_dict['idx_sig']], Hd_fit_dict['residual'],
