@@ -245,7 +245,7 @@ def HbHgHd_fits(fitspath: str, out_pdf_prefix: str ='HbHgHd_fits',
         txt2 += f"F_G: {Hd_fit_dict['flux_gauss']:.3f} " + \
                 f"F_S: {Hd_fit_dict['flux_spec']:.3f}" + "\n"
         HdHb = Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss']
-        txt2 += fr"H$\delta/H$\beta$: {HdHb:.2f} E(B-V): {EBV_HdHb:.2f}"
+        txt2 += fr"H$\delta$/H$\beta$: {HdHb:.2f} E(B-V): {EBV_HdHb:.2f}"
 
         ax_arr[row][0].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
         ax_arr[row][0].plot(wave, Hd_fit_dict['gauss'], 'm', linewidth=0.25,
