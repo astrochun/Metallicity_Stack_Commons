@@ -111,7 +111,8 @@ def fitting_result(wave: np.ndarray, y_norm: np.ndarray, lambda_cen: float,
 
     # Residuals
     idx_sig_2 = np.where(np.abs((wave - lambda_cen)) / line_fit[1] <= 3.0)[0]
-    fit_dict['residual'] = y_norm[idx_sig_2] - fit_dict['gauss'][idx_sig_2] + line_fit[3]
+    fit_dict['residual'] = y_norm[idx_sig_2] - fit_dict['gauss'][idx_sig_2] + \
+                           (line_fit[3] + line_fit_neg[2])  # Applies negative amp offset
 
     fit_dict['idx_sig'] = idx_sig_2
 
@@ -127,7 +128,7 @@ def fitting_result(wave: np.ndarray, y_norm: np.ndarray, lambda_cen: float,
 
 
 # noinspection PyUnboundLocalVariable
-def HbHgHd_fits(fitspath: str, out_pdf_prefix: str ='HbHgHd_fits',
+def HbHgHd_fits(fitspath: str, out_pdf_prefix: str = 'HbHgHd_fits',
                 use_revised: bool = False, verbose: bool = False,
                 log: Logger = log_stdout()):
     """
