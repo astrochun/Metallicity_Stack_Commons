@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='Metallicity_Stack_Commons',
-    version='1.4.7',
+    version='1.4.8',
     packages=['Metallicity_Stack_Commons'],
     url='https://github.com/astrochun/Metallicity_Stack_Commons',
     license='MIT License',
