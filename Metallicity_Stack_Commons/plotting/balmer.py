@@ -111,7 +111,8 @@ def fitting_result(wave: np.ndarray, y_norm: np.ndarray, lambda_cen: float,
 
     # Residuals
     idx_sig_2 = np.where(np.abs((wave - lambda_cen)) / line_fit[1] <= 3.0)[0]
-    fit_dict['residual'] = y_norm[idx_sig_2] - fit_dict['gauss'][idx_sig_2] + line_fit[3]
+    fit_dict['residual'] = y_norm[idx_sig_2] - fit_dict['gauss'][idx_sig_2] + \
+                           (line_fit[3] + line_fit_neg[2])  # Applies negative amp offset
 
     fit_dict['idx_sig'] = idx_sig_2
 
@@ -127,7 +128,7 @@ def fitting_result(wave: np.ndarray, y_norm: np.ndarray, lambda_cen: float,
 
 
 # noinspection PyUnboundLocalVariable
-def HbHgHd_fits(fitspath: str, out_pdf_prefix: str ='HbHgHd_fits',
+def HbHgHd_fits(fitspath: str, out_pdf_prefix: str = 'HbHgHd_fits',
                 use_revised: bool = False, verbose: bool = False,
                 log: Logger = log_stdout()):
     """
@@ -245,7 +246,7 @@ def HbHgHd_fits(fitspath: str, out_pdf_prefix: str ='HbHgHd_fits',
         txt2 += f"F_G: {Hd_fit_dict['flux_gauss']:.3f} " + \
                 f"F_S: {Hd_fit_dict['flux_spec']:.3f}" + "\n"
         HdHb = Hd_fit_dict['flux_gauss']/Hb_fit_dict['flux_gauss']
-        txt2 += fr"H$\delta/H$\beta$: {HdHb:.2f} E(B-V): {EBV_HdHb:.2f}"
+        txt2 += fr"H$\delta$/H$\beta$: {HdHb:.2f} E(B-V): {EBV_HdHb:.2f}"
 
         ax_arr[row][0].plot(wave, y_norm, 'k', linewidth=0.3, label='Emission')
         ax_arr[row][0].plot(wave, Hd_fit_dict['gauss'], 'm', linewidth=0.25,
