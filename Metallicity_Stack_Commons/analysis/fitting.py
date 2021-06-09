@@ -129,7 +129,7 @@ def OIII4363_flux_limit(combine_flux_file: str, verbose: bool = False,
         log.warning(f"File not found! {combine_flux_file}")
         return
 
-    Hgamma    = combine_fits['HGAMMA_Flux_Observed'].data
+    Hgamma    = combine_fits['HGAMMA_Flux_Gaussian'].data
     Hgamma_SN = combine_fits['HGAMMA_S/N'].data
 
     flux_limit = (Hgamma / Hgamma_SN) * 3
