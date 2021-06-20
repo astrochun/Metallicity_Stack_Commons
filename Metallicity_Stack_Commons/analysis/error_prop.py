@@ -48,8 +48,8 @@ def replace_oiii4363(flux_file: str, detection: np.ndarray,
 
     flux_limit = OIII4363_flux_limit(flux_file, log=log)
 
-    non_det = np.where(detection == 0.5)[0]
-    flux_dict[line_name_short['4363']][non_det] = flux_limit[non_det]
+    rlimit = np.where(detection == 0.5)[0]
+    flux_dict[line_name_short['4363']][rlimit] = flux_limit[rlimit]
 
     return flux_dict
 
