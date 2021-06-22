@@ -12,8 +12,9 @@ from ..column_names import filename_dict, temp_metal_names0, npz_filename_dict, 
 from .ratios import flux_ratios
 from .temp_metallicity_calc import temp_calculation, metallicity_calculation
 from .attenuation import compute_EBV
-from .. import line_name
+from .. import line_name, line_name_short
 from ..logging import log_stdout, log_verbose
+from .fitting import OIII4363_flux_limit
 
 
 def write_npz(path: str, npz_files: list, dict_list: list,
@@ -39,6 +40,18 @@ def write_npz(path: str, npz_files: list, dict_list: list,
         np.savez(npz_outfile, **dict_input)
 
     log_verbose(log, "finished.", verbose=verbose)
+
+
+def replace_oiii4363(flux_file: str, detection: np.ndarray,
+                     flux_dict: dict,
+                     log: Logger = log_stdout()):
+
+    flux_limit = OIII4363_flux_limit(flux_file, log=log)
+
+    rlimit = np.where(detection == 0.5)[0]
+    flux_dict[line_name_short['4363']][rlimit] = flux_limit[rlimit]
+
+    return flux_dict
 
 
 def fluxes_derived_prop(path: str, raw: bool = False,
@@ -97,15 +110,15 @@ def fluxes_derived_prop(path: str, raw: bool = False,
     flux_tab0 = asc.read(flux_file)
 
     if binned_data:
+        log.info(f"Reading : {verify_file}")
+        verify_tab = asc.read(verify_file)
+        detection = verify_tab['Detection'].data
+
+        # For now we are only considering those with reliable detection and
+        # excluding those with reliable non-detections (detect = 0.5)
+        detect_idx = np.where((detection == 1))[0]
+
         if not raw:
-            log.info(f"Reading : {verify_file}")
-            verify_tab = asc.read(verify_file)
-            detection = verify_tab['Detection'].data
-
-            # For now we are only considering those with reliable detection and
-            # excluding those with reliable non-detections (detect = 0.5)
-            detect_idx = np.where((detection == 1))[0]
-
             ID = verify_tab['bin_ID'].data
             ID_detect = ID[detect_idx]
             log.info(ID_detect)
@@ -130,6 +143,7 @@ def fluxes_derived_prop(path: str, raw: bool = False,
             # Fill in dictionary
             flux_dict[line_name[aa]] = flux_tab0[flux].data
 
+        flux_dict = replace_oiii4363(flux_file, detection, flux_dict)
         flux_ratios_dict = flux_ratios(flux_dict, binned_data=binned_data,
                                        verbose=verbose, log=log)
 
